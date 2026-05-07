@@ -5,7 +5,7 @@ const SUPABASE_SECRET_KEY_REQUIRED = "SUPABASE_SECRET_KEY is required";
 
 const requiredEnv = (message: string) =>
   z.preprocess(
-    (value) => (typeof value === "string" ? value : ""),
+    (value) => (typeof value === "string" ? value.trim() : ""),
     z.string().min(1, message),
   );
 
@@ -14,7 +14,7 @@ export const ApiEnvSchema = z.object({
   PORT: z.coerce.number().int().positive().default(3001),
   GEMINI_API_KEY: requiredEnv(GEMINI_API_KEY_REQUIRED),
   SUPABASE_URL: z.preprocess(
-    (value) => (typeof value === "string" ? value : ""),
+    (value) => (typeof value === "string" ? value.trim() : ""),
     z
       .string()
       .min(1, "SUPABASE_URL is required")

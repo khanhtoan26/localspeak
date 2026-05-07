@@ -24,6 +24,30 @@ describe("validateApiEnv", () => {
     ).toThrow(/GEMINI_API_KEY is required/);
   });
 
+  it("fails fast when required secrets contain only whitespace", () => {
+    expect(() =>
+      validateApiEnv({
+        ...validEnv,
+        GEMINI_API_KEY: "   ",
+      }),
+    ).toThrow(/GEMINI_API_KEY is required/);
+  });
+
+  it("trims surrounding whitespace from string environment values", () => {
+    expect(
+      validateApiEnv({
+        ...validEnv,
+        GEMINI_API_KEY: "  test-gemini-key  ",
+        SUPABASE_URL: "  https://example.supabase.co  ",
+        SUPABASE_SECRET_KEY: "  test-supabase-secret  ",
+      }),
+    ).toEqual({
+      NODE_ENV: "development",
+      PORT: 3001,
+      ...validEnv,
+    });
+  });
+
   it("fails fast when SUPABASE_URL is invalid", () => {
     expect(() =>
       validateApiEnv({

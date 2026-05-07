@@ -6,8 +6,8 @@
     "dev": "pnpm --filter @localspeak/contracts build && concurrently \"pnpm --filter web dev\" \"pnpm --filter api start:dev\"",
     "dev:web": "pnpm --filter @localspeak/contracts build && pnpm --filter web dev",
     "dev:api": "pnpm --filter @localspeak/contracts build && pnpm --filter api start:dev",
-    "check": "pnpm -r check",
-    "test": "pnpm -r test",
+    "check": "pnpm --filter @localspeak/contracts build && pnpm -r check",
+    "test": "pnpm --filter @localspeak/contracts build && pnpm -r test",
     "build": "pnpm -r build"
   },
   "devDependencies": {
