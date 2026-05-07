@@ -109,7 +109,7 @@ Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 5 -> 6
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Monorepo Foundation & Contracts | 3/4 | In Progress | - |
+| 1. Monorepo Foundation & Contracts | 4/4 | Ready for verification | - |
 | 2. JSON Input & Pronunciation/Fluency Metrics | 0/TBD | Not started | - |
 | 3. JSON-Mode IELTS Feedback | 0/TBD | Not started | - |
 | 4. Audio Upload, Recording & Streaming Analysis | 0/TBD | Not started | - |
@@ -120,9 +120,9 @@ Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 5 -> 6
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| ARCH-01 | Phase 1 | Pending |
-| ARCH-02 | Phase 1 | Pending |
-| ARCH-04 | Phase 1 | Pending |
+| ARCH-01 | Phase 1 | Complete |
+| ARCH-02 | Phase 1 | Complete |
+| ARCH-04 | Phase 1 | Complete |
 | JSON-01 | Phase 2 | Pending |
 | JSON-02 | Phase 2 | Pending |
 | JSON-03 | Phase 2 | Pending |

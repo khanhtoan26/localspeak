@@ -54,10 +54,10 @@ Requirements for initial release. Each maps to roadmap phases.
 
 ### Architecture
 
-- [ ] **ARCH-01**: Monorepo contains a Next.js frontend app and NestJS backend app with clear local development commands.
-- [ ] **ARCH-02**: Shared request/response contracts exist for JSON analysis, audio analysis, saved sessions, and Gemini feedback.
+- [x] **ARCH-01**: Monorepo contains a Next.js frontend app and NestJS backend app with clear local development commands.
+- [x] **ARCH-02**: Shared request/response contracts exist for JSON analysis, audio analysis, saved sessions, and Gemini feedback.
 - [ ] **ARCH-03**: Supabase schema stores users' analysis sessions, derived metrics, feedback, input mode, and timestamps.
-- [ ] **ARCH-04**: Server-side configuration documents required Gemini and Supabase environment variables.
+- [x] **ARCH-04**: Server-side configuration documents required Gemini and Supabase environment variables.
 
 ## v2 Requirements
 
@@ -119,10 +119,10 @@ Which phases cover which requirements. Updated during roadmap creation.
 | UI-05 | Phase 6 | Pending |
 | UI-06 | Phase 6 | Pending |
 | UI-07 | Phase 6 | Pending |
-| ARCH-01 | Phase 1 | Pending |
-| ARCH-02 | Phase 1 | Pending |
+| ARCH-01 | Phase 1 | Complete |
+| ARCH-02 | Phase 1 | Complete |
 | ARCH-03 | Phase 5 | Pending |
-| ARCH-04 | Phase 1 | Pending |
+| ARCH-04 | Phase 1 | Complete |
 
 **Coverage:**
 - v1 requirements: 31 total
