@@ -31,7 +31,7 @@ Decimal phases appear between their surrounding integers in numeric order.
   2. Frontend and backend share documented request/response contracts for JSON analysis, audio analysis, saved sessions, and Gemini feedback.
   3. Required Gemini and Supabase environment variables are documented clearly enough for local setup.
   4. The project has a useful verifiable baseline before feature phases begin.
-**Plans**: TBD
+**Plans**: 4 (Wave 1: 01-01 workspace/contracts; Wave 2: 01-02 API and 01-03 web; Wave 3: 01-04 docs/final verification)
 **UI hint**: yes
 
 ### Phase 2: JSON Input & Pronunciation/Fluency Metrics
@@ -109,7 +109,7 @@ Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 5 -> 6
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Monorepo Foundation & Contracts | 0/TBD | Not started | - |
+| 1. Monorepo Foundation & Contracts | 0/4 | Ready to execute | - |
 | 2. JSON Input & Pronunciation/Fluency Metrics | 0/TBD | Not started | - |
 | 3. JSON-Mode IELTS Feedback | 0/TBD | Not started | - |
 | 4. Audio Upload, Recording & Streaming Analysis | 0/TBD | Not started | - |
