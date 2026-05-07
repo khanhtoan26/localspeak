@@ -15,7 +15,7 @@ Requirements for initial release. Each maps to roadmap phases.
 
 ### JSON Input
 
-- [ ] **JSON-01**: User can paste or upload speech assessment JSON matching the expected word/phoneme schema.
+- [x] **JSON-01**: User can paste or upload speech assessment JSON matching the expected word/phoneme schema.
 - [x] **JSON-02**: App validates required JSON fields and surfaces actionable errors for malformed input.
 - [x] **JSON-03**: App extracts total score, reference text, word timings, word scores, ARPAbet phones, IPA labels, and phone scores from valid JSON.
 
@@ -95,7 +95,7 @@ Which phases cover which requirements. Updated during roadmap creation.
 | AUTH-01 | Phase 5 | Pending |
 | AUTH-02 | Phase 5 | Pending |
 | AUTH-03 | Phase 5 | Pending |
-| JSON-01 | Phase 2 | Pending |
+| JSON-01 | Phase 2 | Complete |
 | JSON-02 | Phase 2 | Complete |
 | JSON-03 | Phase 2 | Complete |
 | AUD-01 | Phase 4 | Pending |
