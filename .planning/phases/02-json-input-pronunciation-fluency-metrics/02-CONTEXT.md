@@ -30,6 +30,10 @@ Phase 2 turns the Phase 1 foundation into a JSON-mode analysis flow. Learners ca
 - **D-10:** Repeated weak-phoneme patterns should prioritize the top 5 weak ARPAbet phones by repeated low scores, with IPA examples.
 - **D-11:** Word-level output should be a color-banded weak/okay/good word list with score and timing.
 - **D-12:** Fluency output should include a notable pauses list with severity, duration, and nearby words.
+- **D-17:** Word quality bands should use the approved UI-SPEC thresholds for Phase 2: weak `<0.65`, okay `>=0.65 && <0.85`, and good `>=0.85`.
+- **D-18:** MET-06 should use the researched provisional Fluency band rubric: `criticalPauseCount >= 3 || pauseRatio >= 0.30` -> `5.5`; `criticalPauseCount >= 2 || pauseRatio >= 0.20` -> `6.0`; `criticalPauseCount >= 1 || pauseRatio >= 0.15` -> `6.5`; `pauseRatio <= 0.10 && wpm >= 140 && wpm <= 160` -> `7.5`; otherwise `7.0`; cap to `6.0` when `wpm < 100 || wpm > 190`, and cap to `6.5` when `wpm < 120 || wpm > 180`.
+- **D-19:** Pause severity should use PROJECT thresholds only in Phase 2: natural/acceptable `0.3s <= gap < 0.5s`, noticeable/warning `0.5s <= gap < 1.0s`, and critical `gap >= 1.0s`. Do not add a separate `Long` severity yet.
+- **D-20:** Analysis responses should return derived/extracted analysis fields, warnings, and metrics only; do not echo the full original speech assessment JSON unless a later phase explicitly needs it.
 
 ### Result presentation style
 - **D-13:** Use a single analysis page: input panel on top, results below in warm cards.
@@ -106,6 +110,10 @@ Phase 2 turns the Phase 1 foundation into a JSON-mode analysis flow. Learners ca
 - Weak phoneme output: top 5 repeated weak ARPAbet phones with IPA examples.
 - Word output: weak/okay/good bands using score and timing.
 - Pause output: notable pauses with severity, duration, and nearby words.
+- Word band thresholds: weak `<0.65`, okay `>=0.65 && <0.85`, good `>=0.85`.
+- Fluency band rubric: 5.5 for 3+ critical pauses or pause ratio `>=0.30`; 6.0 for 2+ critical pauses or pause ratio `>=0.20`; 6.5 for 1+ critical pause or pause ratio `>=0.15`; 7.5 for pause ratio `<=0.10` with 140-160 WPM; otherwise 7.0, capped lower for very low/high WPM.
+- Pause severity thresholds: natural/acceptable `0.3s-0.5s`, noticeable/warning `0.5s-1.0s`, critical `>=1.0s`; no separate `Long` severity in Phase 2.
+- Analysis response should not include the full original speech assessment JSON; render from extracted fields and metric arrays.
 - Tone: coach-like and deterministic, e.g. "This suggests...", not Gemini-style feedback yet.
 
 </specifics>
