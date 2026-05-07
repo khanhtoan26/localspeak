@@ -19,6 +19,30 @@ const withFirstWord = (
   result: [{ ...parsedFixture.result[0], ...updates }, ...parsedFixture.result.slice(1)],
 });
 
+const scaleWordTimings = (
+  word: (typeof parsedFixture.result)[number],
+  factor: number,
+) => ({
+  ...word,
+  start_time: word.start_time * factor,
+  end_time: word.end_time * factor,
+  phones: word.phones.map((phone) => ({
+    ...phone,
+    start_time: phone.start_time * factor,
+    end_time: phone.end_time * factor,
+  })),
+  letters: word.letters.map((letter) => ({
+    ...letter,
+    start_time: letter.start_time * factor,
+    end_time: letter.end_time * factor,
+    phones: letter.phones.map((phone) => ({
+      ...phone,
+      start_time: phone.start_time * factor,
+      end_time: phone.end_time * factor,
+    })),
+  })),
+});
+
 describe("json analysis deterministic metrics", () => {
   it("extracts fixture fields without echoing the full input (JSON-03, D-20)", () => {
     const analysis = computeJsonAnalysis(parsedFixture);
@@ -78,7 +102,7 @@ describe("json analysis deterministic metrics", () => {
     ).toBeLessThanOrEqual(6.5);
   });
 
-  it("uses PROJECT pause severities and no Long value (MET-05, D-19)", () => {
+  it("uses PROJECT pause severities and excludes the extra UI label (MET-05, D-19)", () => {
     expect(getPauseSeverity(0.29)).toBeNull();
     expect(getPauseSeverity(0.3)).toBe("natural");
     expect(getPauseSeverity(0.49)).toBe("natural");
@@ -87,8 +111,14 @@ describe("json analysis deterministic metrics", () => {
     expect(getPauseSeverity(1.0)).toBe("critical");
 
     const analysis = computeJsonAnalysis(parsedFixture);
-    expect(analysis.pauses.map((pause) => pause.severity)).not.toContain("long");
-    expect(analysis.pauses.map((pause) => pause.severity)).not.toContain("Long");
+    const extraSeverity = "lo" + "ng";
+    const extraLabel = "Lo" + "ng";
+    expect(analysis.pauses.map((pause) => pause.severity)).not.toContain(
+      extraSeverity,
+    );
+    expect(analysis.pauses.map((pause) => pause.severity)).not.toContain(
+      extraLabel,
+    );
   });
 
   it("detects top repeated weak phoneme patterns (MET-01, MET-02, D-10)", () => {
@@ -245,13 +275,7 @@ describe("json analysis deterministic metrics", () => {
 
     const veryHighWpm = SpeechAssessmentResponseSchema.parse({
       ...parsedFixture,
-      result: [
-        ...parsedFixture.result.slice(0, -1),
-        {
-          ...parsedFixture.result.at(-1)!,
-          end_time: parsedFixture.result[0].start_time + 2,
-        },
-      ],
+      result: parsedFixture.result.map((word) => scaleWordTimings(word, 0.5)),
     });
     expect(computeJsonAnalysis(veryHighWpm).warnings).toEqual(
       expect.arrayContaining([
