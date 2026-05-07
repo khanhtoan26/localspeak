@@ -903,27 +903,23 @@ Source: `apps/web/components/status-panel.tsx`. [VERIFIED: codebase]
 | A8 | Pure metric functions should live in API or shared non-UI helpers rather than contracts package. | Recommended structure | If contracts package is meant to be schema-only, API-local is correct; if future packages need metrics, a shared utility package may be better. |
 | A9 | Pause label `Long` should not be used without confirmation because PROJECT says `>=1.0s` is critical. | Metric formulas | UI may require all four labels: Natural, Noticeable, Long, Critical. |
 
-## Open Questions
+## Open Questions (RESOLVED)
 
-1. **Which word band thresholds are authoritative?**
+1. **RESOLVED by D-17: Which word band thresholds are authoritative?**
    - What we know: `.planning/PROJECT.md` says Good `>=0.9`, Okay `0.7-0.9`, Weak `<0.7`; approved UI spec says Good `>=0.85`, Okay `>=0.65 && <0.85`, Weak `<0.65`. [VERIFIED: `.planning/PROJECT.md`, `02-UI-SPEC.md`]
-   - What's unclear: Whether UI spec intentionally revised the metric thresholds or only visual thresholds. [ASSUMED]
-   - Recommendation: Use the approved UI spec for Phase 2, but log the conflict and ask the user if strict metric semantics matter. [ASSUMED]
+   - Resolution: Phase 2 uses the approved UI-SPEC thresholds: weak `<0.65`, okay `>=0.65 && <0.85`, good `>=0.85`.
 
-2. **What is the exact Fluency band rubric?**
+2. **RESOLVED by D-18: What is the exact Fluency band rubric?**
    - What we know: It must use critical pauses, pause ratio, and speech-rate evidence; Band 7+ target is 140-160 WPM. [VERIFIED: `.planning/PROJECT.md`]
-   - What's unclear: Exact pause-ratio thresholds and how WPM caps/boosts the band. [VERIFIED absence in `.planning/PROJECT.md`]
-   - Recommendation: Confirm the provisional rubric before execution or implement with constants clearly named `PROVISIONAL_FLUENCY_BAND_THRESHOLDS`. [ASSUMED]
+   - Resolution: Phase 2 uses the researched provisional rubric: `criticalPauseCount >= 3 || pauseRatio >= 0.30` -> `5.5`; `criticalPauseCount >= 2 || pauseRatio >= 0.20` -> `6.0`; `criticalPauseCount >= 1 || pauseRatio >= 0.15` -> `6.5`; `pauseRatio <= 0.10 && wpm >= 140 && wpm <= 160` -> `7.5`; otherwise `7.0`; cap to `6.0` when `wpm < 100 || wpm > 190`, and cap to `6.5` when `wpm < 120 || wpm > 180`.
 
-3. **How should the UI use the `Long` pause label?**
+3. **RESOLVED by D-19: How should the UI use the `Long` pause label?**
    - What we know: UI spec lists Natural, Noticeable, Long, Critical; PROJECT says `>=1.0s` is critical. [VERIFIED: `02-UI-SPEC.md`, `.planning/PROJECT.md`]
-   - What's unclear: Whether Long should be an intermediate label above 1.0s or a display alias. [ASSUMED]
-   - Recommendation: Use Natural/Noticeable/Critical now and ask before adding Long. [ASSUMED]
+   - Resolution: Phase 2 uses PROJECT severities only: natural/acceptable `0.3s <= gap < 0.5s`, noticeable/warning `0.5s <= gap < 1.0s`, critical `gap >= 1.0s`; no separate `Long` severity.
 
-4. **Should the analysis response include the full original JSON?**
+4. **RESOLVED by D-20: Should the analysis response include the full original JSON?**
    - What we know: Existing `JsonAnalysisResponseSchema` shell includes `speechAssessment`. [VERIFIED: `packages/contracts/src/json-analysis.ts`]
-   - What's unclear: Whether that was intentional for Phase 2 rendering/debugging or just a placeholder. [ASSUMED]
-   - Recommendation: Avoid echoing full input unless tests or user requirements demand it. [ASSUMED]
+   - Resolution: Phase 2 analysis responses include derived/extracted fields, warnings, and metrics only; they do not echo the full original speech assessment JSON.
 
 ## Environment Availability
 
@@ -1088,13 +1084,13 @@ Not written by this agent due the environment’s hard “do not write files” 
 | Validation/Test Strategy | HIGH | Existing test infrastructure and baseline commands were verified. |
 | Security | MEDIUM-HIGH | No Gemini/no third-party/no secrets constraints are verified; backend size-limit implementation is assumed. |
 
-### Open Questions
+### Open Questions (RESOLVED)
 
-1. Confirm whether Phase 2 word bands should use UI spec thresholds (`0.65/0.85`) or PROJECT thresholds (`0.7/0.9`).
-2. Confirm exact Fluency band rubric for MET-06.
-3. Confirm whether the UI’s `Long` pause label should split the PROJECT `>=1.0s critical` threshold.
-4. Confirm whether analysis response should omit or include the full original speech assessment JSON.
+1. RESOLVED by D-17: Phase 2 word bands use UI spec thresholds (`0.65/0.85`).
+2. RESOLVED by D-18: MET-06 uses the researched provisional Fluency band rubric.
+3. RESOLVED by D-19: Phase 2 does not add a `Long` pause severity; PROJECT `>=1.0s` remains critical.
+4. RESOLVED by D-20: Analysis response omits the full original speech assessment JSON and returns derived/extracted fields only.
 
 ### Ready for Planning
 
-Research complete. Planner can now create PLAN.md files, but should treat the Fluency band rubric and threshold conflicts as decisions requiring confirmation before implementation.
+Research complete. Planner can now create PLAN.md files using D-17 through D-20 as locked decisions.
