@@ -1,0 +1,16 @@
+{
+  "name": "localspeak",
+  "private": true,
+  "packageManager": "pnpm@10.33.0",
+  "scripts": {
+    "dev": "concurrently \"pnpm dev:web\" \"pnpm dev:api\"",
+    "dev:web": "pnpm --filter web dev",
+    "dev:api": "pnpm --filter api start:dev",
+    "check": "pnpm -r check",
+    "test": "pnpm -r test",
+    "build": "pnpm -r build"
+  },
+  "devDependencies": {
+    "concurrently": "^9.2.1"
+  }
+}
