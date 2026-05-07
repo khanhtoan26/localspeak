@@ -2,12 +2,15 @@
 
 import { useCallback, useEffect, useMemo, useState } from "react";
 import {
+  GeminiFeedbackResponseSchema,
   JsonAnalysisPreviewResponseSchema,
   JsonAnalysisResponseSchema,
   JsonAnalysisSampleResponseSchema,
+  type GeminiFeedbackRequest,
   type JsonAnalysisPreviewResponse,
   type JsonAnalysisResponse,
 } from "@localspeak/contracts";
+import type { AiCoachState } from "./ai-coach-tab";
 import { JsonInputCard } from "./json-input-card";
 import { ResultTabs } from "./result-tabs";
 import { SummaryMetricCards } from "./summary-metric-cards";
@@ -64,6 +67,7 @@ export function JsonAnalysisPanel() {
     status: "idle",
   });
   const [resultsStale, setResultsStale] = useState(false);
+  const [aiCoachState, setAiCoachState] = useState<AiCoachState>({ status: "idle" });
 
   const syntaxState = useMemo(() => parseJson(jsonText), [jsonText]);
 
@@ -72,6 +76,7 @@ export function JsonAnalysisPanel() {
     setPreview(null);
     setPreviewError(null);
     setLastValidatedText("");
+    setAiCoachState({ status: "idle" });
     if (analysisState.status === "done") {
       setResultsStale(true);
     }
@@ -220,7 +225,58 @@ export function JsonAnalysisPanel() {
     setLastValidatedText("");
     setAnalysisState({ status: "idle" });
     setResultsStale(false);
+    setAiCoachState({ status: "idle" });
   }, [analysisState.status, jsonText, preview]);
+
+  const handleGetFeedback = useCallback(async () => {
+    if (analysisState.status !== "done") return;
+
+    setAiCoachState({ status: "loading" });
+
+    const analysis = analysisState.result;
+    const requestBody: GeminiFeedbackRequest = {
+      referenceText: analysis.extracted.referenceText,
+      pronunciationBand: analysis.summary.pronunciationBand,
+      fluencyBand: analysis.summary.fluencyBand,
+      wpm: analysis.summary.wpm,
+      pauseRatio: analysis.summary.pauseRatio,
+      weakWords: analysis.words
+        .filter((w) => w.band === "weak")
+        .map((w) => ({ word: w.word, score: w.score })),
+      weakPhonemePatterns: analysis.weakPhonemePatterns.map((p) => ({
+        arpabet: p.arpabet,
+        ipaExamples: p.ipaExamples,
+        averageScore: p.averageScore,
+        exampleWords: p.exampleWords,
+      })),
+      notablePauses: analysis.fluency.notablePauses.map((p) => ({
+        duration: p.duration,
+        severity: p.severity,
+        beforeWord: p.beforeWord,
+        afterWord: p.afterWord,
+      })),
+    };
+
+    try {
+      const response = await fetch("/api/gemini-feedback", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(requestBody),
+      });
+
+      if (!response.ok) {
+        throw new Error(`Feedback failed with status ${response.status}`);
+      }
+
+      const feedback = GeminiFeedbackResponseSchema.parse(await response.json());
+      setAiCoachState({ status: "done", feedback });
+    } catch {
+      setAiCoachState({
+        status: "error",
+        message: "AI feedback unavailable, please try again.",
+      });
+    }
+  }, [analysisState]);
 
   const lastValidationStatus = preview
     ? preview.status
@@ -284,7 +340,19 @@ export function JsonAnalysisPanel() {
               </div>
             ) : null}
             <SummaryMetricCards summary={analysisState.result.summary} />
-            <ResultTabs analysis={analysisState.result} />
+            <button
+              type="button"
+              className="json-action-button json-action-button--ai"
+              onClick={() => void handleGetFeedback()}
+              disabled={aiCoachState.status === "loading"}
+            >
+              {aiCoachState.status === "loading" ? "Generating…" : "Get AI Feedback"}
+            </button>
+            <ResultTabs
+              analysis={analysisState.result}
+              aiCoachState={aiCoachState}
+              onRetryFeedback={() => void handleGetFeedback()}
+            />
           </section>
         ) : null}
 

@@ -2,18 +2,21 @@
 
 import { useState } from "react";
 import type { JsonAnalysisResponse } from "@localspeak/contracts";
+import { AiCoachTab, type AiCoachState } from "./ai-coach-tab";
 import { PhonemesTab } from "./phonemes-tab";
 import { PausesTab } from "./pauses-tab";
 import { WordsTab } from "./words-tab";
 
-const tabs = ["Summary", "Words", "Phonemes", "Pauses"] as const;
+const tabs = ["Summary", "Words", "Phonemes", "Pauses", "AI Coach"] as const;
 type TabName = (typeof tabs)[number];
 
 type ResultTabsProps = {
   analysis: JsonAnalysisResponse;
+  aiCoachState: AiCoachState;
+  onRetryFeedback: () => void;
 };
 
-export function ResultTabs({ analysis }: ResultTabsProps) {
+export function ResultTabs({ analysis, aiCoachState, onRetryFeedback }: ResultTabsProps) {
   const [activeTab, setActiveTab] = useState<TabName>("Summary");
 
   return (
@@ -39,12 +42,15 @@ export function ResultTabs({ analysis }: ResultTabsProps) {
           <PhonemesTab patterns={analysis.weakPhonemePatterns} />
         ) : null}
         {activeTab === "Pauses" ? <PausesTab pauses={analysis.pauses} /> : null}
+        {activeTab === "AI Coach" ? (
+          <AiCoachTab state={aiCoachState} onRetry={onRetryFeedback} />
+        ) : null}
       </div>
     </section>
   );
 }
 
-function SummaryTab({ analysis }: ResultTabsProps) {
+function SummaryTab({ analysis }: { analysis: JsonAnalysisResponse }) {
   return (
     <section className="json-analysis-card">
       <h2 className="json-analysis-card__title">What this means</h2>
