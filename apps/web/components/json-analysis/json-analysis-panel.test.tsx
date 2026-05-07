@@ -1,6 +1,4 @@
-import { cleanup, fireEvent, render, screen, waitFor } from "@testing-library/react";
-import { act } from "react";
-import userEvent from "@testing-library/user-event";
+import { act, cleanup, fireEvent, render, screen } from "@testing-library/react";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import {
   JSON_ANALYSIS_MAX_BYTES,
@@ -71,17 +69,21 @@ function jsonResponse(body: unknown, ok = true) {
 
 async function advancePreviewDebounce() {
   await act(async () => {
-    await vi.advanceTimersByTimeAsync(600);
+    vi.advanceTimersByTime(600);
   });
+  await flushPromises();
+}
+
+async function flushPromises() {
+  for (let tick = 0; tick < 5; tick += 1) {
+    await act(async () => {
+      await Promise.resolve();
+    });
+  }
 }
 
 function renderPanel() {
-  const user = userEvent.setup({
-    advanceTimers: (delay) => vi.advanceTimersByTime(delay),
-  });
   render(<JsonAnalysisPanel />);
-
-  return { user };
 }
 
 describe("JsonAnalysisPanel", () => {
@@ -124,13 +126,13 @@ describe("JsonAnalysisPanel", () => {
     });
 
     await act(async () => {
-      await vi.advanceTimersByTimeAsync(599);
+      vi.advanceTimersByTime(599);
     });
     expect(fetchMock).not.toHaveBeenCalled();
 
     await advancePreviewDebounce();
 
-    await waitFor(() => expect(fetchMock).toHaveBeenCalledTimes(1));
+    expect(fetchMock).toHaveBeenCalledTimes(1);
     expect(fetchMock).toHaveBeenCalledWith("/api/json-analysis/preview", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -143,7 +145,7 @@ describe("JsonAnalysisPanel", () => {
   });
 
   it("shows malformed JSON details only inside the collapsed technical section", async () => {
-    const { user } = renderPanel();
+    renderPanel();
 
     fireEvent.change(screen.getByLabelText("Speech assessment JSON input"), {
       target: { value: '{"result":' },
@@ -157,12 +159,13 @@ describe("JsonAnalysisPanel", () => {
     ).toBeInTheDocument();
     expect(screen.queryByText(/SyntaxError|Unexpected|Expected/i)).not.toBeInTheDocument();
 
-    await user.click(screen.getByRole("button", { name: "Show technical details" }));
+    fireEvent.click(screen.getByRole("button", { name: "Show technical details" }));
+    await flushPromises();
     expect(screen.getByText(/SyntaxError|Unexpected|Expected/i)).toBeInTheDocument();
   });
 
   it("shows top backend issues first and reveals allIssues on request", async () => {
-    const { user } = renderPanel();
+    renderPanel();
     vi.mocked(fetch).mockImplementation(() => jsonResponse(invalidPreview));
     expect(invalidPreview.issueCount).toBe(invalidPreview.allIssues.length);
 
@@ -172,7 +175,7 @@ describe("JsonAnalysisPanel", () => {
     await advancePreviewDebounce();
 
     expect(
-      await screen.findByText("Some required speech assessment fields are missing or malformed."),
+      screen.getByText("Some required speech assessment fields are missing or malformed."),
     ).toBeInTheDocument();
     expect(screen.getByText("Missing Start Time")).toBeInTheDocument();
     expect(screen.getByText("path: result[0].start_time")).toBeInTheDocument();
@@ -180,11 +183,13 @@ describe("JsonAnalysisPanel", () => {
     expect(screen.queryByText("Missing Field 06")).not.toBeInTheDocument();
     expect(screen.queryByText("invalid_type: expected number")).not.toBeInTheDocument();
 
-    await user.click(screen.getByRole("button", { name: "Show all issues" }));
+    fireEvent.click(screen.getByRole("button", { name: "Show all issues" }));
+    await flushPromises();
     expect(screen.getByText("Missing Field 06")).toBeInTheDocument();
     expect(screen.getByText("path: result[5].score")).toBeInTheDocument();
 
-    await user.click(screen.getByRole("button", { name: "Show technical details" }));
+    fireEvent.click(screen.getByRole("button", { name: "Show technical details" }));
+    await flushPromises();
     expect(screen.getAllByText("invalid_type: expected number").length).toBeGreaterThan(0);
   });
 
@@ -197,7 +202,7 @@ describe("JsonAnalysisPanel", () => {
     });
     await advancePreviewDebounce();
 
-    expect(await screen.findByText("Analyzable with warnings")).toBeInTheDocument();
+    expect(screen.getByText("Analyzable with warnings")).toBeInTheDocument();
     expect(
       screen.getByText("Metrics will still be computed, but review these unusual values."),
     ).toBeInTheDocument();
@@ -206,7 +211,7 @@ describe("JsonAnalysisPanel", () => {
   });
 
   it("loads the sample JSON after confirmation and triggers preview", async () => {
-    const { user } = renderPanel();
+    renderPanel();
     const fetchMock = vi
       .fn()
       .mockImplementationOnce(() =>
@@ -221,7 +226,8 @@ describe("JsonAnalysisPanel", () => {
     fireEvent.change(screen.getByLabelText("Speech assessment JSON input"), {
       target: { value: '{"existing": true}' },
     });
-    await user.click(screen.getByRole("button", { name: "Load sample JSON" }));
+    fireEvent.click(screen.getByRole("button", { name: "Load sample JSON" }));
+    await flushPromises();
     await advancePreviewDebounce();
 
     expect(confirm).toHaveBeenCalledWith("Replace the current JSON with the sample JSON?");
@@ -239,32 +245,39 @@ describe("JsonAnalysisPanel", () => {
   });
 
   it("accepts .json uploads under 2 MB and previews the file text", async () => {
-    const { user } = renderPanel();
+    renderPanel();
     const input = screen.getByLabelText("Upload .json file");
     const file = new File([JSON.stringify(parsedFixture)], "sample.json", {
       type: "application/json",
     });
+    Object.defineProperty(file, "text", {
+      value: () => Promise.resolve(JSON.stringify(parsedFixture)),
+    });
 
     expect(input).toHaveAttribute("accept", ".json,application/json");
-    await user.upload(input, file);
+    fireEvent.change(input, { target: { files: [file] } });
+    await flushPromises();
     await advancePreviewDebounce();
 
     expect(screen.getByLabelText("Speech assessment JSON input")).toHaveValue(
       JSON.stringify(parsedFixture),
     );
-    expect(await screen.findByText("This JSON can be analyzed.")).toBeInTheDocument();
+    expect(screen.getByText("This JSON can be analyzed.")).toBeInTheDocument();
     expect(screen.getByText("sample.json")).toBeInTheDocument();
   });
 
   it("blocks uploaded files over 2 * 1024 * 1024 bytes", async () => {
-    const { user } = renderPanel();
+    renderPanel();
     const hugeFile = new File(
       ["x".repeat(JSON_ANALYSIS_MAX_BYTES + 1)],
       "huge.json",
       { type: "application/json" },
     );
 
-    await user.upload(screen.getByLabelText("Upload .json file"), hugeFile);
+    fireEvent.change(screen.getByLabelText("Upload .json file"), {
+      target: { files: [hugeFile] },
+    });
+    await flushPromises();
 
     expect(JSON_ANALYSIS_MAX_BYTES).toBe(2 * 1024 * 1024);
     expect(
@@ -276,15 +289,16 @@ describe("JsonAnalysisPanel", () => {
   });
 
   it("clears input and preview after destructive confirmation", async () => {
-    const { user } = renderPanel();
+    renderPanel();
 
     fireEvent.change(screen.getByLabelText("Speech assessment JSON input"), {
       target: { value: JSON.stringify(parsedFixture) },
     });
     await advancePreviewDebounce();
-    await screen.findByText("This JSON can be analyzed.");
+    expect(screen.getByText("This JSON can be analyzed.")).toBeInTheDocument();
 
-    await user.click(screen.getByRole("button", { name: "Clear JSON" }));
+    fireEvent.click(screen.getByRole("button", { name: "Clear JSON" }));
+    await flushPromises();
 
     expect(confirm).toHaveBeenCalledWith(
       "Clear the pasted JSON and current results? This cannot be undone.",
@@ -294,7 +308,7 @@ describe("JsonAnalysisPanel", () => {
   });
 
   it("keeps malformed backend preview responses out of success UI", async () => {
-    const { user } = renderPanel();
+    renderPanel();
     vi.mocked(fetch).mockImplementation(() =>
       jsonResponse({ contract: "json-analysis-preview.v1", status: "valid" }),
     );
@@ -305,14 +319,15 @@ describe("JsonAnalysisPanel", () => {
     await advancePreviewDebounce();
 
     expect(
-      await screen.findByText(
+      screen.getByText(
         "We couldn't validate this JSON with LocalSpeak yet. Try again after refreshing.",
       ),
     ).toBeInTheDocument();
     expect(screen.queryByText("This JSON can be analyzed.")).not.toBeInTheDocument();
     expect(screen.queryByText(/ZodError|Error:/)).not.toBeInTheDocument();
 
-    await user.click(screen.getByRole("button", { name: "Show technical details" }));
+    fireEvent.click(screen.getByRole("button", { name: "Show technical details" }));
+    await flushPromises();
     expect(screen.getByText("Backend preview response did not match the expected contract.")).toBeInTheDocument();
   });
 
@@ -342,7 +357,7 @@ describe("JsonAnalysisPanel", () => {
     });
     await advancePreviewDebounce();
 
-    expect(await screen.findByText("<script>alert(1)</script>")).toBeInTheDocument();
+    expect(screen.getByText("<script>alert(1)</script>")).toBeInTheDocument();
     expect(document.querySelector("script")).toBeNull();
   });
 });

@@ -1,5 +1,5 @@
-import { StatusPanel } from "../components/status-panel";
+import { JsonAnalysisPanel } from "../components/json-analysis/json-analysis-panel";
 
 export default function Home() {
-  return <StatusPanel />;
+  return <JsonAnalysisPanel />;
 }

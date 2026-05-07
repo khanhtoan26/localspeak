@@ -199,3 +199,261 @@ select {
     padding: 16px;
   }
 }
+
+.json-analysis-page {
+  min-height: 100vh;
+  padding: 24px;
+}
+
+.json-analysis-shell {
+  display: flex;
+  width: min(100%, 960px);
+  margin: 0 auto;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.json-analysis-header {
+  padding: 32px 0 8px;
+}
+
+.json-analysis-tag,
+.json-analysis-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  border-radius: 999px;
+  background: var(--beige-soft);
+  color: var(--accent);
+  font-size: 11px;
+  font-weight: 600;
+  line-height: 1.2;
+  padding: 4px 8px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.json-analysis-pill--danger {
+  background: #f6ebe8;
+  color: var(--danger);
+}
+
+.json-analysis-pill--warning {
+  background: #f8f1df;
+  color: var(--warning);
+}
+
+.json-analysis-title {
+  margin: 16px 0 8px;
+  color: var(--ink);
+  font-family: var(--font-display);
+  font-size: 32px;
+  font-weight: 400;
+  line-height: 1.1;
+}
+
+.json-analysis-intro,
+.json-analysis-card__detail,
+.json-input-helper,
+.json-analysis-error,
+.json-analysis-stale,
+.json-issue-row p {
+  margin: 0;
+  color: var(--ink-soft);
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 1.5;
+}
+
+.json-analysis-card {
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  background: var(--card);
+  padding: 16px;
+}
+
+.json-analysis-card--success {
+  border-color: #d9e8dd;
+}
+
+.json-analysis-card--warning {
+  border-color: #eadcb8;
+}
+
+.json-analysis-card--danger {
+  border-color: #edd0ca;
+}
+
+.json-analysis-card__header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.json-analysis-card__title,
+.json-analysis-subtitle {
+  margin: 0;
+  color: var(--ink);
+  font-size: 20px;
+  font-weight: 600;
+  line-height: 1.2;
+}
+
+.json-analysis-card__detail {
+  margin-top: 16px;
+}
+
+.json-input-label,
+.json-analysis-card__meta,
+.json-input-meta,
+.json-issue-row span,
+.json-technical-line {
+  color: var(--ink-muted);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 600;
+  line-height: 1.2;
+}
+
+.json-input-label {
+  display: block;
+  margin-top: 16px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.json-input-textarea {
+  width: 100%;
+  min-height: 280px;
+  margin-top: 8px;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: #fffdf9;
+  color: var(--ink);
+  font-family: var(--font-mono);
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 1.5;
+  padding: 16px;
+  resize: vertical;
+  white-space: pre;
+}
+
+.json-input-textarea:focus-visible,
+.json-primary-button:focus-visible,
+.json-secondary-button:focus-visible,
+.json-link-button:focus-visible {
+  border-color: var(--accent);
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.json-input-actions,
+.json-analyze-row,
+.json-input-meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  margin-top: 16px;
+}
+
+.json-input-file {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+.json-primary-button,
+.json-secondary-button,
+.json-link-button {
+  min-height: 44px;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 1.5;
+  padding: 8px 16px;
+}
+
+.json-primary-button {
+  border-color: var(--ink);
+  background: var(--ink);
+  color: #ffffff;
+}
+
+.json-secondary-button,
+.json-link-button {
+  background: var(--card);
+  color: var(--ink);
+}
+
+.json-link-button {
+  margin-top: 16px;
+  color: var(--accent);
+}
+
+.json-primary-button:disabled {
+  cursor: not-allowed;
+  opacity: 0.56;
+}
+
+.json-analysis-error {
+  margin-top: 8px;
+  color: var(--danger);
+}
+
+.json-analysis-stale {
+  color: var(--warning);
+}
+
+.json-issue-list {
+  display: flex;
+  margin: 16px 0 0;
+  padding: 0;
+  flex-direction: column;
+  gap: 8px;
+  list-style: none;
+}
+
+.json-issue-row {
+  display: flex;
+  border-radius: 14px;
+  background: var(--beige-soft);
+  flex-direction: column;
+  gap: 4px;
+  padding: 16px;
+}
+
+.json-issue-row strong {
+  color: var(--ink);
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 1.5;
+}
+
+.json-technical-details,
+.json-all-issues {
+  margin-top: 16px;
+}
+
+.json-technical-line {
+  display: block;
+  margin-top: 8px;
+  overflow-wrap: anywhere;
+}
+
+@media (max-width: 640px) {
+  .json-analysis-page {
+    padding: 16px;
+  }
+
+  .json-input-textarea {
+    min-height: 220px;
+  }
+}
