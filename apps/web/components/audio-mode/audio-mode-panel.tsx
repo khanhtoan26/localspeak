@@ -11,47 +11,45 @@ export function AudioModePanel() {
     useAudioSession(referenceText);
 
   return (
-    <div className="flex flex-col gap-6 max-w-2xl mx-auto">
+    <div className="json-analysis-card">
       {/* Reference text input */}
-      <div>
-        <label
-          htmlFor="reference-text"
-          className="block text-sm font-medium text-gray-700 mb-1"
-        >
-          Reference sentence
-        </label>
-        <input
-          id="reference-text"
-          type="text"
-          value={referenceText}
-          onChange={(e) => setReferenceText(e.target.value)}
-          placeholder="Enter the sentence you want to practice..."
-          className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-          disabled={status === "recording" || status === "connecting"}
+      <label htmlFor="reference-text" className="json-input-label">
+        Reference sentence
+      </label>
+      <input
+        id="reference-text"
+        type="text"
+        value={referenceText}
+        onChange={(e) => setReferenceText(e.target.value)}
+        placeholder="Enter the sentence you want to practice..."
+        className="json-input-textarea"
+        style={{ minHeight: "auto", padding: "12px 16px" }}
+        disabled={status === "recording" || status === "connecting"}
+      />
+
+      {/* Record button with waveform */}
+      <div style={{ marginTop: "24px" }}>
+        <RecordButton
+          status={status}
+          onStart={() => void start()}
+          onStop={stop}
+          disabled={!referenceText.trim()}
+          analyserNode={analyserNode}
         />
       </div>
 
-      {/* Record button with waveform */}
-      <RecordButton
-        status={status}
-        onStart={() => void start()}
-        onStop={stop}
-        disabled={!referenceText.trim()}
-        analyserNode={analyserNode}
-      />
-
       {/* Error display */}
       {error && (
-        <div className="p-3 bg-red-50 border border-red-200 rounded-lg text-red-700 text-sm">
-          {error}
-        </div>
+        <p className="json-analysis-error">{error}</p>
       )}
 
       {/* Live analysis output */}
-      <LiveAnalysisPanel
-        analysis={analysis}
-        isStreaming={status === "recording"}
-      />
+      <div style={{ marginTop: "24px" }}>
+        <LiveAnalysisPanel
+          analysis={analysis}
+          isStreaming={status === "recording"}
+        />
+      </div>
     </div>
   );
 }

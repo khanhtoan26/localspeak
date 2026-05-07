@@ -47,38 +47,51 @@ export function RecordButton({
   const isConnecting = status === "connecting";
 
   return (
-    <div className="flex flex-col items-center gap-3">
+    <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: "12px" }}>
       <button
         type="button"
         onClick={isRecording ? onStop : onStart}
         disabled={disabled || isConnecting}
-        className={`
-          flex items-center gap-2 px-6 py-3 rounded-full font-medium text-white transition-all
-          ${isRecording ? "bg-red-600 hover:bg-red-700" : "bg-blue-600 hover:bg-blue-700"}
-          ${disabled || isConnecting ? "opacity-50 cursor-not-allowed" : ""}
-        `}
+        className={isRecording ? "json-primary-button" : "json-primary-button"}
+        style={{
+          borderRadius: "999px",
+          background: isRecording ? "var(--danger)" : "var(--ink)",
+          borderColor: isRecording ? "var(--danger)" : "var(--ink)",
+          display: "inline-flex",
+          alignItems: "center",
+          gap: "8px",
+        }}
       >
         {isRecording && (
-          <span className="w-3 h-3 bg-red-300 rounded-full animate-pulse" />
+          <span
+            style={{
+              width: "10px",
+              height: "10px",
+              background: "#fca5a5",
+              borderRadius: "999px",
+              animation: "blink 1s step-end infinite",
+            }}
+          />
         )}
-        {isConnecting
-          ? "Connecting..."
-          : isRecording
-            ? "Stop"
-            : "Record"}
+        {isConnecting ? "Connecting..." : isRecording ? "Stop" : "Record"}
       </button>
 
       {/* Waveform visualization */}
       {isRecording && (
         <div
           ref={barsRef}
-          className="flex items-end gap-[2px] h-10"
+          style={{ display: "flex", alignItems: "flex-end", gap: "2px", height: "40px" }}
         >
           {Array.from({ length: 24 }, (_, i) => (
             <div
               key={i}
-              className="w-[3px] bg-blue-400 rounded-sm transition-[height] duration-75"
-              style={{ height: "4px" }}
+              style={{
+                width: "3px",
+                background: "var(--accent)",
+                borderRadius: "2px",
+                height: "4px",
+                transition: "height 75ms",
+              }}
             />
           ))}
         </div>

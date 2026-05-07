@@ -10,16 +10,36 @@ export function LiveAnalysisPanel({
   isStreaming,
 }: LiveAnalysisPanelProps) {
   return (
-    <div className="bg-gray-900 text-gray-100 rounded-lg p-4 min-h-[200px] font-mono text-sm leading-relaxed">
+    <div
+      style={{
+        background: "var(--ink)",
+        color: "#f5f5f0",
+        borderRadius: "14px",
+        padding: "16px",
+        minHeight: "160px",
+        fontFamily: "var(--font-mono)",
+        fontSize: "14px",
+        lineHeight: "1.6",
+      }}
+    >
       {!analysis && !isStreaming ? (
-        <p className="text-gray-500 italic">
-          Live analysis will appear here...
+        <p style={{ color: "var(--ink-muted)", fontStyle: "italic", margin: 0 }}>
+          Live analysis will appear here…
         </p>
       ) : (
-        <div className="whitespace-pre-wrap">
+        <div style={{ whiteSpace: "pre-wrap" }}>
           {analysis}
           {isStreaming && (
-            <span className="inline-block w-[2px] h-[1em] bg-gray-100 ml-[1px] animate-[blink_1s_step-end_infinite]" />
+            <span
+              style={{
+                display: "inline-block",
+                width: "2px",
+                height: "1em",
+                background: "#f5f5f0",
+                marginLeft: "1px",
+                animation: "blink 1s step-end infinite",
+              }}
+            />
           )}
         </div>
       )}
