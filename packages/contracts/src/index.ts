@@ -1,4 +1,4 @@
-export * from "./audio-analysis";
+export * from "./audio-streaming";
 export * from "./gemini-feedback";
 export * from "./json-analysis";
 export * from "./saved-session";
