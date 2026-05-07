@@ -64,7 +64,7 @@ export function useAudioSession(referenceText: string): AudioSessionState {
     // 1. Fetch ephemeral token
     let token: string;
     try {
-      const res = await fetch("/api/token", {
+      const res = await fetch("/api/audio-token/token", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ referenceText }),

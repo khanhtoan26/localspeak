@@ -2,7 +2,7 @@ import { Body, Controller, Inject, Post, BadRequestException } from "@nestjs/com
 import { TokenRequestSchema, type TokenResponse } from "@localspeak/contracts";
 import { AudioTokenService } from "./audio-token.service";
 
-@Controller("api")
+@Controller("audio-token")
 export class AudioTokenController {
   constructor(
     @Inject(AudioTokenService)
