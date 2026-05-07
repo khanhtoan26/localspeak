@@ -1,9 +1,10 @@
-import { Body, Controller, Headers, HttpCode, Post } from "@nestjs/common";
+import { Body, Controller, Headers, HttpCode, Inject, Post } from "@nestjs/common";
 import { GeminiFeedbackService } from "./gemini-feedback.service";
 
 @Controller("gemini-feedback")
 export class GeminiFeedbackController {
   constructor(
+    @Inject(GeminiFeedbackService)
     private readonly geminiFeedbackService: GeminiFeedbackService,
   ) {}
 

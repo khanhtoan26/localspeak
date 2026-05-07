@@ -1,10 +1,13 @@
-import { Body, Controller, Post, BadRequestException } from "@nestjs/common";
+import { Body, Controller, Inject, Post, BadRequestException } from "@nestjs/common";
 import { TokenRequestSchema, type TokenResponse } from "@localspeak/contracts";
 import { AudioTokenService } from "./audio-token.service";
 
 @Controller("api")
 export class AudioTokenController {
-  constructor(private readonly audioTokenService: AudioTokenService) {}
+  constructor(
+    @Inject(AudioTokenService)
+    private readonly audioTokenService: AudioTokenService,
+  ) {}
 
   @Post("token")
   async createToken(@Body() body: unknown): Promise<TokenResponse> {

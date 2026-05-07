@@ -1,9 +1,12 @@
-import { Body, Controller, Get, HttpCode, Post } from "@nestjs/common";
+import { Body, Controller, Get, HttpCode, Inject, Post } from "@nestjs/common";
 import { JsonAnalysisService } from "./json-analysis.service";
 
 @Controller("json-analysis")
 export class JsonAnalysisController {
-  constructor(private readonly jsonAnalysisService: JsonAnalysisService) {}
+  constructor(
+    @Inject(JsonAnalysisService)
+    private readonly jsonAnalysisService: JsonAnalysisService,
+  ) {}
 
   @Get("sample")
   getSample() {
