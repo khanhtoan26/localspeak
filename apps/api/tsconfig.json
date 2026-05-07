@@ -1,0 +1,13 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "module": "CommonJS",
+    "moduleResolution": "Node",
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+    "types": ["node", "jest"],
+    "baseUrl": ".",
+    "noEmit": true
+  },
+  "include": ["src/**/*.ts", "test/**/*.ts", "jest.config.ts"]
+}
