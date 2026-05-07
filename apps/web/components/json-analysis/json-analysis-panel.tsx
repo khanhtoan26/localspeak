@@ -9,6 +9,8 @@ import {
   type JsonAnalysisResponse,
 } from "@localspeak/contracts";
 import { JsonInputCard } from "./json-input-card";
+import { ResultTabs } from "./result-tabs";
+import { SummaryMetricCards } from "./summary-metric-cards";
 import { ValidationPreviewCard } from "./validation-preview-card";
 
 const PREVIEW_DEBOUNCE_MS = 600;
@@ -16,6 +18,10 @@ const PREVIEW_UNAVAILABLE_COPY =
   "We couldn't validate this JSON with LocalSpeak yet. Try again after refreshing.";
 const PREVIEW_CONTRACT_MISMATCH_COPY =
   "Backend preview response did not match the expected contract.";
+const ANALYZE_ERROR_COPY =
+  "We couldn't analyze this JSON. The backend may be unavailable or the response did not match the contract.";
+const ANALYZE_ERROR_NEXT_STEP =
+  "Check the validation preview, then try Analyze JSON again.";
 
 type SyntaxState =
   | { status: "empty" }
@@ -31,7 +37,7 @@ type AnalysisState =
   | { status: "idle" }
   | { status: "loading" }
   | { status: "done"; result: JsonAnalysisResponse }
-  | { status: "error"; message: string };
+  | { status: "error"; message: string; nextStep: string };
 
 function parseJson(text: string): SyntaxState {
   if (text.trim().length === 0) return { status: "empty" };
@@ -132,7 +138,6 @@ export function JsonAnalysisPanel() {
     preview?.acceptedForAnalysis === true &&
     lastValidatedText === jsonText &&
     !isPreviewing &&
-    !resultsStale &&
     analysisState.status !== "loading";
 
   const disabledHelper = getDisabledHelper({
@@ -165,7 +170,8 @@ export function JsonAnalysisPanel() {
     } catch {
       setAnalysisState({
         status: "error",
-        message: "We couldn't analyze this JSON yet. Try again after previewing it.",
+        message: ANALYZE_ERROR_COPY,
+        nextStep: ANALYZE_ERROR_NEXT_STEP,
       });
     }
   }, [canAnalyze, syntaxState]);
@@ -261,19 +267,32 @@ export function JsonAnalysisPanel() {
           <p className="json-analysis-stale">Input changed. Analyze again to update results.</p>
         ) : null}
 
+        {analysisState.status === "loading" ? (
+          <p className="json-analysis-loading" aria-live="polite">
+            Computing deterministic metrics from the JSON...
+          </p>
+        ) : null}
+
         {analysisState.status === "done" ? (
-          <section className="json-analysis-card" aria-live="polite">
-            <h2 className="json-analysis-card__title">Analysis ready</h2>
-            <p className="json-analysis-card__detail">
-              Results are ready for the next view. Pronunciation{" "}
-              {analysisState.result.summary.pronunciationPercentage}% · WPM{" "}
-              {analysisState.result.summary.wpm}
-            </p>
+          <section className="json-results-region" aria-live="polite">
+            {analysisState.result.warnings.length > 0 ? (
+              <div className="json-analysis-card json-analysis-card--warning">
+                <h2 className="json-analysis-card__title">Analyzable with warnings</h2>
+                <p className="json-analysis-card__detail">
+                  Metrics will still be computed, but review these unusual values.
+                </p>
+              </div>
+            ) : null}
+            <SummaryMetricCards summary={analysisState.result.summary} />
+            <ResultTabs analysis={analysisState.result} />
           </section>
         ) : null}
 
         {analysisState.status === "error" ? (
-          <p className="json-analysis-error">{analysisState.message}</p>
+          <section className="json-analysis-card json-analysis-card--danger" aria-live="polite">
+            <h2 className="json-analysis-card__title">{analysisState.message}</h2>
+            <p className="json-analysis-card__detail">{analysisState.nextStep}</p>
+          </section>
         ) : null}
       </section>
     </main>
@@ -300,7 +319,7 @@ function getDisabledHelper({
   if (isPreviewing) return "Wait for validation preview to finish.";
   if (previewError) return "Preview this JSON again before analysis.";
   if (preview && !preview.acceptedForAnalysis) return "Fix validation issues before analysis.";
-  if (resultsStale) return "Input changed. Analyze again to update results.";
+  if (resultsStale) return "Result is stale until backend validation finishes.";
   if (!preview) return "Wait for backend validation before analysis.";
   return "Ready to analyze.";
 }
