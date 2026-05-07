@@ -40,4 +40,13 @@ describe("speech assessment fixture contract", () => {
 
     expect(result.success).toBe(false);
   });
+
+  it("rejects non-http audio URLs", () => {
+    const result = SpeechAssessmentResponseSchema.safeParse({
+      ...fixture,
+      audio_url: "javascript:alert(1)",
+    });
+
+    expect(result.success).toBe(false);
+  });
 });

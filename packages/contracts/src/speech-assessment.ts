@@ -7,6 +7,12 @@ const NumericResponseTimeSchema = z.union([
   z.number().nonnegative(),
   z.string().regex(/^\d+(\.\d+)?$/, "response_time must be numeric"),
 ]);
+const HttpUrlSchema = z
+  .string()
+  .url()
+  .refine((value) => /^https?:\/\//i.test(value), {
+    message: "audio_url must be an http(s) URL",
+  });
 
 const hasValidTimeRange = (value: { start_time: number; end_time: number }) =>
   value.end_time >= value.start_time;
@@ -55,7 +61,7 @@ export const SpeechAssessmentResponseSchema = z.looseObject({
   msg: z.string().min(1),
   result: z.array(SpeechWordSchema),
   text_refs: z.string().min(1),
-  audio_url: z.string().url(),
+  audio_url: HttpUrlSchema,
   total_score: ScoreSchema,
   response_time: NumericResponseTimeSchema,
 });

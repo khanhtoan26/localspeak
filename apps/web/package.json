@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev --port ${WEB_PORT:-3000}",
-    "check": "tsc --noEmit -p tsconfig.json",
+    "check": "next typegen && tsc --noEmit -p tsconfig.json",
     "test": "vitest run",
     "build": "next build"
   },
