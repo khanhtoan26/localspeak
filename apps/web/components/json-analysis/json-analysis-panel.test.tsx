@@ -60,6 +60,191 @@ const invalidPreview = {
   warnings: [],
 };
 
+const analysisResponse = {
+  contract: "json-analysis-response.v1",
+  inputMode: "json",
+  summary: {
+    pronunciationPercentage: 89,
+    pronunciationBand: 7,
+    fluencyBand: 5.5,
+    wpm: 153,
+    pauseRatio: 0.332,
+  },
+  extracted: {
+    totalScore: 0.894,
+    referenceText: "The sample response",
+    wordCount: 3,
+    phoneCount: 9,
+    durationSeconds: 31.74,
+  },
+  pronunciation: {
+    totalScore: 0.894,
+    percentage: 89,
+    band: 7,
+    phonemeAverages: [],
+    weakPatterns: [],
+    wordBandCounts: { weak: 1, okay: 1, good: 1 },
+  },
+  fluency: {
+    durationSeconds: 31.74,
+    wordCount: 3,
+    wpm: 153,
+    totalPauseTime: 2.5,
+    pauseRatio: 0.332,
+    pauseCount: 3,
+    criticalPauseCount: 1,
+    band: 5.5,
+    notablePauses: [],
+  },
+  words: [
+    {
+      index: 0,
+      word: "<script>alert(1)</script>",
+      score: 0.64,
+      scorePercent: 64,
+      band: "weak",
+      startTime: 0,
+      endTime: 0.5,
+      duration: 0.5,
+    },
+    {
+      index: 1,
+      word: "steady",
+      score: 0.72,
+      scorePercent: 72,
+      band: "okay",
+      startTime: 0.9,
+      endTime: 1.4,
+      duration: 0.5,
+    },
+    {
+      index: 2,
+      word: "clear",
+      score: 0.91,
+      scorePercent: 91,
+      band: "good",
+      startTime: 1.8,
+      endTime: 2.2,
+      duration: 0.4,
+    },
+  ],
+  phonemes: [],
+  weakPhonemePatterns: [
+    {
+      arpabet: "T",
+      ipaExamples: ["t"],
+      averageScore: 0.51,
+      weakOccurrenceCount: 5,
+      exampleWords: ["to", "tea"],
+    },
+    {
+      arpabet: "Z",
+      ipaExamples: ["z"],
+      averageScore: 0.58,
+      weakOccurrenceCount: 4,
+      exampleWords: ["zoo"],
+    },
+    {
+      arpabet: "S",
+      ipaExamples: ["s"],
+      averageScore: 0.6,
+      weakOccurrenceCount: 3,
+      exampleWords: ["see"],
+    },
+    {
+      arpabet: "IH2",
+      ipaExamples: ["ɪ"],
+      averageScore: 0.62,
+      weakOccurrenceCount: 2,
+      exampleWords: ["city"],
+    },
+    {
+      arpabet: "R",
+      ipaExamples: ["r"],
+      averageScore: 0.64,
+      weakOccurrenceCount: 2,
+      exampleWords: ["red"],
+    },
+    {
+      arpabet: "SH",
+      ipaExamples: ["ʃ"],
+      averageScore: 0.7,
+      weakOccurrenceCount: 2,
+      exampleWords: ["ship"],
+    },
+  ],
+  pauses: [
+    {
+      index: 1,
+      severity: "critical",
+      duration: 1.4,
+      startTime: 2.2,
+      endTime: 3.6,
+      beforeWord: "clear",
+      afterWord: "again",
+      nearbyWords: "clear again",
+      explanation: "This suggests a planning or word-search pause.",
+    },
+    {
+      index: 0,
+      severity: "noticeable",
+      duration: 0.7,
+      startTime: 0.5,
+      endTime: 1.2,
+      beforeWord: "sample",
+      afterWord: "steady",
+      nearbyWords: "sample steady",
+      explanation: "This pause is noticeable in the word timing data.",
+    },
+    {
+      index: 2,
+      severity: "natural",
+      duration: 0.35,
+      startTime: 3.6,
+      endTime: 3.95,
+      beforeWord: "again",
+      afterWord: "now",
+      nearbyWords: "again now",
+      explanation: "This pause is noticeable in the word timing data.",
+    },
+  ],
+  warnings: [
+    {
+      severity: "warning",
+      code: "very_high_wpm",
+      label: "Very high WPM",
+      path: "result",
+      value: 210,
+      message: "The computed speaking rate is unusually high.",
+      hint: "Check whether the duration or timing units are correct.",
+    },
+  ],
+};
+
+const emptyAnalysisResponse = {
+  ...analysisResponse,
+  pronunciation: {
+    ...analysisResponse.pronunciation,
+    weakPatterns: [],
+    wordBandCounts: { weak: 0, okay: 2, good: 1 },
+  },
+  fluency: {
+    ...analysisResponse.fluency,
+    notablePauses: [],
+    pauseCount: 0,
+    criticalPauseCount: 0,
+  },
+  words: analysisResponse.words.map((word) => ({
+    ...word,
+    score: Math.max(word.score, 0.72),
+    scorePercent: Math.max(word.scorePercent, 72),
+    band: word.index === 2 ? "good" : "okay",
+  })),
+  weakPhonemePatterns: [],
+  pauses: [],
+  warnings: [],
+};
+
 function jsonResponse(body: unknown, ok = true) {
   return Promise.resolve({
     ok,
@@ -84,6 +269,24 @@ async function flushPromises() {
 
 function renderPanel() {
   render(<JsonAnalysisPanel />);
+}
+
+async function previewValid() {
+  fireEvent.change(screen.getByLabelText("Speech assessment JSON input"), {
+    target: { value: JSON.stringify(parsedFixture) },
+  });
+  await advancePreviewDebounce();
+  expect(screen.getByText("This JSON can be analyzed.")).toBeInTheDocument();
+}
+
+async function previewAndAnalyze(response: unknown = analysisResponse) {
+  vi.mocked(fetch)
+    .mockImplementationOnce(() => jsonResponse(validPreview))
+    .mockImplementationOnce(() => jsonResponse(response));
+
+  await previewValid();
+  fireEvent.click(screen.getByRole("button", { name: "Analyze JSON" }));
+  await flushPromises();
 }
 
 describe("JsonAnalysisPanel", () => {
@@ -359,5 +562,186 @@ describe("JsonAnalysisPanel", () => {
 
     expect(screen.getByText("<script>alert(1)</script>")).toBeInTheDocument();
     expect(document.querySelector("script")).toBeNull();
+  });
+
+  it("posts to analyze only after the manual Analyze JSON action", async () => {
+    renderPanel();
+    vi.mocked(fetch)
+      .mockImplementationOnce(() => jsonResponse(validPreview))
+      .mockImplementationOnce(() => jsonResponse(analysisResponse));
+
+    await previewValid();
+    expect(fetch).not.toHaveBeenCalledWith(
+      "/api/json-analysis/analyze",
+      expect.anything(),
+    );
+
+    fireEvent.click(screen.getByRole("button", { name: "Analyze JSON" }));
+    await flushPromises();
+
+    expect(fetch).toHaveBeenLastCalledWith("/api/json-analysis/analyze", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ speechAssessment: parsedFixture }),
+    });
+  });
+
+  it("shows a safe analyze error when the backend response is malformed", async () => {
+    renderPanel();
+    await previewAndAnalyze({ contract: "json-analysis-response.v1" });
+
+    expect(
+      screen.getByText(
+        "We couldn't analyze this JSON. The backend may be unavailable or the response did not match the contract.",
+      ),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByText("Check the validation preview, then try Analyze JSON again."),
+    ).toBeInTheDocument();
+    expect(screen.queryByText("Pronunciation percentage")).not.toBeInTheDocument();
+  });
+
+  it("renders ordered summary metrics with exact helper copy and formatting", async () => {
+    renderPanel();
+    await previewAndAnalyze();
+
+    expect(screen.getAllByTestId("summary-metric-label").map((node) => node.textContent)).toEqual([
+      "Pronunciation percentage",
+      "Pronunciation Band",
+      "Fluency Band",
+      "WPM",
+      "Pause ratio",
+    ]);
+    expect(screen.getByText("Computed from word and phone scores.")).toBeInTheDocument();
+    expect(
+      screen.getByText("Estimated from deterministic score thresholds."),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByText("Estimated from WPM, pause ratio, and critical pauses."),
+    ).toBeInTheDocument();
+    expect(screen.getByText("Words per minute from word timings.")).toBeInTheDocument();
+    expect(
+      screen.getByText("Share of speaking time spent in detected pauses."),
+    ).toBeInTheDocument();
+    expect(screen.getByText("89%")).toBeInTheDocument();
+    expect(screen.getByText("7.0")).toBeInTheDocument();
+    expect(screen.getByText("5.5")).toBeInTheDocument();
+    expect(screen.getByText("153")).toBeInTheDocument();
+    expect(screen.getByText("33%")).toBeInTheDocument();
+  });
+
+  it("renders deterministic summary tab copy and warning callouts", async () => {
+    renderPanel();
+    await previewAndAnalyze();
+
+    expect(screen.getByRole("button", { name: "Summary" })).toHaveAttribute(
+      "aria-pressed",
+      "true",
+    );
+    expect(screen.getByRole("button", { name: "Words" })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Phonemes" })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Pauses" })).toBeInTheDocument();
+    expect(screen.getByText("What this means")).toBeInTheDocument();
+    expect(screen.getByText("Pronunciation signals")).toBeInTheDocument();
+    expect(screen.getByText("Fluency signals")).toBeInTheDocument();
+    expect(screen.getByText("Warnings")).toBeInTheDocument();
+    expect(screen.getByText(/This suggests/)).toBeInTheDocument();
+    expect(screen.queryByText(/Gemini says|examiner thinks|IELTS examiner/i)).not.toBeInTheDocument();
+    expect(screen.getByText("Very high WPM")).toBeInTheDocument();
+    expect(screen.getByText("The computed speaking rate is unusually high.")).toBeInTheDocument();
+  });
+
+  it("renders original-order word bands with scores and timings", async () => {
+    renderPanel();
+    await previewAndAnalyze();
+
+    fireEvent.click(screen.getByRole("button", { name: "Words" }));
+
+    const wordRows = screen.getAllByTestId("word-row");
+    expect(wordRows.map((row) => row.textContent)).toEqual([
+      expect.stringContaining("<script>alert(1)</script>Weak - 64%0.00s-0.50s"),
+      expect.stringContaining("steadyOkay - 72%0.90s-1.40s"),
+      expect.stringContaining("clearGood - 91%1.80s-2.20s"),
+    ]);
+    expect(document.querySelector("script")).toBeNull();
+  });
+
+  it("renders up to five repeated weak phoneme patterns and the empty state", async () => {
+    renderPanel();
+    await previewAndAnalyze();
+
+    fireEvent.click(screen.getByRole("button", { name: "Phonemes" }));
+
+    expect(screen.getAllByTestId("phoneme-row")).toHaveLength(5);
+    expect(screen.getByText("T / t")).toBeInTheDocument();
+    expect(screen.getByText("5 weak occurrences - average 51%")).toBeInTheDocument();
+    expect(screen.getByText("Examples: to, tea")).toBeInTheDocument();
+    expect(screen.queryByText("SH / ʃ")).not.toBeInTheDocument();
+
+    cleanup();
+    renderPanel();
+    await previewAndAnalyze(emptyAnalysisResponse);
+    fireEvent.click(screen.getByRole("button", { name: "Phonemes" }));
+
+    expect(screen.getByText("No repeated weak pattern found.")).toBeInTheDocument();
+    expect(
+      screen.getByText(
+        "The JSON did not show the same low-scoring phone repeated at least twice.",
+      ),
+    ).toBeInTheDocument();
+  });
+
+  it("renders pause severities without Long pause text and shows empty states", async () => {
+    renderPanel();
+    await previewAndAnalyze();
+
+    fireEvent.click(screen.getByRole("button", { name: "Pauses" }));
+
+    expect(screen.getByText("Critical")).toBeInTheDocument();
+    expect(screen.getByText("Noticeable")).toBeInTheDocument();
+    expect(screen.getByText("Natural")).toBeInTheDocument();
+    expect(screen.getByText("1.40s between \"clear\" and \"again\"")).toBeInTheDocument();
+    expect(screen.getByText("gap: 2.20s-3.60s")).toBeInTheDocument();
+    expect(
+      screen.getByText("This suggests a planning or word-search pause."),
+    ).toBeInTheDocument();
+    expect(screen.queryByText("Long pause")).not.toBeInTheDocument();
+
+    cleanup();
+    renderPanel();
+    await previewAndAnalyze(emptyAnalysisResponse);
+    fireEvent.click(screen.getByRole("button", { name: "Pauses" }));
+
+    expect(screen.getByText("No notable pauses found.")).toBeInTheDocument();
+    expect(
+      screen.getByText(
+        "The word timings did not include pauses long enough to flag in this analysis.",
+      ),
+    ).toBeInTheDocument();
+  });
+
+  it("shows a positive empty weak-word state when no weak words are returned", async () => {
+    renderPanel();
+    await previewAndAnalyze(emptyAnalysisResponse);
+
+    fireEvent.click(screen.getByRole("button", { name: "Words" }));
+
+    expect(screen.getByText("No major weak words found.")).toBeInTheDocument();
+    expect(
+      screen.getByText("Most word scores are in the okay or good range for this sample."),
+    ).toBeInTheDocument();
+  });
+
+  it("marks successful results stale when the input changes", async () => {
+    renderPanel();
+    await previewAndAnalyze();
+
+    fireEvent.change(screen.getByLabelText("Speech assessment JSON input"), {
+      target: { value: JSON.stringify({ ...parsedFixture, msg: "changed" }) },
+    });
+
+    expect(
+      screen.getByText("Input changed. Analyze again to update results."),
+    ).toBeInTheDocument();
   });
 });
