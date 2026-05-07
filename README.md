@@ -35,6 +35,8 @@ pnpm dev:api
 
 The web app uses a same-origin rewrite from `/api/:path*` to the local API server at `http://localhost:3001`.
 
+Each `pnpm dev*` command builds `@localspeak/contracts` first so the API and web app can resolve the shared package from a fresh install.
+
 ## Verification commands
 
 ```bash
@@ -61,6 +63,8 @@ SUPABASE_SECRET_KEY=
 ```
 
 `GEMINI_API_KEY` and `SUPABASE_SECRET_KEY` are backend-only secrets. Do not put them in frontend files and do not prefix them with `NEXT_PUBLIC_`.
+
+The API dev script loads `apps/api/.env` automatically at startup.
 
 ### Frontend web app
 
