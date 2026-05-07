@@ -12,7 +12,7 @@ Build a greenfield monorepo from a runnable Next.js/NestJS foundation into a com
 
 Decimal phases appear between their surrounding integers in numeric order.
 
-- [ ] **Phase 1: Monorepo Foundation & Contracts** - Project can run locally with frontend, backend, shared contracts, and documented configuration.
+- [x] **Phase 1: Monorepo Foundation & Contracts** - Project can run locally with frontend, backend, shared contracts, and documented configuration.
 - [ ] **Phase 2: JSON Input & Pronunciation/Fluency Metrics** - Learner can submit speech assessment JSON and receive deterministic pronunciation/fluency metrics.
 - [ ] **Phase 3: JSON-Mode IELTS Feedback** - Learner can request concise Gemini feedback from computed JSON metrics without exposing API keys.
 - [ ] **Phase 4: Audio Upload, Recording & Streaming Analysis** - Learner can upload or record audio and receive streamed Gemini pronunciation/fluency analysis.
@@ -109,7 +109,7 @@ Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 5 -> 6
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Monorepo Foundation & Contracts | 4/4 | Ready for verification | - |
+| 1. Monorepo Foundation & Contracts | 4/4 | Complete | 2026-05-07 |
 | 2. JSON Input & Pronunciation/Fluency Metrics | 0/TBD | Not started | - |
 | 3. JSON-Mode IELTS Feedback | 0/TBD | Not started | - |
 | 4. Audio Upload, Recording & Streaming Analysis | 0/TBD | Not started | - |
