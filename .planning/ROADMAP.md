@@ -78,7 +78,13 @@ Plans:
   3. User can record audio from the browser microphone and stream it in real-time to Gemini Live API.
   4. User can see real-time streamed Gemini analysis output as audio is being processed.
   5. Audio-mode feedback identifies pronunciation accuracy issues, IPA phoneme errors, pauses, hesitations, speech rate, fillers, priority errors, and drills.
-**Plans**: TBD
+**Plans**: 3 (Wave 1: 04-01 contracts+token; Wave 2: 04-02 audio capture+session; Wave 3: 04-03 UI+integration)
+
+Plans:
+- [ ] 04-01-PLAN.md — Contracts + backend token endpoint
+- [ ] 04-02-PLAN.md — Audio capture pipeline + Gemini Live session hook
+- [ ] 04-03-PLAN.md — Audio Mode UI components + app tab switching
+
 **UI hint**: yes
 
 ### Phase 5: Auth & Saved Analysis History (Drizzle + Postgres)
