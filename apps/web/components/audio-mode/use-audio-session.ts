@@ -20,6 +20,7 @@ export interface AudioSessionState {
   status: AudioSessionStatus;
   analysis: string;
   error: string | null;
+  analyserNode: AnalyserNode | null;
   start: () => Promise<void>;
   stop: () => void;
 }
@@ -28,6 +29,7 @@ export function useAudioSession(referenceText: string): AudioSessionState {
   const [status, setStatus] = useState<AudioSessionStatus>("idle");
   const [analysis, setAnalysis] = useState("");
   const [error, setError] = useState<string | null>(null);
+  const [analyserNode, setAnalyserNode] = useState<AnalyserNode | null>(null);
 
   const sessionRef = useRef<Session | null>(null);
   const audioCtxRef = useRef<AudioContext | null>(null);
@@ -46,6 +48,7 @@ export function useAudioSession(referenceText: string): AudioSessionState {
       sessionRef.current.close();
       sessionRef.current = null;
     }
+    setAnalyserNode(null);
   }, []);
 
   const stop = useCallback(() => {
@@ -120,6 +123,11 @@ export function useAudioSession(referenceText: string): AudioSessionState {
     audioCtxRef.current = audioCtx;
     const source = audioCtx.createMediaStreamSource(stream);
 
+    const analyser = audioCtx.createAnalyser();
+    analyser.fftSize = 256;
+    source.connect(analyser);
+    setAnalyserNode(analyser);
+
     await audioCtx.audioWorklet.addModule("/audio-worklet-processor.js");
     const workletNode = new AudioWorkletNode(audioCtx, "pcm-processor");
 
@@ -143,5 +151,5 @@ export function useAudioSession(referenceText: string): AudioSessionState {
     };
   }, [cleanup]);
 
-  return { status, analysis, error, start, stop };
+  return { status, analysis, error, analyserNode, start, stop };
 }
