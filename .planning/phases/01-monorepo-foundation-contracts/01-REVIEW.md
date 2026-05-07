@@ -1,82 +1,102 @@
 ---
+status: clean
 phase: 01-monorepo-foundation-contracts
-reviewed: 2026-05-07T06:01:51Z
+reviewed: 2026-05-07T13:23:00Z
 depth: standard
-files_reviewed: 24
+files_reviewed: 43
 files_reviewed_list:
-  - package.json
-  - pnpm-workspace.yaml
-  - tsconfig.base.json
   - .gitignore
-  - packages/contracts/package.json
-  - packages/contracts/tsconfig.json
-  - packages/contracts/src/index.ts
-  - packages/contracts/src/speech-assessment.ts
-  - packages/contracts/test/speech-assessment.fixture.test.ts
+  - README.md
+  - apps/api/.env.example
+  - apps/api/jest.config.ts
   - apps/api/package.json
+  - apps/api/src/app.module.ts
+  - apps/api/src/config/env.spec.ts
   - apps/api/src/config/env.ts
-  - apps/api/src/health/health.controller.ts
   - apps/api/src/contracts/contracts.controller.ts
-  - apps/api/test/health.e2e-spec.ts
+  - apps/api/src/contracts/contracts.module.ts
+  - apps/api/src/health/health.controller.ts
+  - apps/api/src/health/health.module.ts
+  - apps/api/src/main.ts
   - apps/api/test/contracts.e2e-spec.ts
-  - apps/web/package.json
-  - apps/web/next.config.ts
+  - apps/api/test/health.e2e-spec.ts
+  - apps/api/tsconfig.build.json
+  - apps/api/tsconfig.json
+  - apps/web/.env.example
+  - apps/web/app/globals.css
   - apps/web/app/layout.tsx
   - apps/web/app/page.tsx
-  - apps/web/app/globals.css
-  - apps/web/components/status-panel.tsx
   - apps/web/components/status-card.tsx
   - apps/web/components/status-panel.test.tsx
-  - README.md
+  - apps/web/components/status-panel.tsx
+  - apps/web/next-env.d.ts
+  - apps/web/next.config.ts
+  - apps/web/package.json
+  - apps/web/test/setup.ts
+  - apps/web/tsconfig.json
+  - apps/web/vitest.config.mts
+  - package.json
+  - packages/contracts/package.json
+  - packages/contracts/src/audio-analysis.ts
+  - packages/contracts/src/gemini-feedback.ts
+  - packages/contracts/src/index.ts
+  - packages/contracts/src/json-analysis.ts
+  - packages/contracts/src/saved-session.ts
+  - packages/contracts/src/speech-assessment.ts
+  - packages/contracts/test/speech-assessment.fixture.test.ts
+  - packages/contracts/tsconfig.json
+  - packages/contracts/vitest.config.mts
+  - pnpm-workspace.yaml
+  - tsconfig.base.json
 findings:
   critical: 0
-  warning: 2
+  warning: 0
   info: 0
-  total: 2
-status: issues_found
+  total: 0
 ---
 
 # Phase 1: Code Review Report
 
-**Reviewed:** 2026-05-07T06:01:51Z
+**Reviewed:** 2026-05-07T13:23:00Z
 **Depth:** standard
-**Files Reviewed:** 24
-**Status:** issues_found
+**Files Reviewed:** 43
+**Status:** clean
 
 ## Summary
 
-Reviewed the Phase 1 monorepo foundation files: pnpm workspace configuration, shared `@localspeak/contracts` Zod schemas, Nest API environment validation and endpoints, Next status page/rewrite, tests, and README/env documentation.
+Reviewed the Phase 1 monorepo foundation source and configuration files for genuine bugs, security vulnerabilities, logic errors, type-safety problems, and test/verification gaps that could hide real failures.
 
-No critical security issues were found. In particular:
+No Critical, Warning, or Info findings were identified.
 
-- Gemini and Supabase secret keys are documented as backend-only.
-- No `NEXT_PUBLIC_` secret usage was found.
-- `/health` returns generic status only and does not call external services.
-- No broad CORS enablement was found in the reviewed API bootstrap path.
-- The Next rewrite uses a server-side `API_INTERNAL_URL`, not a browser-exposed public env variable.
+All reviewed files meet quality standards. No issues found.
 
-Two correctness issues were found around runtime validation. The shared speech-assessment contract validates basic shape but still accepts domain-invalid vendor data, and the frontend status panel trusts API JSON via TypeScript casts instead of runtime validation.
+## Previously Reported Warning Verification
 
-## Warnings
+The previously reported warnings were explicitly rechecked and are resolved:
 
-### WR-01: Speech assessment contract accepts domain-invalid vendor JSON
+1. **Root dev/check/test should not rely on ignored `packages/contracts/dist` in a fresh clone.** Resolved. Root `dev`, `dev:web`, `dev:api`, `check`, and `test` scripts build `@localspeak/contracts` before starting dependent apps/checks/tests.
 
-**File:** `packages/contracts/src/speech-assessment.ts:3-38`
+2. **Root/API test paths should include the API e2e endpoint tests.** Resolved. `apps/api/package.json` runs `pnpm test:unit && pnpm test:e2e`, and `test:e2e` uses `--testMatch '**/test/**/*.e2e-spec.ts'`. Verified both `contracts.e2e-spec.ts` and `health.e2e-spec.ts` run.
 
-**Issue:** The schema validates that vendor fields are numbers/strings/arrays, but it does not enforce important domain invariants. Examples currently accepted include negative timestamps, `end_time` before `start_time`, negative scores, scores above the expected vendor scale, and non-URL `audio_url` values. Because this schema is the shared contract for vendor speech-assessment JSON, invalid assessment data can be accepted silently and later used by the API/UI as if it were meaningful.
+3. **API required secret validation should reject whitespace-only values.** Resolved. `requiredEnv()` trims string values before enforcing `.min(1)`, and tests cover whitespace-only `GEMINI_API_KEY`.
 
-**Fix:** Add range and relationship validation while keeping `z.looseObject` if preserving unknown vendor fields is intentional. If the vendor uses a different score range for `score_raw`, define a separate `RawScoreSchema` that matches the real API contract.
+4. **Frontend status UI should not show success for malformed 200 JSON responses.** Resolved. `StatusPanel` parses both health and contract responses with Zod before setting success states, and tests cover malformed 200 responses.
 
-### WR-02: Frontend status panel trusts API JSON and can show success for malformed responses
+5. **Speech assessment contracts should reject domain-invalid timing/score/url data while preserving unknown vendor fields, including rejecting non-http(s) audio URLs.** Resolved. Speech assessment schemas enforce nonnegative timing, valid time ranges, score bounds, HTTP(S) audio URLs, and use loose objects to preserve unknown vendor fields. Tests cover invalid timing/score data, non-http audio URLs, and unknown vendor field preservation.
 
-**File:** `apps/web/components/status-panel.tsx:57-62,80-96`
+6. **Web typecheck should not depend on pre-existing ignored `.next` route type output.** Resolved. `apps/web/package.json` runs `next typegen && tsc --noEmit -p tsconfig.json`, so route types are generated before TypeScript checks.
 
-**Issue:** The component casts `response.json()` directly to `HealthResponse` and `ContractResponse`. For `/api/health`, an empty or malformed `200` response still renders as `"localspeak-api is responding"` with `status: ok` because fallback defaults are applied. For the contract endpoint, non-boolean truthy values such as `{ "valid": "false" }` are treated as valid. This can hide broken API responses instead of surfacing them as unavailable/invalid.
+## Verification Commands Run
 
-**Fix:** Validate API response bodies at runtime before rendering success. Parsing failures should fall into the existing `.catch()` path, preventing malformed JSON from being presented as a healthy/valid state.
+- `pnpm check` - passed
+- `pnpm test` - passed
+- `pnpm --filter api test` - passed, including 2 API e2e endpoint tests
+- `pnpm --filter web test` - passed
+- `pnpm --filter @localspeak/contracts test` - passed
+- `pnpm build` - passed
 
 ---
 
-_Reviewed: 2026-05-07T06:01:51Z_
+_Reviewed: 2026-05-07T13:23:00Z_
 _Reviewer: the agent (gsd-code-reviewer)_
 _Depth: standard_
