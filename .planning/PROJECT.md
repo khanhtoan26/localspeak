@@ -4,7 +4,7 @@
 
 IELTS Pronunciation Scorer is a web app for English pronunciation training, optimized first for Vietnamese IELTS learners. It analyzes either phoneme-level speech assessment JSON or raw uploaded/recorded audio, then returns IELTS-style Pronunciation and Fluency feedback with concrete error patterns and drills.
 
-The app uses a Next.js frontend, a NestJS backend for LLM/API processing, Gemini for multimodal and structured analysis, and Supabase for authentication and saved learner history.
+The app uses a Next.js frontend, a NestJS backend for LLM/API processing and token provisioning, Gemini for multimodal and structured analysis (including Gemini Live API with ephemeral tokens for real-time audio), Drizzle ORM over Postgres via `DATABASE_URL` for data persistence, and simple email/password sessions for authentication.
 
 ## Core Value
 
@@ -18,10 +18,10 @@ Vietnamese IELTS learners can identify their highest-priority pronunciation and 
 
 ### Active
 
-- [ ] User can sign in and save pronunciation analysis history through Supabase.
+- [ ] User can sign in and save pronunciation analysis history through email/password sessions (Drizzle + Postgres via DATABASE_URL).
 - [ ] User can paste/import speech assessment JSON that contains total score, reference text, word timings, word scores, and phoneme-level ARPAbet/IPA scores.
 - [ ] User can upload an audio file or record from the microphone in the browser.
-- [ ] Backend can send audio and structured prompts to Gemini without exposing the Gemini API key to the browser.
+- [ ] Backend provisions ephemeral tokens so the browser can stream audio directly to Gemini Live API via WebSocket without exposing the Gemini API key.
 - [ ] App computes pronunciation metrics from JSON, including per-phoneme averages, systematic error patterns, word color bands, and IELTS-style Pronunciation band estimate.
 - [ ] App computes fluency metrics from word timings, including pause severity, pause ratio, speech rate/WPM, and IELTS-style Fluency band estimate.
 - [ ] App can ask Gemini for concise IELTS-oriented analysis that returns Pronunciation Band, Fluency Band, top 3 errors with examples, and 3 actionable drills.
@@ -34,8 +34,9 @@ Vietnamese IELTS learners can identify their highest-priority pronunciation and 
 - Lexical Resource and Grammar scoring — deferred so v1 stays focused on Pronunciation and Fluency.
 - Full IELTS Speaking simulation — deferred until the scoring and feedback loop is useful.
 - Teacher/tutor review workflows — the first user is the individual learner.
-- Anonymous-only usage — v1 should support Supabase Auth and saved history.
-- Frontend-only API calls to Gemini — the backend owns LLM processing to protect API keys and centralize prompt logic.
+- Anonymous-only usage — v1 should support email/password auth and saved history.
+- Frontend-only API calls to Gemini — the backend provisions ephemeral tokens for Gemini Live API but the API key stays server-side.
+- Supabase — replaced by Drizzle ORM over Postgres via DATABASE_URL for all data needs.
 
 ## Context
 
@@ -71,9 +72,12 @@ Key learner-specific insights:
 
 ## Constraints
 
-- **Tech stack**: Next.js frontend, NestJS backend, Supabase Auth/database, Gemini API — chosen by project direction.
+- **Tech stack**: Next.js frontend, NestJS backend, Drizzle ORM + Postgres (via `DATABASE_URL`), Gemini API (including Gemini Live API with ephemeral tokens for real-time audio) — chosen by project direction.
 - **Architecture**: Monorepo — frontend and backend should be developed together with shared contracts where useful.
-- **Security**: Gemini API key must stay server-side — frontend-only LLM calls are out of scope for v1.
+- **Security**: Gemini API key must stay server-side — backend provisions ephemeral tokens for browser-to-Gemini Live WebSocket connections.
+- **Database**: Use `DATABASE_URL` env var only — no Supabase JS client or anon/service keys.
+- **Auth**: Simple email/password with server-side sessions stored in Postgres via Drizzle.
+- **Audio streaming**: Browser connects directly to Gemini Live API via WebSocket using ephemeral tokens; backend does NOT proxy audio data.
 - **Input support**: Audio mode should support upload and in-browser microphone recording — learners need both existing recordings and new attempts.
 - **Scoring scope**: v1 focuses on Pronunciation and Fluency only — Lexical Resource and Grammar are deferred.
 - **UI direction**: Use a rich web UI with mode toggle, dashboard header, tabs, timeline, charts, and streamed LLM response.

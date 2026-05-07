@@ -9,7 +9,7 @@ Requirements for initial release. Each maps to roadmap phases.
 
 ### Auth & History
 
-- [ ] **AUTH-01**: User can sign up, log in, log out, and maintain a session through Supabase Auth.
+- [ ] **AUTH-01**: User can sign up, log in, log out, and maintain a server-side session (email/password with Drizzle + Postgres via DATABASE_URL).
 - [ ] **AUTH-02**: User can view saved pronunciation analysis sessions linked to their account.
 - [ ] **AUTH-03**: User can reopen a saved analysis session and see its metrics, feedback, and original input metadata.
 
@@ -21,10 +21,10 @@ Requirements for initial release. Each maps to roadmap phases.
 
 ### Audio Input
 
-- [ ] **AUD-01**: User can upload supported audio files for IELTS-style pronunciation and fluency analysis.
-- [ ] **AUD-02**: User can record audio from the browser microphone and submit it for analysis.
-- [ ] **AUD-03**: Backend sends audio to Gemini without exposing API keys to the frontend.
-- [ ] **AUD-04**: User can see streamed Gemini analysis output while audio analysis is running.
+- [ ] **AUD-01**: User can stream audio from the browser microphone in real-time to Gemini Live API via WebSocket.
+- [ ] **AUD-02**: User can record audio from the browser microphone and receive real-time streamed analysis.
+- [ ] **AUD-03**: Backend provisions ephemeral tokens so the browser connects directly to Gemini Live API without exposing the GEMINI_API_KEY.
+- [ ] **AUD-04**: User can see real-time streamed Gemini analysis output while audio is being processed.
 
 ### Metrics
 
@@ -56,7 +56,7 @@ Requirements for initial release. Each maps to roadmap phases.
 
 - [x] **ARCH-01**: Monorepo contains a Next.js frontend app and NestJS backend app with clear local development commands.
 - [x] **ARCH-02**: Shared request/response contracts exist for JSON analysis, audio analysis, saved sessions, and Gemini feedback.
-- [ ] **ARCH-03**: Supabase schema stores users' analysis sessions, derived metrics, feedback, input mode, and timestamps.
+- [ ] **ARCH-03**: Drizzle ORM schema over Postgres (via DATABASE_URL) stores users' analysis sessions, derived metrics, feedback, input mode, and timestamps.
 - [x] **ARCH-04**: Server-side configuration documents required Gemini and Supabase environment variables.
 
 ## v2 Requirements
@@ -81,8 +81,9 @@ Explicitly excluded. Documented to prevent scope creep.
 
 | Feature | Reason |
 |---------|--------|
-| Frontend-only Gemini API calls | Gemini API keys must stay server-side. |
-| Anonymous-only product model | v1 uses Supabase Auth so learners can track progress. |
+| Frontend-only Gemini API calls | Backend provisions ephemeral tokens; API key stays server-side. |
+| Supabase JS client / anon keys | Replaced by Drizzle ORM + DATABASE_URL for all data needs. |
+| Anonymous-only product model | v1 uses email/password auth so learners can track progress. |
 | Full IELTS criteria scoring in v1 | v1 is focused on Pronunciation and Fluency. |
 | Native mobile app | Web-first implementation is sufficient for upload, recording, and analysis. |
 

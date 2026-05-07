@@ -70,9 +70,11 @@ Recent decisions affecting current work:
 
 - Initialization: Optimize first for Vietnamese IELTS learners.
 - Initialization: Include both JSON and audio analysis modes in v1.
-- Initialization: Use Next.js frontend, NestJS backend, Supabase Auth/database, and Gemini API.
-- Initialization: Keep Gemini API calls server-side through the backend.
+- Initialization: Use Next.js frontend, NestJS backend, Drizzle ORM + Postgres (DATABASE_URL), and Gemini API.
+- Initialization: Keep Gemini API key server-side; provision ephemeral tokens for browser-to-Gemini Live WebSocket.
 - Initialization: Limit v1 scoring to Pronunciation and Fluency.
+- Arch change: Drop Supabase entirely — use DATABASE_URL with Drizzle ORM, simple email/password sessions.
+- Arch change: Audio uses Gemini Live API with ephemeral tokens — browser streams directly to Gemini, no backend proxy.
 
 ### Pending Todos
 

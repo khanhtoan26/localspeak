@@ -15,8 +15,8 @@ Decimal phases appear between their surrounding integers in numeric order.
 - [x] **Phase 1: Monorepo Foundation & Contracts** - Project can run locally with frontend, backend, shared contracts, and documented configuration.
 - [x] **Phase 2: JSON Input & Pronunciation/Fluency Metrics** - Learner can submit speech assessment JSON and receive deterministic pronunciation/fluency metrics. (completed 2026-05-07)
 - [ ] **Phase 3: JSON-Mode IELTS Feedback** - Learner can request concise Gemini feedback from computed JSON metrics without exposing API keys.
-- [ ] **Phase 4: Audio Upload, Recording & Streaming Analysis** - Learner can upload or record audio and receive streamed Gemini pronunciation/fluency analysis.
-- [ ] **Phase 5: Supabase Auth & Saved Analysis History** - Learner can authenticate and revisit saved pronunciation analysis sessions.
+- [ ] **Phase 4: Audio Streaming via Gemini Live API** - Learner can record or stream audio from the browser and receive real-time pronunciation/fluency analysis via Gemini Live API.
+- [ ] **Phase 5: Auth & Saved Analysis History (Drizzle + Postgres)** - Learner can authenticate with email/password and revisit saved pronunciation analysis sessions.
 - [ ] **Phase 6: Learner Dashboard & Analysis Views** - Learner can understand results through dashboard metrics, mode switching, tabs, timelines, word chips, phoneme rankings, and streamed IELTS analysis UI.
 
 ## Phase Details
@@ -61,27 +61,27 @@ Decimal phases appear between their surrounding integers in numeric order.
 **Plans**: TBD
 **UI hint**: no
 
-### Phase 4: Audio Upload, Recording & Streaming Analysis
+### Phase 4: Audio Streaming via Gemini Live API
 
-**Goal**: Learner can upload or record audio and receive streamed Gemini pronunciation/fluency analysis.
+**Goal**: Learner can record or stream audio from the browser and receive real-time pronunciation/fluency analysis via Gemini Live API.
 **Depends on**: Phase 3
 **Requirements**: AUD-01, AUD-02, AUD-03, AUD-04, GEM-03
 **Success Criteria** (what must be TRUE):
-  1. User can upload a supported audio file for IELTS-style pronunciation and fluency analysis.
-  2. User can record audio from the browser microphone and submit it for analysis.
-  3. Backend sends audio to Gemini without exposing Gemini API keys to the frontend.
-  4. User can see streamed Gemini analysis output while audio analysis is running.
+  1. Backend provisions ephemeral tokens via a `/api/token` endpoint using the server-side GEMINI_API_KEY.
+  2. Browser establishes a direct WebSocket connection to Gemini Live API using the ephemeral token (no backend audio proxy).
+  3. User can record audio from the browser microphone and stream it in real-time to Gemini Live API.
+  4. User can see real-time streamed Gemini analysis output as audio is being processed.
   5. Audio-mode feedback identifies pronunciation accuracy issues, IPA phoneme errors, pauses, hesitations, speech rate, fillers, priority errors, and drills.
 **Plans**: TBD
 **UI hint**: yes
 
-### Phase 5: Supabase Auth & Saved Analysis History
+### Phase 5: Auth & Saved Analysis History (Drizzle + Postgres)
 
-**Goal**: Learner can authenticate and revisit saved pronunciation analysis sessions.
+**Goal**: Learner can authenticate with email/password and revisit saved pronunciation analysis sessions.
 **Depends on**: Phase 4
 **Requirements**: AUTH-01, AUTH-02, AUTH-03, ARCH-03
 **Success Criteria** (what must be TRUE):
-  1. User can sign up, log in, log out, and maintain a Supabase-backed session.
+  1. User can sign up, log in, log out, and maintain a server-side session (email/password, stored in Postgres via Drizzle ORM using DATABASE_URL).
   2. User's analysis sessions are stored with derived metrics, feedback, input mode, input metadata, and timestamps.
   3. User can view saved pronunciation analysis sessions linked to their account.
   4. User can reopen a saved session and see its metrics, feedback, and original input metadata.
@@ -112,8 +112,8 @@ Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 5 -> 6
 | 1. Monorepo Foundation & Contracts | 4/4 | Complete | 2026-05-07 |
 | 2. JSON Input & Pronunciation/Fluency Metrics | 4/4 | Complete | 2026-05-07 |
 | 3. JSON-Mode IELTS Feedback | 0/TBD | Not started | - |
-| 4. Audio Upload, Recording & Streaming Analysis | 0/TBD | Not started | - |
-| 5. Supabase Auth & Saved Analysis History | 0/TBD | Not started | - |
+| 4. Audio Streaming via Gemini Live API | 0/TBD | Not started | - |
+| 5. Auth & Saved Analysis History (Drizzle + Postgres) | 0/TBD | Not started | - |
 | 6. Learner Dashboard & Analysis Views | 0/TBD | Not started | - |
 
 ## Requirement Coverage
