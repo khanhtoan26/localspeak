@@ -58,8 +58,14 @@ Decimal phases appear between their surrounding integers in numeric order.
   2. User receives JSON-mode IELTS feedback containing Pronunciation Band, Fluency Band, top 3 errors with examples, and 3 actionable drills.
   3. Feedback is concise, direct, learner-specific, and avoids generic pronunciation advice.
   4. Gemini API calls are handled by the backend rather than the browser.
-**Plans**: TBD
-**UI hint**: no
+**Plans**: 3 (Wave 1: 03-01 contracts/env; Wave 2: 03-02 backend API and 03-03 frontend UI in parallel)
+
+Plans:
+- [ ] 03-01-PLAN.md — Enrich Gemini feedback contracts + env cleanup
+- [ ] 03-02-PLAN.md — Backend Gemini service + controller
+- [ ] 03-03-PLAN.md — Frontend AI Coach button + tab
+
+**UI hint**: yes
 
 ### Phase 4: Audio Streaming via Gemini Live API
 
