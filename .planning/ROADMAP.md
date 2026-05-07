@@ -13,7 +13,7 @@ Build a greenfield monorepo from a runnable Next.js/NestJS foundation into a com
 Decimal phases appear between their surrounding integers in numeric order.
 
 - [x] **Phase 1: Monorepo Foundation & Contracts** - Project can run locally with frontend, backend, shared contracts, and documented configuration.
-- [ ] **Phase 2: JSON Input & Pronunciation/Fluency Metrics** - Learner can submit speech assessment JSON and receive deterministic pronunciation/fluency metrics.
+- [x] **Phase 2: JSON Input & Pronunciation/Fluency Metrics** - Learner can submit speech assessment JSON and receive deterministic pronunciation/fluency metrics. (completed 2026-05-07)
 - [ ] **Phase 3: JSON-Mode IELTS Feedback** - Learner can request concise Gemini feedback from computed JSON metrics without exposing API keys.
 - [ ] **Phase 4: Audio Upload, Recording & Streaming Analysis** - Learner can upload or record audio and receive streamed Gemini pronunciation/fluency analysis.
 - [ ] **Phase 5: Supabase Auth & Saved Analysis History** - Learner can authenticate and revisit saved pronunciation analysis sessions.
@@ -110,7 +110,7 @@ Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 5 -> 6
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
 | 1. Monorepo Foundation & Contracts | 4/4 | Complete | 2026-05-07 |
-| 2. JSON Input & Pronunciation/Fluency Metrics | 3/4 | In Progress | - |
+| 2. JSON Input & Pronunciation/Fluency Metrics | 4/4 | Complete | 2026-05-07 |
 | 3. JSON-Mode IELTS Feedback | 0/TBD | Not started | - |
 | 4. Audio Upload, Recording & Streaming Analysis | 0/TBD | Not started | - |
 | 5. Supabase Auth & Saved Analysis History | 0/TBD | Not started | - |
@@ -123,7 +123,7 @@ Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 5 -> 6
 | ARCH-01 | Phase 1 | Complete |
 | ARCH-02 | Phase 1 | Complete |
 | ARCH-04 | Phase 1 | Complete |
-| JSON-01 | Phase 2 | Pending |
+| JSON-01 | Phase 2 | Complete |
 | JSON-02 | Phase 2 | Complete |
 | JSON-03 | Phase 2 | Complete |
 | MET-01 | Phase 2 | Complete |
