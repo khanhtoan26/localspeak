@@ -16,8 +16,8 @@ Requirements for initial release. Each maps to roadmap phases.
 ### JSON Input
 
 - [ ] **JSON-01**: User can paste or upload speech assessment JSON matching the expected word/phoneme schema.
-- [ ] **JSON-02**: App validates required JSON fields and surfaces actionable errors for malformed input.
-- [ ] **JSON-03**: App extracts total score, reference text, word timings, word scores, ARPAbet phones, IPA labels, and phone scores from valid JSON.
+- [x] **JSON-02**: App validates required JSON fields and surfaces actionable errors for malformed input.
+- [x] **JSON-03**: App extracts total score, reference text, word timings, word scores, ARPAbet phones, IPA labels, and phone scores from valid JSON.
 
 ### Audio Input
 
@@ -28,12 +28,12 @@ Requirements for initial release. Each maps to roadmap phases.
 
 ### Metrics
 
-- [ ] **MET-01**: App computes per-phoneme average scores grouped by ARPAbet phone type.
-- [ ] **MET-02**: App detects systematic pronunciation patterns when weak phoneme scores repeat at least twice below the configured threshold.
-- [ ] **MET-03**: App computes word quality bands and color categories from word scores.
-- [ ] **MET-04**: App estimates IELTS Pronunciation band from the configured score thresholds.
-- [ ] **MET-05**: App computes pause gaps, pause severity, total pause time, pause ratio, duration, word count, and WPM from word timings.
-- [ ] **MET-06**: App estimates IELTS Fluency band from critical pauses, pause ratio, and speech-rate evidence.
+- [x] **MET-01**: App computes per-phoneme average scores grouped by ARPAbet phone type.
+- [x] **MET-02**: App detects systematic pronunciation patterns when weak phoneme scores repeat at least twice below the configured threshold.
+- [x] **MET-03**: App computes word quality bands and color categories from word scores.
+- [x] **MET-04**: App estimates IELTS Pronunciation band from the configured score thresholds.
+- [x] **MET-05**: App computes pause gaps, pause severity, total pause time, pause ratio, duration, word count, and WPM from word timings.
+- [x] **MET-06**: App estimates IELTS Fluency band from critical pauses, pause ratio, and speech-rate evidence.
 
 ### Gemini Feedback
 
@@ -96,18 +96,18 @@ Which phases cover which requirements. Updated during roadmap creation.
 | AUTH-02 | Phase 5 | Pending |
 | AUTH-03 | Phase 5 | Pending |
 | JSON-01 | Phase 2 | Pending |
-| JSON-02 | Phase 2 | Pending |
-| JSON-03 | Phase 2 | Pending |
+| JSON-02 | Phase 2 | Complete |
+| JSON-03 | Phase 2 | Complete |
 | AUD-01 | Phase 4 | Pending |
 | AUD-02 | Phase 4 | Pending |
 | AUD-03 | Phase 4 | Pending |
 | AUD-04 | Phase 4 | Pending |
-| MET-01 | Phase 2 | Pending |
-| MET-02 | Phase 2 | Pending |
-| MET-03 | Phase 2 | Pending |
-| MET-04 | Phase 2 | Pending |
-| MET-05 | Phase 2 | Pending |
-| MET-06 | Phase 2 | Pending |
+| MET-01 | Phase 2 | Complete |
+| MET-02 | Phase 2 | Complete |
+| MET-03 | Phase 2 | Complete |
+| MET-04 | Phase 2 | Complete |
+| MET-05 | Phase 2 | Complete |
+| MET-06 | Phase 2 | Complete |
 | GEM-01 | Phase 3 | Pending |
 | GEM-02 | Phase 3 | Pending |
 | GEM-03 | Phase 4 | Pending |

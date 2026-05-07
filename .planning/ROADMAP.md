@@ -45,7 +45,7 @@ Decimal phases appear between their surrounding integers in numeric order.
   3. App extracts total score, reference text, word timings, word scores, ARPAbet phones, IPA labels, and phone scores from valid JSON.
   4. App computes pronunciation outputs including phoneme averages, repeated weak-phone patterns, word quality bands, and IELTS-style Pronunciation band.
   5. App computes fluency outputs including pause severity, pause ratio, duration, word count, WPM, and IELTS-style Fluency band.
-**Plans**: TBD
+**Plans**: 4 (Wave 1: 02-01 shared contracts/metrics; Wave 2: 02-02 backend endpoints; Wave 3: 02-03 JSON input UI; Wave 4: 02-04 results rendering/final verification)
 **UI hint**: yes
 
 ### Phase 3: JSON-Mode IELTS Feedback
@@ -110,7 +110,7 @@ Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 5 -> 6
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
 | 1. Monorepo Foundation & Contracts | 4/4 | Complete | 2026-05-07 |
-| 2. JSON Input & Pronunciation/Fluency Metrics | 0/TBD | Not started | - |
+| 2. JSON Input & Pronunciation/Fluency Metrics | 1/4 | In Progress | - |
 | 3. JSON-Mode IELTS Feedback | 0/TBD | Not started | - |
 | 4. Audio Upload, Recording & Streaming Analysis | 0/TBD | Not started | - |
 | 5. Supabase Auth & Saved Analysis History | 0/TBD | Not started | - |
@@ -124,14 +124,14 @@ Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 5 -> 6
 | ARCH-02 | Phase 1 | Complete |
 | ARCH-04 | Phase 1 | Complete |
 | JSON-01 | Phase 2 | Pending |
-| JSON-02 | Phase 2 | Pending |
-| JSON-03 | Phase 2 | Pending |
-| MET-01 | Phase 2 | Pending |
-| MET-02 | Phase 2 | Pending |
-| MET-03 | Phase 2 | Pending |
-| MET-04 | Phase 2 | Pending |
-| MET-05 | Phase 2 | Pending |
-| MET-06 | Phase 2 | Pending |
+| JSON-02 | Phase 2 | Complete |
+| JSON-03 | Phase 2 | Complete |
+| MET-01 | Phase 2 | Complete |
+| MET-02 | Phase 2 | Complete |
+| MET-03 | Phase 2 | Complete |
+| MET-04 | Phase 2 | Complete |
+| MET-05 | Phase 2 | Complete |
+| MET-06 | Phase 2 | Complete |
 | GEM-01 | Phase 3 | Pending |
 | GEM-02 | Phase 3 | Pending |
 | GEM-04 | Phase 3 | Pending |
