@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
+    "dev": "next dev --port ${WEB_PORT:-3000}",
     "check": "tsc --noEmit -p tsconfig.json",
     "test": "vitest run",
     "build": "next build"
@@ -12,7 +12,8 @@
     "@localspeak/contracts": "workspace:*",
     "next": "^16.0.7",
     "react": "^19.2.1",
-    "react-dom": "^19.2.1"
+    "react-dom": "^19.2.1",
+    "zod": "^4.1.13"
   },
   "devDependencies": {
     "@testing-library/jest-dom": "^6.9.1",

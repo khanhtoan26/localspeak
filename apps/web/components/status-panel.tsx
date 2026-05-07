@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
+import { z } from "zod";
 import { StatusCard, type StatusBadge } from "./status-card";
 
 const API_UNAVAILABLE_COPY =
@@ -14,16 +15,16 @@ type CardState = {
   meta?: string;
 };
 
-type HealthResponse = {
-  status?: string;
-  service?: string;
-};
+const HealthResponseSchema = z.object({
+  status: z.literal("ok"),
+  service: z.literal("localspeak-api"),
+});
 
-type ContractResponse = {
-  valid?: boolean;
-  contract?: string;
-  issues?: unknown[];
-};
+const ContractResponseSchema = z.object({
+  valid: z.boolean(),
+  contract: z.string().min(1),
+  issues: z.array(z.unknown()),
+});
 
 const checkingHealth: CardState = {
   badge: "Checking",
@@ -54,11 +55,11 @@ export function StatusPanel() {
           throw new Error(`Health check failed: ${response.status}`);
         }
 
-        const data = (await response.json()) as HealthResponse;
+        const data = HealthResponseSchema.parse(await response.json());
         setApiHealth({
           badge: "OK",
-          detail: `${data.service ?? "localspeak-api"} is responding.`,
-          meta: `status: ${data.status ?? "ok"}`,
+          detail: `${data.service} is responding.`,
+          meta: `status: ${data.status}`,
         });
       })
       .catch(() => {
@@ -77,21 +78,19 @@ export function StatusPanel() {
           throw new Error(`Contract check failed: ${response.status}`);
         }
 
-        const data = (await response.json()) as ContractResponse;
+        const data = ContractResponseSchema.parse(await response.json());
         if (!data.valid) {
           setContractFixture({
             badge: "Invalid",
             detail: CONTRACT_INVALID_COPY,
-            meta: `issues: ${data.issues?.length ?? "unknown"}`,
+            meta: `issues: ${data.issues.length}`,
           });
           return;
         }
 
         setContractFixture({
           badge: "Valid",
-          detail: `${
-            data.contract ?? "speech-assessment-response.v1"
-          } fixture validates.`,
+          detail: `${data.contract} fixture validates.`,
           meta: "issues: 0",
         });
       })

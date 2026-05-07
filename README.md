@@ -37,6 +37,8 @@ The web app uses a same-origin rewrite from `/api/:path*` to the local API serve
 
 Each `pnpm dev*` command builds `@localspeak/contracts` first so the API and web app can resolve the shared package from a fresh install.
 
+If port `3000` is already in use, set `WEB_PORT` for the frontend and update `API_INTERNAL_URL` if the API is not running on `3001`.
+
 ## Verification commands
 
 ```bash

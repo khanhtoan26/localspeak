@@ -23,4 +23,21 @@ describe("speech assessment fixture contract", () => {
 
     expect(result.vendor_extra).toEqual({ kept: true });
   });
+
+  it("rejects invalid timing and score ranges", () => {
+    const result = SpeechAssessmentResponseSchema.safeParse({
+      ...fixture,
+      total_score: 1.2,
+      result: [
+        {
+          ...fixture.result[0],
+          start_time: 2,
+          end_time: 1,
+          score: -0.1,
+        },
+      ],
+    });
+
+    expect(result.success).toBe(false);
+  });
 });

@@ -1,41 +1,63 @@
 import { z } from "zod";
 
-export const SpeechPhoneSchema = z.looseObject({
-  start_time: z.number(),
-  end_time: z.number(),
-  phone: z.string(),
-  phone_ipa: z.string(),
-  score: z.number(),
-  score_raw: z.number(),
-});
+const TimeSchema = z.number().nonnegative();
+const ScoreSchema = z.number().min(0).max(1);
+const RawScoreSchema = z.number();
+const NumericResponseTimeSchema = z.union([
+  z.number().nonnegative(),
+  z.string().regex(/^\d+(\.\d+)?$/, "response_time must be numeric"),
+]);
 
-export const SpeechLetterSchema = z.looseObject({
-  start_time: z.number(),
-  end_time: z.number(),
-  letter: z.string(),
-  phones: z.array(SpeechPhoneSchema),
-  score: z.number(),
-  score_raw: z.number(),
-});
+const hasValidTimeRange = (value: { start_time: number; end_time: number }) =>
+  value.end_time >= value.start_time;
 
-export const SpeechWordSchema = z.looseObject({
-  start_time: z.number(),
-  end_time: z.number(),
-  word: z.string(),
-  score: z.number(),
-  score_raw: z.number(),
-  phones: z.array(SpeechPhoneSchema),
-  letters: z.array(SpeechLetterSchema),
-});
+const timeRangeIssue = {
+  message: "end_time must be greater than or equal to start_time",
+  path: ["end_time"],
+};
+
+export const SpeechPhoneSchema = z
+  .looseObject({
+    start_time: TimeSchema,
+    end_time: TimeSchema,
+    phone: z.string().min(1),
+    phone_ipa: z.string().min(1),
+    score: ScoreSchema,
+    score_raw: RawScoreSchema,
+  })
+  .refine(hasValidTimeRange, timeRangeIssue);
+
+export const SpeechLetterSchema = z
+  .looseObject({
+    start_time: TimeSchema,
+    end_time: TimeSchema,
+    letter: z.string().min(1),
+    phones: z.array(SpeechPhoneSchema),
+    score: ScoreSchema,
+    score_raw: RawScoreSchema,
+  })
+  .refine(hasValidTimeRange, timeRangeIssue);
+
+export const SpeechWordSchema = z
+  .looseObject({
+    start_time: TimeSchema,
+    end_time: TimeSchema,
+    word: z.string().min(1),
+    score: ScoreSchema,
+    score_raw: RawScoreSchema,
+    phones: z.array(SpeechPhoneSchema),
+    letters: z.array(SpeechLetterSchema),
+  })
+  .refine(hasValidTimeRange, timeRangeIssue);
 
 export const SpeechAssessmentResponseSchema = z.looseObject({
   success: z.boolean(),
-  msg: z.string(),
+  msg: z.string().min(1),
   result: z.array(SpeechWordSchema),
-  text_refs: z.string(),
-  audio_url: z.string(),
-  total_score: z.number(),
-  response_time: z.union([z.string(), z.number()]),
+  text_refs: z.string().min(1),
+  audio_url: z.string().url(),
+  total_score: ScoreSchema,
+  response_time: NumericResponseTimeSchema,
 });
 
 export type SpeechPhone = z.infer<typeof SpeechPhoneSchema>;

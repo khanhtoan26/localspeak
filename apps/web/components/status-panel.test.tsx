@@ -69,6 +69,30 @@ describe("StatusPanel", () => {
     ).toHaveLength(2);
   });
 
+  it("does not show success for malformed API responses", async () => {
+    vi.stubGlobal(
+      "fetch",
+      vi
+        .fn()
+        .mockImplementationOnce(() => jsonResponse({ status: "ok" }))
+        .mockImplementationOnce(() =>
+          jsonResponse({
+            valid: "false",
+            contract: "speech-assessment-response.v1",
+            issues: [],
+          }),
+        ),
+    );
+
+    render(<StatusPanel />);
+
+    expect(
+      await screen.findAllByText(
+        "Couldn't reach LocalSpeak API. Start the backend with pnpm dev:api or run pnpm dev, then refresh.",
+      ),
+    ).toHaveLength(2);
+  });
+
   it("re-runs both checks when Refresh Status is clicked", async () => {
     const fetchMock = vi
       .fn()
