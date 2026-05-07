@@ -1,0 +1,201 @@
+:root {
+  --bg: #fafaf7;
+  --card: #ffffff;
+  --ink: #161513;
+  --ink-soft: #5a564f;
+  --ink-muted: #9b968d;
+  --line: #ebe7df;
+  --beige-soft: #f1ede4;
+  --accent: #d97757;
+  --success: #3f6b4f;
+  --warning: #b88a3e;
+  --danger: #9f2d20;
+  --font-display: "Instrument Serif", "Iowan Old Style", Georgia, serif;
+  --font-body: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  min-height: 100%;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--font-body);
+}
+
+button,
+input,
+textarea,
+select {
+  font: inherit;
+}
+
+.status-page {
+  min-height: 100vh;
+  padding: 24px;
+}
+
+.status-shell {
+  display: flex;
+  width: min(100%, 720px);
+  margin: 0 auto;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.status-header {
+  padding: 32px 0 8px;
+}
+
+.status-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  border-radius: 999px;
+  background: var(--beige-soft);
+  color: var(--accent);
+  font-size: 11px;
+  font-weight: 600;
+  line-height: 1.2;
+  padding: 4px 8px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.status-title {
+  margin: 16px 0 8px;
+  color: var(--ink);
+  font-family: var(--font-display);
+  font-size: 32px;
+  font-weight: 400;
+  line-height: 1.1;
+}
+
+.status-intro,
+.status-helper {
+  margin: 0;
+  color: var(--ink-soft);
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 1.5;
+}
+
+.status-card {
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  background: var(--card);
+  padding: 16px;
+}
+
+.status-card__header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.status-card__title {
+  margin: 0;
+  color: var(--ink);
+  font-size: 20px;
+  font-weight: 600;
+  line-height: 1.2;
+}
+
+.status-card__body {
+  margin-top: 16px;
+}
+
+.status-card__detail {
+  margin: 0;
+  color: var(--ink-soft);
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 1.5;
+}
+
+.status-card__meta {
+  margin: 8px 0 0;
+  color: var(--ink-muted);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 600;
+  line-height: 1.2;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.status-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  border-radius: 999px;
+  padding: 4px 8px;
+  font-size: 11px;
+  font-weight: 600;
+  line-height: 1.2;
+}
+
+.status-badge::before {
+  width: 8px;
+  height: 8px;
+  border-radius: 999px;
+  background: currentColor;
+  content: "";
+}
+
+.status-badge--checking {
+  background: var(--beige-soft);
+  color: var(--warning);
+}
+
+.status-badge--ok,
+.status-badge--valid {
+  background: #edf5ef;
+  color: var(--success);
+}
+
+.status-badge--unavailable,
+.status-badge--invalid {
+  background: #f6ebe8;
+  color: var(--danger);
+}
+
+.status-refresh {
+  min-height: 44px;
+  border: 1px solid transparent;
+  border-radius: 14px;
+  background: var(--ink);
+  color: #ffffff;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 1.5;
+  padding: 16px 24px;
+}
+
+.status-refresh:hover,
+.status-refresh:focus-visible {
+  border-color: var(--accent);
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.status-refresh:disabled {
+  cursor: wait;
+  opacity: 0.64;
+}
+
+@media (max-width: 640px) {
+  .status-page {
+    padding: 16px;
+  }
+}
