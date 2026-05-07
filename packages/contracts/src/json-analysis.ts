@@ -867,7 +867,7 @@ function issueHint(
   const jsonPath = formatJsonPath(path);
   switch (code) {
     case "missing_required_field":
-      return `Add the missing value at ${jsonPath}.`;
+      return `Add the missing value for ${jsonPath}.`;
     case "invalid_range":
       return "Scores must be between 0 and 1, and timings must be nonnegative.";
     case "invalid_url":

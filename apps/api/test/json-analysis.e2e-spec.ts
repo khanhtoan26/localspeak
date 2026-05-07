@@ -20,6 +20,7 @@ const createApp = async (): Promise<NestExpressApplication> => {
 
   const app = moduleRef.createNestApplication<NestExpressApplication>({
     bodyParser: false,
+    logger: false,
   });
   app.useBodyParser("json", { limit: "2mb" });
   await app.init();
