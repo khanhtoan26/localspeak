@@ -258,8 +258,8 @@ select {
 }
 
 .json-analysis-page {
-  min-height: 100vh;
-  padding: 24px;
+  min-height: auto;
+  padding: 0;
 }
 
 .json-analysis-shell {
@@ -330,6 +330,7 @@ select {
 }
 
 .json-analysis-card {
+  min-width: 0;
   border: 1px solid var(--line);
   border-radius: 18px;
   background: var(--card);
@@ -488,6 +489,7 @@ select {
 
 .json-results-region {
   display: flex;
+  min-width: 0;
   flex-direction: column;
   gap: 24px;
 }
@@ -520,6 +522,7 @@ select {
 
 .json-results-main {
   display: grid;
+  min-width: 0;
   grid-template-columns: minmax(0, 2fr) minmax(280px, 1fr);
   align-items: start;
   gap: 24px;
@@ -585,6 +588,7 @@ select {
 
 .json-results-tabs {
   display: flex;
+  min-width: 0;
   flex-direction: column;
   gap: 16px;
 }
@@ -1149,7 +1153,31 @@ select {
 
 @media (max-width: 640px) {
   .json-analysis-page {
-    padding: 16px;
+    padding: 0;
+  }
+
+  .json-analysis-shell {
+    gap: 16px;
+  }
+
+  .json-analysis-header {
+    padding: 16px 0 0;
+  }
+
+  .json-analysis-title {
+    font-size: 28px;
+  }
+
+  .json-results-region {
+    gap: 16px;
+  }
+
+  .json-priority-card,
+  .json-analysis-card,
+  .json-input-disclosure,
+  .saved-sessions-panel {
+    border-radius: 16px;
+    padding: 14px;
   }
 
   .json-input-textarea {
@@ -1157,15 +1185,25 @@ select {
   }
 
   .json-metric-grid {
-    grid-template-columns: 1fr;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .json-metric-card {
+    border-radius: 16px;
+    padding: 14px;
+  }
+
+  .json-metric-card__value {
+    font-size: 28px;
   }
 
   .json-results-main {
     grid-template-columns: 1fr;
+    gap: 16px;
   }
 
   .pause-summary-grid {
-    grid-template-columns: 1fr;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
   .pause-timeline {

@@ -1,4 +1,4 @@
-import { expect, test } from "@playwright/test";
+import { expect, type Page, test } from "@playwright/test";
 
 const validPreview = {
   contract: "json-analysis-preview.v1",
@@ -105,9 +105,7 @@ const analysisResponse = {
   warnings: [],
 };
 
-test("polished dashboard leads with results and keeps secondary controls quiet", async ({
-  page,
-}) => {
+async function mockDashboardApi(page: Page) {
   await page.route("**/api/json-analysis/preview", async (route) => {
     await route.fulfill({ json: validPreview });
   });
@@ -121,6 +119,21 @@ test("polished dashboard leads with results and keeps secondary controls quiet",
     }
     await route.fulfill({ json: { session: null }, status: 201 });
   });
+}
+
+async function completeJsonAnalysis(page: Page) {
+  await page
+    .getByLabel("Speech assessment JSON input")
+    .fill(JSON.stringify({ result: [] }));
+  await expect(page.getByRole("button", { name: "Analyze JSON" })).toBeEnabled();
+  await page.getByRole("button", { name: "Analyze JSON" }).click();
+  await expect(page.getByRole("heading", { name: "What should I practice next?" })).toBeVisible();
+}
+
+test("polished dashboard leads with results and keeps secondary controls quiet", async ({
+  page,
+}) => {
+  await mockDashboardApi(page);
 
   await page.goto("/");
   await expect(page.getByRole("button", { name: "JSON Analysis" })).toHaveAttribute(
@@ -131,12 +144,7 @@ test("polished dashboard leads with results and keeps secondary controls quiet",
     page.getByText("Record from your microphone and watch live transcript feedback."),
   ).toBeVisible();
 
-  const input = page.getByLabel("Speech assessment JSON input");
-  await input.fill(JSON.stringify({ result: [] }));
-  await expect(page.getByRole("button", { name: "Analyze JSON" })).toBeEnabled();
-  await page.getByRole("button", { name: "Analyze JSON" }).click();
-
-  await expect(page.getByRole("heading", { name: "What should I practice next?" })).toBeVisible();
+  await completeJsonAnalysis(page);
   await expect(page.getByText("Start with the TH / theta sound pattern.")).toBeVisible();
   await expect(page.getByTestId("summary-metric-label")).toHaveText([
     "Pronunciation",
@@ -157,4 +165,29 @@ test("polished dashboard leads with results and keeps secondary controls quiet",
   await expect(
     page.getByText("Record from your microphone and watch live transcript feedback."),
   ).toBeVisible();
+});
+
+test("mobile JSON layout stays within the same phone shell as live audio", async ({
+  page,
+}) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await mockDashboardApi(page);
+
+  await page.goto("/");
+  await completeJsonAnalysis(page);
+  await expect(page.getByTestId("summary-metric-label")).toHaveCount(4);
+
+  const jsonWidth = await page.evaluate(() => ({
+    clientWidth: document.documentElement.clientWidth,
+    scrollWidth: document.documentElement.scrollWidth,
+  }));
+  expect(jsonWidth.scrollWidth).toBeLessThanOrEqual(jsonWidth.clientWidth);
+
+  await page.getByRole("button", { name: "Live Audio Practice" }).click();
+  await expect(page.getByLabel("Reference sentence")).toBeVisible();
+  const audioWidth = await page.evaluate(() => ({
+    clientWidth: document.documentElement.clientWidth,
+    scrollWidth: document.documentElement.scrollWidth,
+  }));
+  expect(audioWidth.scrollWidth).toBeLessThanOrEqual(audioWidth.clientWidth);
 });
