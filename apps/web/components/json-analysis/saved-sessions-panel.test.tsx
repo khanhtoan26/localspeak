@@ -34,6 +34,7 @@ describe("SavedSessionsPanel", () => {
 
   afterEach(() => {
     cleanup();
+    vi.restoreAllMocks();
     vi.unstubAllGlobals();
     window.localStorage.clear();
   });
@@ -187,6 +188,25 @@ describe("SavedSessionsPanel", () => {
     expect(
       screen.getByText("This browser cannot create secure local saved-session keys."),
     ).toBeInTheDocument();
+    expect(fetchMock).not.toHaveBeenCalled();
+  });
+
+  it("disables saved attempts when localStorage access is blocked", () => {
+    vi.spyOn(Storage.prototype, "getItem").mockImplementation(() => {
+      throw new DOMException("Storage blocked", "SecurityError");
+    });
+    const fetchMock = vi.fn();
+    vi.stubGlobal("fetch", fetchMock);
+
+    render(
+      <SavedSessionsPanel
+        analysis={createJsonAnalysisResponseFixture()}
+        aiCoachState={{ status: "idle" }}
+        onReopen={vi.fn()}
+      />,
+    );
+
+    expect(screen.getByText("Saved attempts unavailable")).toBeInTheDocument();
     expect(fetchMock).not.toHaveBeenCalled();
   });
 });

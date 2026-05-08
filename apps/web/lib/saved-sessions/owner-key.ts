@@ -9,11 +9,11 @@ export function getOrCreateOwnerKey(): string {
 }
 
 export function tryGetOrCreateOwnerKey(): string | null {
-  const existing = window.localStorage.getItem(OWNER_KEY_STORAGE_KEY);
-  if (existing) return existing;
-
-  const cryptoApi = globalThis.crypto;
   try {
+    const existing = window.localStorage.getItem(OWNER_KEY_STORAGE_KEY);
+    if (existing) return existing;
+
+    const cryptoApi = globalThis.crypto;
     const ownerKey =
       typeof cryptoApi?.randomUUID === "function"
         ? cryptoApi.randomUUID()
