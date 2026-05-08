@@ -55,6 +55,31 @@ select {
   width: min(100%, 1200px);
 }
 
+.status-shell--practice {
+  width: min(100%, 1040px);
+}
+
+.status-shell--practice.status-shell--dashboard {
+  width: min(100%, 1200px);
+}
+
+.practice-layout {
+  display: grid;
+  grid-template-columns: minmax(180px, 220px) minmax(0, 1fr);
+  align-items: start;
+  gap: 16px;
+}
+
+.practice-sidebar {
+  position: sticky;
+  top: 24px;
+  align-self: start;
+}
+
+.practice-content {
+  min-width: 0;
+}
+
 .mode-panel {
   width: 100%;
 }
@@ -204,21 +229,20 @@ select {
 
 .mode-switch-list {
   display: flex;
+  flex-direction: column;
   gap: 8px;
-  overflow-x: auto;
-  padding-bottom: 4px;
 }
 
 .mode-switch-button {
   display: flex;
-  min-width: min(100%, 260px);
+  width: 100%;
+  min-width: 0;
   min-height: 44px;
   border: 1px solid var(--line);
   border-radius: 14px;
   background: var(--card);
   color: var(--ink-soft);
   cursor: pointer;
-  flex: 1 0 260px;
   flex-direction: column;
   gap: 4px;
   line-height: 1.5;
@@ -249,11 +273,29 @@ select {
 
 @media (max-width: 640px) {
   .status-page {
-    padding: 16px;
+    padding: 12px;
+  }
+
+  .practice-layout {
+    grid-template-columns: 108px minmax(0, 1fr);
+    gap: 12px;
+  }
+
+  .practice-sidebar {
+    top: 12px;
   }
 
   .mode-switch-button {
-    flex-basis: 240px;
+    border-radius: 12px;
+    padding: 12px 10px;
+  }
+
+  .mode-switch-button__label {
+    font-size: 14px;
+  }
+
+  .mode-switch-button__helper {
+    display: none;
   }
 }
 

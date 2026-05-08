@@ -12,7 +12,7 @@ export default function Home() {
   return (
     <main className="status-page">
       <div
-        className={`status-shell${
+        className={`status-shell status-shell--practice${
           mode === "json" ? " status-shell--dashboard" : ""
         }`}
       >
@@ -24,40 +24,46 @@ export default function Home() {
           </p>
         </header>
 
-        <div className="mode-switch-list" aria-label="Practice paths">
-          <button
-            type="button"
-            className="mode-switch-button"
-            aria-label="JSON Analysis"
-            aria-pressed={mode === "json"}
-            onClick={() => setMode("json")}
-          >
-            <span className="mode-switch-button__label">JSON Analysis</span>
-            <span className="mode-switch-button__helper">
-              Import assessment data to inspect scores, pauses, words, and phonemes.
-            </span>
-          </button>
-          <button
-            type="button"
-            className="mode-switch-button"
-            aria-label="Live Audio Practice"
-            aria-pressed={mode === "audio"}
-            onClick={() => setMode("audio")}
-          >
-            <span className="mode-switch-button__label">
-              Live Audio Practice
-            </span>
-            <span className="mode-switch-button__helper">
-              Record from your microphone and watch live transcript feedback.
-            </span>
-          </button>
-        </div>
+        <div className="practice-layout">
+          <aside className="practice-sidebar">
+            <div className="mode-switch-list" aria-label="Practice paths">
+              <button
+                type="button"
+                className="mode-switch-button"
+                aria-label="JSON Analysis"
+                aria-pressed={mode === "json"}
+                onClick={() => setMode("json")}
+              >
+                <span className="mode-switch-button__label">JSON Analysis</span>
+                <span className="mode-switch-button__helper">
+                  Import assessment data to inspect scores, pauses, words, and phonemes.
+                </span>
+              </button>
+              <button
+                type="button"
+                className="mode-switch-button"
+                aria-label="Live Audio Practice"
+                aria-pressed={mode === "audio"}
+                onClick={() => setMode("audio")}
+              >
+                <span className="mode-switch-button__label">
+                  Live Audio Practice
+                </span>
+                <span className="mode-switch-button__helper">
+                  Record from your microphone and watch live transcript feedback.
+                </span>
+              </button>
+            </div>
+          </aside>
 
-        <div className="mode-panel" hidden={mode !== "json"}>
-          <JsonAnalysisPanel />
-        </div>
-        <div className="mode-panel" hidden={mode !== "audio"}>
-          <AudioModePanel />
+          <div className="practice-content">
+            <div className="mode-panel" hidden={mode !== "json"}>
+              <JsonAnalysisPanel />
+            </div>
+            <div className="mode-panel" hidden={mode !== "audio"}>
+              <AudioModePanel />
+            </div>
+          </div>
         </div>
       </div>
     </main>
