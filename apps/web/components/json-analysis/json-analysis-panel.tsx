@@ -50,7 +50,8 @@ function parseJson(text: string): SyntaxState {
   } catch (error) {
     return {
       status: "invalid",
-      error: error instanceof Error ? error.message : "Unknown JSON parser error",
+      error:
+        error instanceof Error ? error.message : "Unknown JSON parser error",
     };
   }
 }
@@ -59,7 +60,9 @@ export function JsonAnalysisPanel() {
   const [jsonText, setJsonText] = useState("");
   const [fileName, setFileName] = useState<string | null>(null);
   const [fileError, setFileError] = useState<string | null>(null);
-  const [preview, setPreview] = useState<JsonAnalysisPreviewResponse | null>(null);
+  const [preview, setPreview] = useState<JsonAnalysisPreviewResponse | null>(
+    null,
+  );
   const [previewError, setPreviewError] = useState<PreviewError | null>(null);
   const [isPreviewing, setIsPreviewing] = useState(false);
   const [lastValidatedText, setLastValidatedText] = useState("");
@@ -67,20 +70,25 @@ export function JsonAnalysisPanel() {
     status: "idle",
   });
   const [resultsStale, setResultsStale] = useState(false);
-  const [aiCoachState, setAiCoachState] = useState<AiCoachState>({ status: "idle" });
+  const [aiCoachState, setAiCoachState] = useState<AiCoachState>({
+    status: "idle",
+  });
 
   const syntaxState = useMemo(() => parseJson(jsonText), [jsonText]);
 
-  const resetForNewInput = useCallback((nextText: string) => {
-    setJsonText(nextText);
-    setPreview(null);
-    setPreviewError(null);
-    setLastValidatedText("");
-    setAiCoachState({ status: "idle" });
-    if (analysisState.status === "done") {
-      setResultsStale(true);
-    }
-  }, [analysisState.status]);
+  const resetForNewInput = useCallback(
+    (nextText: string) => {
+      setJsonText(nextText);
+      setPreview(null);
+      setPreviewError(null);
+      setLastValidatedText("");
+      setAiCoachState({ status: "idle" });
+      if (analysisState.status === "done") {
+        setResultsStale(true);
+      }
+    },
+    [analysisState.status],
+  );
 
   useEffect(() => {
     setPreview(null);
@@ -197,21 +205,29 @@ export function JsonAnalysisPanel() {
         throw new Error(`Sample failed with status ${response.status}`);
       }
 
-      const sample = JsonAnalysisSampleResponseSchema.parse(await response.json());
+      const sample = JsonAnalysisSampleResponseSchema.parse(
+        await response.json(),
+      );
       setFileName(null);
       setFileError(null);
       resetForNewInput(JSON.stringify(sample.speechAssessment, null, 2));
     } catch {
-      setFileError("We couldn't load the sample JSON. Try again after refreshing.");
+      setFileError(
+        "We couldn't load the sample JSON. Try again after refreshing.",
+      );
     }
   }, [jsonText, resetForNewInput]);
 
   const handleClear = useCallback(() => {
     const hasContent =
-      jsonText.trim().length > 0 || preview !== null || analysisState.status !== "idle";
+      jsonText.trim().length > 0 ||
+      preview !== null ||
+      analysisState.status !== "idle";
     if (
       hasContent &&
-      !window.confirm("Clear the pasted JSON and current results? This cannot be undone.")
+      !window.confirm(
+        "Clear the pasted JSON and current results? This cannot be undone.",
+      )
     ) {
       return;
     }
@@ -268,7 +284,9 @@ export function JsonAnalysisPanel() {
         throw new Error(`Feedback failed with status ${response.status}`);
       }
 
-      const feedback = GeminiFeedbackResponseSchema.parse(await response.json());
+      const feedback = GeminiFeedbackResponseSchema.parse(
+        await response.json(),
+      );
       setAiCoachState({ status: "done", feedback });
     } catch {
       setAiCoachState({
@@ -289,10 +307,13 @@ export function JsonAnalysisPanel() {
       <section className="json-analysis-shell" aria-label="JSON analysis">
         <header className="json-analysis-header">
           <span className="json-analysis-tag">JSON Mode</span>
-          <h1 className="json-analysis-title">Analyze speech assessment JSON</h1>
+          <h1 className="json-analysis-title">
+            Analyze speech assessment JSON
+          </h1>
           <p className="json-analysis-intro">
-            Paste a speech assessment response, load the sample, or upload a JSON
-            file to preview deterministic pronunciation and fluency metrics.
+            Paste a speech assessment response, load the sample, or upload a
+            JSON file to preview deterministic pronunciation and fluency
+            metrics.
           </p>
         </header>
 
@@ -320,7 +341,9 @@ export function JsonAnalysisPanel() {
         />
 
         {resultsStale ? (
-          <p className="json-analysis-stale">Input changed. Analyze again to update results.</p>
+          <p className="json-analysis-stale">
+            Input changed. Analyze again to update results.
+          </p>
         ) : null}
 
         {analysisState.status === "loading" ? (
@@ -333,20 +356,25 @@ export function JsonAnalysisPanel() {
           <section className="json-results-region" aria-live="polite">
             {analysisState.result.warnings.length > 0 ? (
               <div className="json-analysis-card json-analysis-card--warning">
-                <h2 className="json-analysis-card__title">Analyzable with warnings</h2>
+                <h2 className="json-analysis-card__title">
+                  Analyzable with warnings
+                </h2>
                 <p className="json-analysis-card__detail">
-                  Metrics will still be computed, but review these unusual values.
+                  Metrics will still be computed, but review these unusual
+                  values.
                 </p>
               </div>
             ) : null}
             <SummaryMetricCards summary={analysisState.result.summary} />
             <button
               type="button"
-              className="json-action-button json-action-button--ai"
+              className="json-primary-button json-action-button json-action-button--ai"
               onClick={() => void handleGetFeedback()}
               disabled={aiCoachState.status === "loading"}
             >
-              {aiCoachState.status === "loading" ? "Generating…" : "Get AI Feedback"}
+              {aiCoachState.status === "loading"
+                ? "Generating…"
+                : "Get AI Feedback"}
             </button>
             <ResultTabs
               analysis={analysisState.result}
@@ -357,9 +385,16 @@ export function JsonAnalysisPanel() {
         ) : null}
 
         {analysisState.status === "error" ? (
-          <section className="json-analysis-card json-analysis-card--danger" aria-live="polite">
-            <h2 className="json-analysis-card__title">{analysisState.message}</h2>
-            <p className="json-analysis-card__detail">{analysisState.nextStep}</p>
+          <section
+            className="json-analysis-card json-analysis-card--danger"
+            aria-live="polite"
+          >
+            <h2 className="json-analysis-card__title">
+              {analysisState.message}
+            </h2>
+            <p className="json-analysis-card__detail">
+              {analysisState.nextStep}
+            </p>
           </section>
         ) : null}
       </section>
@@ -382,11 +417,14 @@ function getDisabledHelper({
   isPreviewing: boolean;
   resultsStale: boolean;
 }) {
-  if (jsonText.trim().length === 0) return "Paste JSON or load the sample to continue.";
-  if (syntaxState.status === "invalid") return "Fix the JSON syntax before analysis.";
+  if (jsonText.trim().length === 0)
+    return "Paste JSON or load the sample to continue.";
+  if (syntaxState.status === "invalid")
+    return "Fix the JSON syntax before analysis.";
   if (isPreviewing) return "Wait for validation preview to finish.";
   if (previewError) return "Preview this JSON again before analysis.";
-  if (preview && !preview.acceptedForAnalysis) return "Fix validation issues before analysis.";
+  if (preview && !preview.acceptedForAnalysis)
+    return "Fix validation issues before analysis.";
   if (resultsStale) return "Result is stale until backend validation finishes.";
   if (!preview) return "Wait for backend validation before analysis.";
   return "Ready to analyze.";
