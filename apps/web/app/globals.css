@@ -856,6 +856,59 @@ select {
   padding-left: 8px;
 }
 
+.saved-sessions-panel {
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  background: var(--beige-soft);
+  padding: 16px;
+}
+
+.saved-sessions-status,
+.saved-session-marker {
+  margin-top: 16px;
+}
+
+.saved-sessions-list {
+  display: flex;
+  margin: 16px 0 0;
+  padding: 0;
+  flex-direction: column;
+  gap: 8px;
+  list-style: none;
+}
+
+.saved-session-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: var(--card);
+  padding: 16px;
+}
+
+.saved-session-row div {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.saved-session-row strong {
+  color: var(--ink);
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 1.5;
+}
+
+.saved-session-row span,
+.saved-sessions-status {
+  color: var(--ink-soft);
+  font-size: 16px;
+  line-height: 1.5;
+}
+
 @media (max-width: 640px) {
   .json-analysis-page {
     padding: 16px;
@@ -871,6 +924,11 @@ select {
 
   .pause-summary-grid {
     grid-template-columns: 1fr;
+  }
+
+  .saved-session-row {
+    align-items: stretch;
+    flex-direction: column;
   }
 }
 

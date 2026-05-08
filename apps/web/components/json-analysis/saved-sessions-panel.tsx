@@ -1,0 +1,181 @@
+"use client";
+
+import { useCallback, useEffect, useState } from "react";
+import {
+  JsonAnalysisResponseSchema,
+  SavedSessionCreateResponseSchema,
+  SavedSessionDetailResponseSchema,
+  SavedSessionListResponseSchema,
+  type GeminiFeedbackResponse,
+  type JsonAnalysisResponse,
+  type SavedSessionListItem,
+} from "@localspeak/contracts";
+import type { AiCoachState } from "./ai-coach-tab";
+import { getOrCreateOwnerKey } from "../../lib/saved-sessions/owner-key";
+
+type SavedSessionsPanelProps = {
+  analysis: JsonAnalysisResponse;
+  aiCoachState: AiCoachState;
+  onReopen: (analysis: JsonAnalysisResponse, marker: string) => void;
+};
+
+type LoadState =
+  | { status: "loading" }
+  | { status: "ready"; sessions: SavedSessionListItem[] }
+  | { status: "error"; message: string };
+
+const HISTORY_LOAD_ERROR =
+  "We couldn't load saved attempts. Refresh and try again.";
+const SAVE_ERROR = "We couldn't save this result. Check your connection and try again.";
+const SAVE_SUCCESS = "Saved to this browser's history.";
+
+export function SavedSessionsPanel({
+  analysis,
+  aiCoachState,
+  onReopen,
+}: SavedSessionsPanelProps) {
+  const [ownerKey] = useState(() => getOrCreateOwnerKey());
+  const [loadState, setLoadState] = useState<LoadState>({ status: "loading" });
+  const [saveStatus, setSaveStatus] = useState<string | null>(null);
+  const [reopenError, setReopenError] = useState<string | null>(null);
+
+  const loadSessions = useCallback(async () => {
+    try {
+      const response = await fetch(
+        `/api/saved-sessions?ownerKey=${encodeURIComponent(ownerKey)}`,
+        { cache: "no-store" },
+      );
+      if (!response.ok) throw new Error(`List failed with status ${response.status}`);
+      const data = SavedSessionListResponseSchema.parse(await response.json());
+      setLoadState({ status: "ready", sessions: data.sessions });
+    } catch {
+      setLoadState({ status: "error", message: HISTORY_LOAD_ERROR });
+    }
+  }, [ownerKey]);
+
+  useEffect(() => {
+    void loadSessions();
+  }, [loadSessions]);
+
+  const handleSave = useCallback(async () => {
+    setSaveStatus(null);
+    const feedback = aiCoachState.status === "done" ? aiCoachState.feedback : undefined;
+    const body = buildSaveRequest(ownerKey, analysis, feedback);
+
+    try {
+      const response = await fetch("/api/saved-sessions", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(body),
+      });
+      if (!response.ok) throw new Error(`Save failed with status ${response.status}`);
+      SavedSessionCreateResponseSchema.parse(await response.json());
+      setSaveStatus(SAVE_SUCCESS);
+      await loadSessions();
+    } catch {
+      setSaveStatus(SAVE_ERROR);
+    }
+  }, [aiCoachState, analysis, loadSessions, ownerKey]);
+
+  const handleReopen = useCallback(
+    async (sessionId: string) => {
+      setReopenError(null);
+      try {
+        const response = await fetch(
+          `/api/saved-sessions/${sessionId}?ownerKey=${encodeURIComponent(ownerKey)}`,
+          { cache: "no-store" },
+        );
+        if (!response.ok) throw new Error(`Fetch failed with status ${response.status}`);
+        const data = SavedSessionDetailResponseSchema.parse(await response.json());
+        const savedAnalysis = JsonAnalysisResponseSchema.parse(data.session.metrics);
+        onReopen(savedAnalysis, "Reopened saved result");
+      } catch {
+        setReopenError("We couldn't reopen this result. Refresh and try again.");
+      }
+    },
+    [onReopen, ownerKey],
+  );
+
+  return (
+    <aside className="saved-sessions-panel" aria-label="Saved sessions">
+      <div className="json-analysis-card__header">
+        <div>
+          <h2 className="json-analysis-card__title">Saved attempts</h2>
+          <p className="json-analysis-card__detail">
+            Save this result or reopen a recent attempt from this browser.
+          </p>
+        </div>
+        <button
+          type="button"
+          className="json-secondary-button"
+          onClick={() => void handleSave()}
+        >
+          Save Result
+        </button>
+      </div>
+
+      {saveStatus ? <p className="saved-sessions-status">{saveStatus}</p> : null}
+      {reopenError ? <p className="json-analysis-error">{reopenError}</p> : null}
+
+      {loadState.status === "loading" ? (
+        <p className="json-analysis-card__detail">Loading saved attempts...</p>
+      ) : null}
+
+      {loadState.status === "error" ? (
+        <p className="json-analysis-error">{loadState.message}</p>
+      ) : null}
+
+      {loadState.status === "ready" && loadState.sessions.length === 0 ? (
+        <section className="json-empty-state">
+          <h3 className="json-analysis-subtitle">No saved attempts yet</h3>
+          <p className="json-analysis-card__detail">
+            Save a result to reopen it later from this browser.
+          </p>
+        </section>
+      ) : null}
+
+      {loadState.status === "ready" && loadState.sessions.length > 0 ? (
+        <ol className="saved-sessions-list">
+          {loadState.sessions.map((session) => (
+            <li className="saved-session-row" key={session.id}>
+              <div>
+                <strong>{session.title ?? "Saved speaking attempt"}</strong>
+                <span>
+                  Band {session.pronunciationBand ?? "-"} / Fluency{" "}
+                  {session.fluencyBand ?? "-"} / {session.wpm ?? "-"} WPM
+                </span>
+              </div>
+              <button
+                type="button"
+                className="json-secondary-button"
+                onClick={() => void handleReopen(session.id)}
+              >
+                Reopen Result
+              </button>
+            </li>
+          ))}
+        </ol>
+      ) : null}
+    </aside>
+  );
+}
+
+function buildSaveRequest(
+  ownerKey: string,
+  analysis: JsonAnalysisResponse,
+  feedback?: GeminiFeedbackResponse,
+) {
+  return {
+    ownerKey,
+    inputMode: "json" as const,
+    title: `JSON analysis - Band ${analysis.summary.pronunciationBand.toFixed(1)}`,
+    referenceText: analysis.extracted.referenceText,
+    inputMetadata: {
+      inputMode: "json",
+      wordCount: analysis.extracted.wordCount,
+      durationSeconds: analysis.extracted.durationSeconds,
+    },
+    metrics: analysis,
+    feedback,
+  };
+}

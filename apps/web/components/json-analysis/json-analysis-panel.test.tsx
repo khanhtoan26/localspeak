@@ -587,7 +587,7 @@ describe("JsonAnalysisPanel", () => {
     fireEvent.click(screen.getByRole("button", { name: "Analyze JSON" }));
     await flushPromises();
 
-    expect(fetch).toHaveBeenLastCalledWith("/api/json-analysis/analyze", {
+    expect(fetch).toHaveBeenCalledWith("/api/json-analysis/analyze", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ speechAssessment: parsedFixture }),

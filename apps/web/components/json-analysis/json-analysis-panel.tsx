@@ -13,6 +13,7 @@ import {
 import type { AiCoachState } from "./ai-coach-tab";
 import { JsonInputCard } from "./json-input-card";
 import { ResultTabs } from "./result-tabs";
+import { SavedSessionsPanel } from "./saved-sessions-panel";
 import { SummaryMetricCards } from "./summary-metric-cards";
 import { ValidationPreviewCard } from "./validation-preview-card";
 
@@ -131,6 +132,7 @@ export function JsonAnalysisPanel() {
   const [aiCoachState, setAiCoachState] = useState<AiCoachState>({
     status: "idle",
   });
+  const [reopenedMarker, setReopenedMarker] = useState<string | null>(null);
 
   const syntaxState = useMemo(() => parseJson(jsonText), [jsonText]);
 
@@ -141,6 +143,7 @@ export function JsonAnalysisPanel() {
       setPreviewError(null);
       setLastValidatedText("");
       setAiCoachState({ status: "idle" });
+      setReopenedMarker(null);
       if (analysisState.status === "done") {
         setResultsStale(true);
       }
@@ -238,6 +241,7 @@ export function JsonAnalysisPanel() {
       const result = JsonAnalysisResponseSchema.parse(await response.json());
       setAnalysisState({ status: "done", result });
       setResultsStale(false);
+      setReopenedMarker(null);
     } catch {
       setAnalysisState({
         status: "error",
@@ -300,6 +304,7 @@ export function JsonAnalysisPanel() {
     setAnalysisState({ status: "idle" });
     setResultsStale(false);
     setAiCoachState({ status: "idle" });
+    setReopenedMarker(null);
   }, [analysisState.status, jsonText, preview]);
 
   const handleGetFeedback = useCallback(async () => {
@@ -361,6 +366,16 @@ export function JsonAnalysisPanel() {
       ? "pending preview"
       : syntaxState.status;
 
+  const handleReopenSavedResult = useCallback(
+    (analysis: JsonAnalysisResponse, marker: string) => {
+      setAnalysisState({ status: "done", result: analysis });
+      setResultsStale(false);
+      setAiCoachState({ status: "idle" });
+      setReopenedMarker(marker);
+    },
+    [],
+  );
+
   return (
     <main className="json-analysis-page">
       <section className="json-analysis-shell" aria-label="JSON analysis">
@@ -413,6 +428,11 @@ export function JsonAnalysisPanel() {
 
         {analysisState.status === "done" ? (
           <section className="json-results-region" aria-live="polite">
+            {reopenedMarker ? (
+              <p className="json-analysis-pill saved-session-marker">
+                {reopenedMarker}
+              </p>
+            ) : null}
             <PracticePriorityCard analysis={analysisState.result} />
             {analysisState.result.warnings.length > 0 ? (
               <div className="json-analysis-card json-analysis-card--warning">
@@ -452,6 +472,11 @@ export function JsonAnalysisPanel() {
               analysis={analysisState.result}
               aiCoachState={aiCoachState}
               onRetryFeedback={() => void handleGetFeedback()}
+            />
+            <SavedSessionsPanel
+              analysis={analysisState.result}
+              aiCoachState={aiCoachState}
+              onReopen={handleReopenSavedResult}
             />
           </section>
         ) : null}
