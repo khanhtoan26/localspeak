@@ -1,144 +1,182 @@
-# Requirements: IELTS Pronunciation Scorer
+# Requirements: IELTS/TOEIC Speaking Practice MVP
 
-**Defined:** 2026-05-07
-**Core Value:** Vietnamese IELTS learners can identify their highest-priority pronunciation and fluency problems from real speaking attempts and get specific, actionable drills to improve them.
+**Defined:** 2026-05-08
+**Milestone:** v1.1 Exam Practice & Rubric Feedback
+**Source:** `.scope/scope.md`
+**Core Value:** Vietnamese learners can practice realistic IELTS/TOEIC speaking tasks, receive strict rubric-based feedback, and know exactly what to improve next.
 
-## v1 Requirements
+## Already Validated
 
-Requirements for initial release. Each maps to roadmap phases.
+These capabilities shipped before v1.1 and remain part of the foundation.
 
-### Saved Analysis Persistence
-
-- [ ] **STORE-01**: Backend persists analysis sessions with input mode, input metadata, derived metrics, feedback, and timestamps using Drizzle + Postgres via `DATABASE_URL`.
-- [ ] **STORE-02**: Backend exposes service/API operations to create, list, and fetch saved analysis sessions without requiring authentication in this phase.
-- [ ] **STORE-03**: Saved-session records include a future ownership field so deferred authentication can link sessions later without reshaping the persistence model.
-
-### JSON Input
+### JSON Analysis Foundation
 
 - [x] **JSON-01**: User can paste or upload speech assessment JSON matching the expected word/phoneme schema.
 - [x] **JSON-02**: App validates required JSON fields and surfaces actionable errors for malformed input.
 - [x] **JSON-03**: App extracts total score, reference text, word timings, word scores, ARPAbet phones, IPA labels, and phone scores from valid JSON.
 
-### Audio Input
-
-- [ ] **AUD-01**: User can stream audio from the browser microphone in real-time to Gemini Live API via WebSocket.
-- [ ] **AUD-02**: User can record audio from the browser microphone and receive real-time streamed analysis.
-- [ ] **AUD-03**: Backend provisions ephemeral tokens so the browser connects directly to Gemini Live API without exposing the GEMINI_API_KEY.
-- [ ] **AUD-04**: User can see real-time streamed Gemini analysis output while audio is being processed.
-
-### Metrics
+### Pronunciation and Fluency Metrics
 
 - [x] **MET-01**: App computes per-phoneme average scores grouped by ARPAbet phone type.
 - [x] **MET-02**: App detects systematic pronunciation patterns when weak phoneme scores repeat at least twice below the configured threshold.
 - [x] **MET-03**: App computes word quality bands and color categories from word scores.
-- [x] **MET-04**: App estimates IELTS Pronunciation band from the configured score thresholds.
+- [x] **MET-04**: App estimates IELTS Pronunciation band from configured score thresholds.
 - [x] **MET-05**: App computes pause gaps, pause severity, total pause time, pause ratio, duration, word count, and WPM from word timings.
 - [x] **MET-06**: App estimates IELTS Fluency band from critical pauses, pause ratio, and speech-rate evidence.
 
-### Gemini Feedback
+### Saved Sessions and Dashboard
 
-- [ ] **GEM-01**: Backend builds structured Gemini prompts from JSON-derived weak words, weak phonemes, pause stats, WPM, pause ratio, and notable pauses.
-- [ ] **GEM-02**: Gemini JSON-mode feedback returns Pronunciation Band, Fluency Band, top 3 errors with examples, and 3 actionable drills.
-- [ ] **GEM-03**: Gemini audio-mode feedback identifies pronunciation accuracy issues, phoneme errors with IPA, pauses, hesitations, speech rate, fillers, priority errors, and drills.
-- [ ] **GEM-04**: Feedback is concise, direct, learner-specific, and avoids generic advice.
-
-### UI
-
+- [x] **STORE-01**: Backend persists analysis sessions with input mode, input metadata, derived metrics, feedback, and timestamps using Drizzle + Postgres via `DATABASE_URL`.
+- [x] **STORE-02**: Backend exposes service/API operations to create, list, and fetch saved analysis sessions without requiring authentication.
+- [x] **STORE-03**: Saved-session records include future ownership support so authentication can link sessions later without reshaping records.
 - [x] **UI-01**: User sees a dashboard header with pronunciation percentage, Pronunciation Band, Fluency Band, and WPM.
-- [x] **UI-02**: User can switch between JSON mode and audio mode.
+- [x] **UI-02**: User can switch between JSON Analysis and Live Audio Practice.
 - [x] **UI-03**: JSON mode provides Pause Analysis, Words, Phonemes, and IELTS Analysis tabs.
-- [x] **UI-04**: Pause Analysis tab shows summary stats, SVG timeline with word blocks and shaded pauses, and pause list sorted by duration.
+- [x] **UI-04**: Pause Analysis tab shows summary stats, timeline, and pause list sorted by duration.
 - [x] **UI-05**: Words tab shows score-colored word chips.
 - [x] **UI-06**: Phonemes tab shows ranked phoneme weakness bars grouped by ARPAbet label.
-- [x] **UI-07**: IELTS Analysis tab can trigger Gemini analysis and display streamed output.
-
-### Architecture
-
+- [x] **UI-07**: IELTS Analysis tab can trigger AI feedback and display output.
 - [x] **ARCH-01**: Monorepo contains a Next.js frontend app and NestJS backend app with clear local development commands.
-- [x] **ARCH-02**: Shared request/response contracts exist for JSON analysis, audio analysis, saved sessions, and Gemini feedback.
-- [ ] **ARCH-03**: Drizzle ORM schema over Postgres (via DATABASE_URL) stores users' analysis sessions, derived metrics, feedback, input mode, and timestamps.
-- [x] **ARCH-04**: Server-side configuration documents required Gemini and Supabase environment variables.
+- [x] **ARCH-02**: Shared request/response contracts exist for JSON analysis, audio analysis, saved sessions, and AI feedback.
+- [x] **ARCH-03**: Drizzle ORM schema over Postgres stores users' analysis sessions, derived metrics, feedback, input mode, and timestamps.
+- [x] **ARCH-04**: Server-side configuration documents required environment variables.
 
-## v2 Requirements
+## v1.1 Requirements
 
-Deferred to future release. Tracked but not in current roadmap.
+Requirements for the next milestone. These are derived from `.scope/scope.md` and scoped to a web-first MVP increment.
 
-### Analysis Enhancements
+### Question Bank
 
+- [ ] **QBANK-01**: User can browse and select IELTS Speaking Part 1 questions grouped by topic.
+- [ ] **QBANK-02**: User can browse and select IELTS Speaking Part 2 cue cards with bullet prompts and preparation/speaking timing metadata.
+- [ ] **QBANK-03**: User can browse and select IELTS Speaking Part 3 discussion questions linked to Part 2 themes.
+- [ ] **QBANK-04**: User can browse TOEIC Speaking task types 1-11 with prep time, response time, and scoring scale metadata.
+- [ ] **QBANK-05**: Question-bank data is represented in shared contracts so frontend, backend, tests, and future persistence use one schema.
+
+### Practice Session Flow
+
+- [ ] **PRACTICE-01**: User can start an IELTS practice session from a chosen Part 1, Part 2, or Part 3 prompt.
+- [ ] **PRACTICE-02**: User sees the active question, part instructions, prep timer where applicable, response timer, and recording state in a single practice screen.
+- [ ] **PRACTICE-03**: User can complete a recorded response and submit transcript/audio metrics for evaluation without losing the original prompt context.
+- [ ] **PRACTICE-04**: User can review a completed practice attempt with question, transcript, audio metrics, timing metadata, and saved-session status.
+- [ ] **PRACTICE-05**: The session flow remains web-first and responsive for phone-width learners.
+
+### IELTS Rubric Evaluation
+
+- [ ] **RUBRIC-01**: Backend builds a strict IELTS-speaking examiner prompt using question, part, transcript, and audio metrics.
+- [ ] **RUBRIC-02**: Backend validates strict JSON evaluation output for Fluency & Coherence, Lexical Resource, Grammatical Range & Accuracy, Pronunciation, and Overall Band.
+- [ ] **RUBRIC-03**: Each criterion includes band, strengths, weaknesses, and quoted evidence from the transcript.
+- [ ] **RUBRIC-04**: Part-specific rules are enforced: Part 2 penalizes responses under 90 seconds, and Part 3 expects extended abstract answers.
+- [ ] **RUBRIC-05**: Evaluation output includes a band 7.5+ improved answer that preserves the learner's original ideas.
+- [ ] **RUBRIC-06**: Evaluation output includes key corrections with original text, corrected text, and reason.
+- [ ] **RUBRIC-07**: Evaluation output includes vocabulary upgrades with original word/phrase, upgraded alternative, and usage context.
+- [ ] **RUBRIC-08**: Evaluation output includes concise Vietnamese feedback that is encouraging, specific, and actionable.
+
+### TOEIC Speaking Scaffold
+
+- [ ] **TOEIC-01**: User can view TOEIC Speaking's 11-question structure with task descriptions and expected response timing.
+- [ ] **TOEIC-02**: User can start a TOEIC practice task from the question bank using the correct prompt, prep time, response time, and score scale metadata.
+- [ ] **TOEIC-03**: TOEIC practice attempts are clearly marked as TOEIC so IELTS band language is not shown as TOEIC scoring.
+
+### Session Reports and History
+
+- [ ] **REPORT-01**: User can view a final session report containing criterion bands, overall band, strengths, weaknesses, evidence, improved answer, corrections, vocabulary upgrades, and Vietnamese feedback.
+- [ ] **REPORT-02**: User can save and reopen practice-session reports using the existing saved-session infrastructure.
+- [ ] **REPORT-03**: Session report records include exam type, speaking part/task type, prompt ID, transcript, timing metadata, audio metrics, and rubric evaluation.
+- [ ] **REPORT-04**: Saved-history UI distinguishes JSON analysis results from IELTS/TOEIC practice-session reports.
+
+### Architecture and Safety
+
+- [ ] **ARCH-05**: Shared contracts cover question-bank prompts, practice attempts, rubric evaluation requests, rubric evaluation responses, and session report metadata.
+- [ ] **ARCH-06**: LLM evaluation uses server-side API calls only; browser never receives provider API keys.
+- [ ] **ARCH-07**: The rubric evaluator surfaces contract/validation errors distinctly from provider/network failures.
+- [ ] **ARCH-08**: Tests cover contract parsing, prompt payload construction, evaluator error handling, and the core practice-to-report user flow.
+
+## Future Requirements
+
+Tracked from `.scope/scope.md`, but intentionally deferred beyond this milestone.
+
+### Authentication and Payments
+
+- **AUTH-01**: User can sign up, log in, log out, and maintain a server-side session.
+- **AUTH-02**: User can link saved analysis and practice reports to an authenticated account.
+- **BILL-01**: User can subscribe via Stripe, VNPay, or MoMo.
+- **BILL-02**: Usage can be capped or metered by subscription tier.
+
+### Audio, Speech, and Voice Agent Enhancements
+
+- **AUD-01**: User can stream browser microphone audio to a real-time speech service.
+- **AUD-02**: System can transcribe speech with word timestamps and confidence.
+- **AUD-03**: System can run industry pronunciation assessment such as Azure Speech Pronunciation Assessment.
+- **AUD-04**: System can store audio recordings in object storage.
+- **VOICE-01**: User can practice with a real-time voice examiner agent.
+- **TTS-01**: Examiner replies can be synthesized via streaming TTS with cached common prompts.
+
+### Retention and Advanced Learning
+
+- **RET-01**: User can maintain daily streaks and gamified practice progress.
+- **RET-02**: User can create vocabulary flashcards from repeated errors.
+- **RET-03**: User can shadow band 7+ sample answers.
+- **RET-04**: User can complete a full IELTS Speaking mock test across all three parts.
 - **ANAL-01**: App distinguishes inter-sentence pauses from mid-sentence pauses using sentence boundary detection.
-- **ANAL-02**: App estimates Lexical Resource from transcript content.
-- **ANAL-03**: App estimates Grammar accuracy from transcript content.
-- **ANAL-04**: App supports full IELTS Speaking simulation across all scoring criteria.
-- **ANAL-05**: App provides advanced progress analytics beyond saved analysis history.
+- **ANAL-02**: App provides advanced progress analytics beyond saved report history.
 
-### Collaboration
+### Collaboration and B2B
 
-- **COLL-01**: Teacher or tutor can review learner recordings and analysis results.
+- **COLL-01**: Teacher or tutor can review learner recordings and reports.
+- **B2B-01**: Language centers can view learner progress through a classroom dashboard.
+- **PARENT-01**: Parents can receive periodic learner reports.
 
-### Authentication Backlog
-
-- **AUTH-01**: User can sign up, log in, log out, and maintain a server-side session (email/password with Drizzle + Postgres via DATABASE_URL).
-- **AUTH-02**: User can view saved pronunciation analysis sessions linked to their account.
-- **AUTH-03**: User can reopen a saved analysis session and see its metrics, feedback, and original input metadata.
-
-## Out of Scope
-
-Explicitly excluded. Documented to prevent scope creep.
+## Out of Scope for v1.1
 
 | Feature | Reason |
 |---------|--------|
-| Frontend-only Gemini API calls | Backend provisions ephemeral tokens; API key stays server-side. |
-| Supabase JS client / anon keys | Replaced by Drizzle ORM + DATABASE_URL for all data needs. |
-| Full email/password authentication in Phase 5 | Deferred to backlog; Phase 5 implements saved-analysis persistence first. |
-| Full IELTS criteria scoring in v1 | v1 is focused on Pronunciation and Fluency. |
-| Native mobile app | Web-first implementation is sufficient for upload, recording, and analysis. |
+| Native mobile app | Scope remains web-first; responsive phone layout is sufficient for this milestone. |
+| Subscription/payments | Monetization depends on stable practice/report value first. |
+| Full real-time voice examiner | The current milestone focuses on prompt-driven practice and final report evaluation. |
+| Azure pronunciation integration | Existing pronunciation/fluency metrics remain the foundation; provider replacement requires its own evaluation phase. |
+| Object storage for raw audio | Session reports can ship with transcript/metrics first; raw audio archival is a later storage concern. |
+| Teacher, center, or parent dashboards | First user remains the individual learner. |
+| Unbounded question-bank import/admin tooling | v1.1 can use curated seed data from `.scope/scope.md`; admin workflows are later. |
 
 ## Traceability
 
-Which phases cover which requirements. Updated during roadmap creation.
-
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| STORE-01 | Phase 5 | Pending |
-| STORE-02 | Phase 5 | Pending |
-| STORE-03 | Phase 5 | Pending |
-| JSON-01 | Phase 2 | Complete |
-| JSON-02 | Phase 2 | Complete |
-| JSON-03 | Phase 2 | Complete |
-| AUD-01 | Phase 4 | Pending |
-| AUD-02 | Phase 4 | Pending |
-| AUD-03 | Phase 4 | Pending |
-| AUD-04 | Phase 4 | Pending |
-| MET-01 | Phase 2 | Complete |
-| MET-02 | Phase 2 | Complete |
-| MET-03 | Phase 2 | Complete |
-| MET-04 | Phase 2 | Complete |
-| MET-05 | Phase 2 | Complete |
-| MET-06 | Phase 2 | Complete |
-| GEM-01 | Phase 3 | Pending |
-| GEM-02 | Phase 3 | Pending |
-| GEM-03 | Phase 4 | Pending |
-| GEM-04 | Phase 3 | Pending |
-| UI-01 | Phase 6 | Complete |
-| UI-02 | Phase 6 | Complete |
-| UI-03 | Phase 6 | Complete |
-| UI-04 | Phase 6 | Complete |
-| UI-05 | Phase 6 | Complete |
-| UI-06 | Phase 6 | Complete |
-| UI-07 | Phase 6 | Complete |
-| ARCH-01 | Phase 1 | Complete |
-| ARCH-02 | Phase 1 | Complete |
-| ARCH-03 | Phase 5 | Pending |
-| ARCH-04 | Phase 1 | Complete |
-| AUTH-01 | Backlog 999.1 | Deferred |
-| AUTH-02 | Backlog 999.1 | Deferred |
-| AUTH-03 | Backlog 999.1 | Deferred |
+| QBANK-01 | Phase 7 | Pending |
+| QBANK-02 | Phase 7 | Pending |
+| QBANK-03 | Phase 7 | Pending |
+| QBANK-04 | Phase 7 | Pending |
+| QBANK-05 | Phase 7 | Pending |
+| PRACTICE-01 | Phase 8 | Pending |
+| PRACTICE-02 | Phase 8 | Pending |
+| PRACTICE-03 | Phase 8 | Pending |
+| PRACTICE-04 | Phase 8 | Pending |
+| PRACTICE-05 | Phase 8 | Pending |
+| RUBRIC-01 | Phase 9 | Pending |
+| RUBRIC-02 | Phase 9 | Pending |
+| RUBRIC-03 | Phase 9 | Pending |
+| RUBRIC-04 | Phase 9 | Pending |
+| RUBRIC-05 | Phase 10 | Pending |
+| RUBRIC-06 | Phase 10 | Pending |
+| RUBRIC-07 | Phase 10 | Pending |
+| RUBRIC-08 | Phase 10 | Pending |
+| TOEIC-01 | Phase 11 | Pending |
+| TOEIC-02 | Phase 11 | Pending |
+| TOEIC-03 | Phase 11 | Pending |
+| REPORT-01 | Phase 10 | Pending |
+| REPORT-02 | Phase 10 | Pending |
+| REPORT-03 | Phase 10 | Pending |
+| REPORT-04 | Phase 10 | Pending |
+| ARCH-05 | Phase 7 | Pending |
+| ARCH-06 | Phase 9 | Pending |
+| ARCH-07 | Phase 9 | Pending |
+| ARCH-08 | Phase 11 | Pending |
 
 **Coverage:**
-- v1 requirements: 31 total
-- Mapped to phases: 31
+- v1.1 requirements: 29 total
+- Mapped to phases: 29
 - Unmapped: 0
 
 ---
-*Requirements defined: 2026-05-07*
-*Last updated: 2026-05-07 after roadmap creation*
+*Last updated: 2026-05-08 for v1.1 milestone planning from `.scope/scope.md`*

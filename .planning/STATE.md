@@ -1,36 +1,33 @@
 ---
 gsd_state_version: 1.0
-milestone: v1.0
-milestone_name: milestone
+milestone: v1.1
+milestone_name: Exam Practice & Rubric Feedback
 status: ready_to_plan
-stopped_at: Phase 6 UI-SPEC approved
-last_updated: "2026-05-08T09:46:08.023Z"
+last_updated: "2026-05-08T11:12:40.032Z"
 last_activity: 2026-05-08
 progress:
-  total_phases: 7
-  completed_phases: 4
-  total_plans: 23
-  completed_plans: 16
-  percent: 57
+  total_phases: 5
+  completed_phases: 0
+  total_plans: 0
+  completed_plans: 0
+  percent: 0
 ---
 
 # Project State
 
 ## Project Reference
 
-See: .planning/PROJECT.md (updated 2026-05-07)
+See: .planning/PROJECT.md (updated 2026-05-08)
 
-**Core value:** Vietnamese IELTS learners can identify their highest-priority pronunciation and fluency problems from real speaking attempts and get specific, actionable drills to improve them.
-**Current focus:** Phase 06 — learner-dashboard-analysis-views
+**Core value:** Vietnamese learners can practice realistic IELTS/TOEIC speaking tasks, receive strict evidence-based feedback, and know exactly what to improve next.
+**Current focus:** Milestone v1.1 — Exam Practice & Rubric Feedback
  
 ## Current Position
 
-Phase: 999.1
+Phase: 7 — Exam Question Bank & Contracts
 Plan: Not started
-Status: Ready to plan
-Last activity: 2026-05-08
-
-Progress: [███████░░░] 70%
+Status: Ready to discuss or plan
+Last activity: 2026-05-08 — Milestone v1.1 roadmap prepared from `.scope/scope.md`
 
 ## Performance Metrics
 
@@ -73,6 +70,7 @@ Progress: [███████░░░] 70%
 ### Roadmap Evolution
 
 - Phase 5 edited: deferred auth to backlog; Phase 5 now saved-analysis persistence service
+- Milestone v1.1 planned from `.scope/scope.md`: question bank, timed IELTS practice, strict rubric evaluation, saved reports, and TOEIC scaffold.
 
 ### Decisions
 
@@ -86,6 +84,7 @@ Recent decisions affecting current work:
 - Initialization: Limit v1 scoring to Pronunciation and Fluency.
 - Arch change: Drop Supabase entirely — use DATABASE_URL with Drizzle ORM, simple email/password sessions.
 - Arch change: Audio uses Gemini Live API with ephemeral tokens — browser streams directly to Gemini, no backend proxy.
+- Milestone v1.1: Expand from pronunciation/fluency-only analysis toward full IELTS rubric reports while deferring voice agent, TTS, payments, and auth.
 
 ### Pending Todos
 
@@ -102,12 +101,14 @@ Items acknowledged and carried forward from previous milestone close:
 | Category | Item | Status | Deferred At |
 |----------|------|--------|-------------|
 | Analysis | Sentence boundary detection for inter-sentence vs mid-sentence pauses | Deferred to v2 | Initialization |
-| Analysis | Lexical Resource and Grammar scoring | Deferred to v2 | Initialization |
-| Product | Full IELTS Speaking simulation | Deferred to v2 | Initialization |
+| Analysis | Lexical Resource and Grammar scoring | Promoted to v1.1 rubric feedback | v1.1 scope update |
+| Product | Full IELTS Speaking simulation | Partially promoted to prompt-driven practice; full mock test remains deferred | v1.1 scope update |
 | Collaboration | Teacher/tutor review workflows | Deferred to v2 | Initialization |
+| Product | Subscription/payments | Deferred beyond v1.1 | v1.1 scope update |
+| Product | Real-time voice examiner and TTS | Deferred beyond v1.1 | v1.1 scope update |
 
 ## Session Continuity
 
-Last session: 2026-05-08T08:33:58.203Z
-Stopped at: Phase 6 UI-SPEC approved
-Resume file: .planning/phases/06-learner-dashboard-analysis-views/06-UI-SPEC.md
+Last session: 2026-05-08T11:12:40.032Z
+Stopped at: Milestone v1.1 ready for Phase 7 discussion/planning
+Resume file: .planning/ROADMAP.md
