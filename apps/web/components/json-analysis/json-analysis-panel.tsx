@@ -349,7 +349,8 @@ export function JsonAnalysisPanel() {
     } catch {
       setAiCoachState({
         status: "error",
-        message: "AI feedback unavailable, please try again.",
+        message:
+          "AI feedback unavailable. Your deterministic results are still available — try again when you're ready.",
       });
     }
   }, [analysisState]);

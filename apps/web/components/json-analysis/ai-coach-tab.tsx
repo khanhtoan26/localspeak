@@ -20,8 +20,7 @@ export function AiCoachTab({ state, onRetry }: AiCoachTabProps) {
     return (
       <section className="json-analysis-card">
         <p className="json-analysis-card__detail">
-          Click &quot;Get AI Feedback&quot; above to receive personalized IELTS
-          coaching based on your metrics.
+          Get AI feedback after reviewing the deterministic metrics.
         </p>
       </section>
     );
@@ -35,7 +34,7 @@ export function AiCoachTab({ state, onRetry }: AiCoachTabProps) {
       >
         <div className="ai-coach-skeleton" />
         <p className="json-analysis-card__detail">
-          Generating personalized feedback…
+          Generating personalized IELTS feedback…
         </p>
       </section>
     );
@@ -45,13 +44,15 @@ export function AiCoachTab({ state, onRetry }: AiCoachTabProps) {
     return (
       <section className="json-analysis-card json-analysis-card--danger">
         <h2 className="json-analysis-card__title">AI feedback unavailable</h2>
-        <p className="json-analysis-card__detail">{state.message}</p>
+        <p className="json-analysis-card__detail">
+          {state.message}
+        </p>
         <button
           type="button"
           className="json-action-button"
           onClick={onRetry}
         >
-          Retry
+          Retry AI Feedback
         </button>
       </section>
     );

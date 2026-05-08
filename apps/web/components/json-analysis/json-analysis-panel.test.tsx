@@ -667,8 +667,41 @@ describe("JsonAnalysisPanel", () => {
 
     fireEvent.click(screen.getByRole("button", { name: "IELTS Analysis" }));
     expect(
-      screen.getByText(/Click "Get AI Feedback" above to receive personalized IELTS/i),
+      screen.getByText("Get AI feedback after reviewing the deterministic metrics."),
     ).toBeInTheDocument();
+  });
+
+  it("keeps deterministic results mounted during AI feedback loading and error", async () => {
+    renderPanel();
+    await previewAndAnalyze(createJsonAnalysisResponseFixture());
+
+    vi.mocked(fetch).mockImplementationOnce(() => new Promise(() => undefined));
+    fireEvent.click(screen.getByRole("button", { name: "Get AI Feedback" }));
+    fireEvent.click(screen.getByRole("button", { name: "IELTS Analysis" }));
+
+    expect(
+      screen.getByText("Generating personalized IELTS feedback…"),
+    ).toBeInTheDocument();
+    expect(screen.getByText("What should I practice next?")).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Pause Analysis" })).toBeInTheDocument();
+
+    cleanup();
+    renderPanel();
+    await previewAndAnalyze(createJsonAnalysisResponseFixture());
+    vi.mocked(fetch).mockRejectedValueOnce(new Error("offline"));
+
+    fireEvent.click(screen.getByRole("button", { name: "Get AI Feedback" }));
+    await flushPromises();
+    fireEvent.click(screen.getByRole("button", { name: "IELTS Analysis" }));
+
+    expect(
+      screen.getByText(
+        "AI feedback unavailable. Your deterministic results are still available — try again when you're ready.",
+      ),
+    ).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Retry AI Feedback" })).toBeInTheDocument();
+    expect(screen.getByText("What should I practice next?")).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Pause Analysis" })).toBeInTheDocument();
   });
 
   it("renders sentence-order word chips and weak shortlist", async () => {
