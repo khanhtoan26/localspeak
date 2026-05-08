@@ -4,7 +4,7 @@
 
 IELTS Pronunciation Scorer is a web app for English pronunciation training, optimized first for Vietnamese IELTS learners. It analyzes either phoneme-level speech assessment JSON or raw uploaded/recorded audio, then returns IELTS-style Pronunciation and Fluency feedback with concrete error patterns and drills.
 
-The app uses a Next.js frontend, a NestJS backend for LLM/API processing and token provisioning, Gemini for multimodal and structured analysis (including Gemini Live API with ephemeral tokens for real-time audio), Drizzle ORM over Postgres via `DATABASE_URL` for data persistence, and simple email/password sessions for authentication.
+The app uses a Next.js frontend, a NestJS backend for LLM/API processing and token provisioning, Gemini for multimodal and structured analysis (including Gemini Live API with ephemeral tokens for real-time audio), and Drizzle ORM over Postgres via `DATABASE_URL` for saved-analysis persistence. Email/password authentication is deferred to the backlog after the persistence service is in place.
 
 ## Core Value
 
@@ -18,7 +18,7 @@ Vietnamese IELTS learners can identify their highest-priority pronunciation and 
 
 ### Active
 
-- [ ] User can sign in and save pronunciation analysis history through email/password sessions (Drizzle + Postgres via DATABASE_URL).
+- [ ] App can persist saved pronunciation analysis history through a backend service using Drizzle + Postgres via `DATABASE_URL`; email/password authentication is deferred to backlog.
 - [ ] User can paste/import speech assessment JSON that contains total score, reference text, word timings, word scores, and phoneme-level ARPAbet/IPA scores.
 - [ ] User can upload an audio file or record from the microphone in the browser.
 - [ ] Backend provisions ephemeral tokens so the browser can stream audio directly to Gemini Live API via WebSocket without exposing the Gemini API key.
@@ -34,7 +34,7 @@ Vietnamese IELTS learners can identify their highest-priority pronunciation and 
 - Lexical Resource and Grammar scoring — deferred so v1 stays focused on Pronunciation and Fluency.
 - Full IELTS Speaking simulation — deferred until the scoring and feedback loop is useful.
 - Teacher/tutor review workflows — the first user is the individual learner.
-- Anonymous-only usage — v1 should support email/password auth and saved history.
+- Full email/password authentication in Phase 5 — deferred to backlog so Phase 5 can focus on saved-analysis persistence first.
 - Frontend-only API calls to Gemini — the backend provisions ephemeral tokens for Gemini Live API but the API key stays server-side.
 - Supabase — replaced by Drizzle ORM over Postgres via DATABASE_URL for all data needs.
 
@@ -76,7 +76,7 @@ Key learner-specific insights:
 - **Architecture**: Monorepo — frontend and backend should be developed together with shared contracts where useful.
 - **Security**: Gemini API key must stay server-side — backend provisions ephemeral tokens for browser-to-Gemini Live WebSocket connections.
 - **Database**: Use `DATABASE_URL` env var only — no Supabase JS client or anon/service keys.
-- **Auth**: Simple email/password with server-side sessions stored in Postgres via Drizzle.
+- **Auth**: Deferred to backlog; the persistence model should include a future ownership field so account linking can be added later.
 - **Audio streaming**: Browser connects directly to Gemini Live API via WebSocket using ephemeral tokens; backend does NOT proxy audio data.
 - **Input support**: Audio mode should support upload and in-browser microphone recording — learners need both existing recordings and new attempts.
 - **Scoring scope**: v1 focuses on Pronunciation and Fluency only — Lexical Resource and Grammar are deferred.
@@ -92,6 +92,7 @@ Key learner-specific insights:
 | Use Next.js frontend | Supports a modern app UI for upload/recording, dashboard views, tabs, and streamed analysis. | — Pending |
 | Use Supabase Auth and saved analysis history | Learners should track progress across recordings and sessions. | — Pending |
 | Limit v1 to Pronunciation and Fluency | Keeps the first release focused on the highest-value IELTS speaking feedback loop. | — Pending |
+| Defer email/password authentication | Saved-analysis persistence should be implemented first, with account linking added later from backlog. | Approved 2026-05-08 |
 
 ## Evolution
 

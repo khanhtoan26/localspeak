@@ -7,11 +7,11 @@
 
 Requirements for initial release. Each maps to roadmap phases.
 
-### Auth & History
+### Saved Analysis Persistence
 
-- [ ] **AUTH-01**: User can sign up, log in, log out, and maintain a server-side session (email/password with Drizzle + Postgres via DATABASE_URL).
-- [ ] **AUTH-02**: User can view saved pronunciation analysis sessions linked to their account.
-- [ ] **AUTH-03**: User can reopen a saved analysis session and see its metrics, feedback, and original input metadata.
+- [ ] **STORE-01**: Backend persists analysis sessions with input mode, input metadata, derived metrics, feedback, and timestamps using Drizzle + Postgres via `DATABASE_URL`.
+- [ ] **STORE-02**: Backend exposes service/API operations to create, list, and fetch saved analysis sessions without requiring authentication in this phase.
+- [ ] **STORE-03**: Saved-session records include a future ownership field so deferred authentication can link sessions later without reshaping the persistence model.
 
 ### JSON Input
 
@@ -75,6 +75,12 @@ Deferred to future release. Tracked but not in current roadmap.
 
 - **COLL-01**: Teacher or tutor can review learner recordings and analysis results.
 
+### Authentication Backlog
+
+- **AUTH-01**: User can sign up, log in, log out, and maintain a server-side session (email/password with Drizzle + Postgres via DATABASE_URL).
+- **AUTH-02**: User can view saved pronunciation analysis sessions linked to their account.
+- **AUTH-03**: User can reopen a saved analysis session and see its metrics, feedback, and original input metadata.
+
 ## Out of Scope
 
 Explicitly excluded. Documented to prevent scope creep.
@@ -83,7 +89,7 @@ Explicitly excluded. Documented to prevent scope creep.
 |---------|--------|
 | Frontend-only Gemini API calls | Backend provisions ephemeral tokens; API key stays server-side. |
 | Supabase JS client / anon keys | Replaced by Drizzle ORM + DATABASE_URL for all data needs. |
-| Anonymous-only product model | v1 uses email/password auth so learners can track progress. |
+| Full email/password authentication in Phase 5 | Deferred to backlog; Phase 5 implements saved-analysis persistence first. |
 | Full IELTS criteria scoring in v1 | v1 is focused on Pronunciation and Fluency. |
 | Native mobile app | Web-first implementation is sufficient for upload, recording, and analysis. |
 
@@ -93,9 +99,9 @@ Which phases cover which requirements. Updated during roadmap creation.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| AUTH-01 | Phase 5 | Pending |
-| AUTH-02 | Phase 5 | Pending |
-| AUTH-03 | Phase 5 | Pending |
+| STORE-01 | Phase 5 | Pending |
+| STORE-02 | Phase 5 | Pending |
+| STORE-03 | Phase 5 | Pending |
 | JSON-01 | Phase 2 | Complete |
 | JSON-02 | Phase 2 | Complete |
 | JSON-03 | Phase 2 | Complete |
@@ -124,6 +130,9 @@ Which phases cover which requirements. Updated during roadmap creation.
 | ARCH-02 | Phase 1 | Complete |
 | ARCH-03 | Phase 5 | Pending |
 | ARCH-04 | Phase 1 | Complete |
+| AUTH-01 | Backlog 999.1 | Deferred |
+| AUTH-02 | Backlog 999.1 | Deferred |
+| AUTH-03 | Backlog 999.1 | Deferred |
 
 **Coverage:**
 - v1 requirements: 31 total

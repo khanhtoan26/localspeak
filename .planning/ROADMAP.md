@@ -2,7 +2,7 @@
 
 ## Overview
 
-Build a greenfield monorepo from a runnable Next.js/NestJS foundation into a complete IELTS pronunciation training app. The roadmap starts with shared contracts and configuration, then adds deterministic JSON analysis, Gemini feedback, audio upload/recording, Supabase-backed history, and finally the learner-facing dashboard views that make the analysis understandable and actionable.
+Build a greenfield monorepo from a runnable Next.js/NestJS foundation into a complete IELTS pronunciation training app. The roadmap starts with shared contracts and configuration, then adds deterministic JSON analysis, Gemini feedback, audio upload/recording, Drizzle-backed saved analysis persistence, and finally the learner-facing dashboard views that make the analysis understandable and actionable.
 
 ## Phases
 
@@ -16,7 +16,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 - [x] **Phase 2: JSON Input & Pronunciation/Fluency Metrics** - Learner can submit speech assessment JSON and receive deterministic pronunciation/fluency metrics. (completed 2026-05-07)
 - [ ] **Phase 3: JSON-Mode IELTS Feedback** - Learner can request concise Gemini feedback from computed JSON metrics without exposing API keys.
 - [ ] **Phase 4: Audio Streaming via Gemini Live API** - Learner can record or stream audio from the browser and receive real-time pronunciation/fluency analysis via Gemini Live API.
-- [ ] **Phase 5: Auth & Saved Analysis History (Drizzle + Postgres)** - Learner can authenticate with email/password and revisit saved pronunciation analysis sessions.
+- [ ] **Phase 5: Saved Analysis Persistence Service (Drizzle + Postgres)** - App can persist and retrieve analysis sessions through a backend service using Drizzle + Postgres.
 - [ ] **Phase 6: Learner Dashboard & Analysis Views** - Learner can understand results through dashboard metrics, mode switching, tabs, timelines, word chips, phoneme rankings, and streamed IELTS analysis UI.
 
 ## Phase Details
@@ -87,18 +87,18 @@ Plans:
 
 **UI hint**: yes
 
-### Phase 5: Auth & Saved Analysis History (Drizzle + Postgres)
+### Phase 5: Saved Analysis Persistence Service (Drizzle + Postgres)
 
-**Goal**: Learner can authenticate with email/password and revisit saved pronunciation analysis sessions.
+**Goal**: App can persist and retrieve analysis sessions with derived metrics, feedback, input mode, input metadata, and timestamps through a backend service using Drizzle + Postgres via `DATABASE_URL`.
 **Depends on**: Phase 4
-**Requirements**: AUTH-01, AUTH-02, AUTH-03, ARCH-03
+**Requirements**: STORE-01, STORE-02, STORE-03, ARCH-03
 **Success Criteria** (what must be TRUE):
-  1. User can sign up, log in, log out, and maintain a server-side session (email/password, stored in Postgres via Drizzle ORM using DATABASE_URL).
-  2. User's analysis sessions are stored with derived metrics, feedback, input mode, input metadata, and timestamps.
-  3. User can view saved pronunciation analysis sessions linked to their account.
-  4. User can reopen a saved session and see its metrics, feedback, and original input metadata.
+  1. Drizzle schema and migration support saved analysis sessions in Postgres via `DATABASE_URL`.
+  2. Backend service/API can create, list, and fetch saved sessions without requiring authentication in this phase.
+  3. Stored sessions preserve JSON/audio input metadata, derived metrics, feedback, input mode, and timestamps.
+  4. The data model includes a future ownership field so deferred authentication can link sessions later without reshaping saved-session records.
 **Plans**: TBD
-**UI hint**: yes
+**UI hint**: no
 
 ### Phase 6: Learner Dashboard & Analysis Views
 
@@ -125,7 +125,7 @@ Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 5 -> 6
 | 2. JSON Input & Pronunciation/Fluency Metrics | 4/4 | Complete | 2026-05-07 |
 | 3. JSON-Mode IELTS Feedback | 0/TBD | Not started | - |
 | 4. Audio Streaming via Gemini Live API | 0/TBD | Not started | - |
-| 5. Auth & Saved Analysis History (Drizzle + Postgres) | 0/TBD | Not started | - |
+| 5. Saved Analysis Persistence Service (Drizzle + Postgres) | 0/TBD | Not started | - |
 | 6. Learner Dashboard & Analysis Views | 0/TBD | Not started | - |
 
 ## Requirement Coverage
@@ -152,9 +152,9 @@ Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 5 -> 6
 | AUD-03 | Phase 4 | Pending |
 | AUD-04 | Phase 4 | Pending |
 | GEM-03 | Phase 4 | Pending |
-| AUTH-01 | Phase 5 | Pending |
-| AUTH-02 | Phase 5 | Pending |
-| AUTH-03 | Phase 5 | Pending |
+| STORE-01 | Phase 5 | Pending |
+| STORE-02 | Phase 5 | Pending |
+| STORE-03 | Phase 5 | Pending |
 | ARCH-03 | Phase 5 | Pending |
 | UI-01 | Phase 6 | Pending |
 | UI-02 | Phase 6 | Pending |
@@ -168,3 +168,15 @@ Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 5 -> 6
 - v1 requirements: 31 total
 - Mapped to phases: 31
 - Unmapped: 0
+
+## Backlog
+
+### Phase 999.1: Authentication & Account Sessions (BACKLOG)
+
+**Goal**: Add email/password authentication and account-linked history after the saved-analysis persistence service is in place.
+**Source**: Deferred from Phase 5 during 2026-05-08 scope update.
+**Requirements**: AUTH-01, AUTH-02, AUTH-03
+**Success Criteria** (what must be TRUE):
+  1. User can sign up, log in, log out, and maintain a server-side session.
+  2. Saved analysis sessions can be linked to authenticated user accounts.
+  3. User can view and reopen account-linked saved sessions.
