@@ -97,7 +97,13 @@ Plans:
   2. Backend service/API can create, list, and fetch saved sessions without requiring authentication in this phase.
   3. Stored sessions preserve JSON/audio input metadata, derived metrics, feedback, input mode, and timestamps.
   4. The data model includes a future ownership field so deferred authentication can link sessions later without reshaping saved-session records.
-**Plans**: TBD
+**Plans**: 4 (Wave 1: 05-01 contracts; Wave 1: 05-02 Drizzle schema/config; Wave 2: 05-03 database provider+service; Wave 3: 05-04 API+e2e+docs)
+
+Plans:
+- [ ] 05-01-PLAN.md — Saved-session contracts and contract tests
+- [ ] 05-02-PLAN.md — Drizzle dependencies, schema, config, and migration
+- [ ] 05-03-PLAN.md — Database provider and saved-sessions service
+- [ ] 05-04-PLAN.md — Saved-sessions API, e2e coverage, and docs
 **UI hint**: no
 
 ### Phase 6: Learner Dashboard & Analysis Views
