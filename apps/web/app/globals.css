@@ -836,6 +836,26 @@ select {
   margin-top: 24px;
 }
 
+.phoneme-bar {
+  position: relative;
+  height: 10px;
+  overflow: hidden;
+  border-radius: 999px;
+  background: var(--line);
+}
+
+.phoneme-bar__fill {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background: var(--danger);
+}
+
+.phoneme-hint {
+  border-left: 3px solid var(--accent);
+  padding-left: 8px;
+}
+
 @media (max-width: 640px) {
   .json-analysis-page {
     padding: 16px;

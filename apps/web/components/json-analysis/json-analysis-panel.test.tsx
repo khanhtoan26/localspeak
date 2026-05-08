@@ -693,17 +693,24 @@ describe("JsonAnalysisPanel", () => {
     expect(document.querySelector("script")).toBeNull();
   });
 
-  it("renders up to five repeated weak phoneme patterns and the empty state", async () => {
+  it("renders impact-ranked phoneme bars and conditional Vietnamese hints", async () => {
     renderPanel();
-    await previewAndAnalyze();
+    await previewAndAnalyze(createJsonAnalysisResponseFixture());
 
     fireEvent.click(screen.getByRole("button", { name: "Phonemes" }));
 
-    expect(screen.getAllByTestId("phoneme-row")).toHaveLength(5);
-    expect(screen.getByText("T / t")).toBeInTheDocument();
-    expect(screen.getByText("5 weak occurrences - average 51%")).toBeInTheDocument();
-    expect(screen.getByText("Examples: to, tea")).toBeInTheDocument();
-    expect(screen.queryByText("SH / ʃ")).not.toBeInTheDocument();
+    const phonemeRows = screen.getAllByTestId("phoneme-row");
+    expect(phonemeRows[0]).toHaveTextContent("TH / θ");
+    expect(screen.getByText("3 weak occurrences - average 48%")).toBeInTheDocument();
+    expect(screen.getByText("Examples: three")).toBeInTheDocument();
+    expect(screen.getAllByLabelText(/weakness impact/)).toHaveLength(2);
+    expect(screen.getByText(/TH appears weak in 3 occurrences/)).toBeInTheDocument();
+    expect(
+      screen.getByText(
+        "Vietnamese speakers often replace /θ/ with /t/ or /d/; keep the tongue lightly between the teeth and let air flow.",
+      ),
+    ).toBeInTheDocument();
+    expect(screen.queryByText(/Vietnamese speakers often replace \/t\//)).not.toBeInTheDocument();
 
     cleanup();
     renderPanel();
