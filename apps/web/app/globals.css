@@ -659,6 +659,109 @@ select {
   background: #f6ebe8;
 }
 
+.pause-summary-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+  margin-top: 16px;
+}
+
+.pause-summary-card {
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: var(--beige-soft);
+  padding: 16px;
+}
+
+.pause-summary-card span {
+  display: block;
+  color: var(--ink-muted);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  line-height: 1.2;
+  text-transform: uppercase;
+}
+
+.pause-summary-card strong {
+  display: block;
+  margin-top: 8px;
+  color: var(--ink);
+  font-size: 20px;
+  font-weight: 600;
+  line-height: 1.2;
+}
+
+.pause-timeline {
+  width: 100%;
+  height: 96px;
+  margin-top: 24px;
+  overflow: visible;
+}
+
+.pause-timeline__axis {
+  stroke: var(--line);
+  stroke-width: 1;
+}
+
+.pause-timeline__segment--natural,
+.pause-legend__dot--natural {
+  fill: var(--success);
+  background: var(--success);
+}
+
+.pause-timeline__segment--noticeable,
+.pause-legend__dot--noticeable {
+  fill: var(--warning);
+  background: var(--warning);
+}
+
+.pause-timeline__segment--critical,
+.pause-legend__dot--critical {
+  fill: var(--danger);
+  background: var(--danger);
+}
+
+.pause-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin: 16px 0 0;
+  padding: 0;
+  color: var(--ink-soft);
+  font-size: 16px;
+  line-height: 1.5;
+  list-style: none;
+}
+
+.pause-legend li {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.pause-legend__dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 999px;
+}
+
+.pause-practice-cue {
+  margin-top: 24px;
+  border: 1px solid #eadcb8;
+  border-radius: 14px;
+  background: #f8f1df;
+  padding: 16px;
+}
+
+.pause-practice-cue p {
+  margin: 8px 0 0;
+  color: var(--ink-soft);
+  font-size: 16px;
+  line-height: 1.5;
+}
+
 @media (max-width: 640px) {
   .json-analysis-page {
     padding: 16px;
@@ -669,6 +772,10 @@ select {
   }
 
   .json-metric-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .pause-summary-grid {
     grid-template-columns: 1fr;
   }
 }

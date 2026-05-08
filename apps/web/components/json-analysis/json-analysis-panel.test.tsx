@@ -713,17 +713,23 @@ describe("JsonAnalysisPanel", () => {
 
   it("renders pause severities without Long pause text and shows empty states", async () => {
     renderPanel();
-    await previewAndAnalyze();
+    await previewAndAnalyze(createJsonAnalysisResponseFixture());
 
     fireEvent.click(screen.getByRole("button", { name: "Pause Analysis" }));
 
-    expect(screen.getByText("Critical")).toBeInTheDocument();
-    expect(screen.getByText("Noticeable")).toBeInTheDocument();
-    expect(screen.getByText("Natural")).toBeInTheDocument();
-    expect(screen.getByText("1.40s between \"clear\" and \"again\"")).toBeInTheDocument();
-    expect(screen.getByText("gap: 2.20s-3.60s")).toBeInTheDocument();
+    expect(screen.getByLabelText("Pause summary")).toBeInTheDocument();
+    expect(screen.getByRole("img", { name: "Pause timeline" })).toBeInTheDocument();
+    expect(screen.getByLabelText("Pause severity legend")).toBeInTheDocument();
+    expect(screen.getByText("Practice this pause first")).toBeInTheDocument();
+    expect(screen.getByText("Critical pause")).toBeInTheDocument();
+    expect(screen.getByText("Noticeable pause")).toBeInTheDocument();
+    expect(screen.getByText("0.95s between \"trees\" and \"stood\"")).toBeInTheDocument();
+    expect(screen.getByText("gap: 2.10s-3.05s")).toBeInTheDocument();
     expect(
-      screen.getByText("This suggests a planning or word-search pause."),
+      screen.getByText("This pause may interrupt fluency between key content words."),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByText(/Say "trees stood" in one breath/),
     ).toBeInTheDocument();
     expect(screen.queryByText("Long pause")).not.toBeInTheDocument();
 
