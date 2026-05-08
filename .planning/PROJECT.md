@@ -14,7 +14,9 @@ Vietnamese IELTS learners can identify their highest-priority pronunciation and 
 
 ### Validated
 
-(None yet — ship to validate)
+- [x] UI presents a dashboard header with pronunciation percentage, Pronunciation Band, Fluency Band, and WPM. Validated in Phase 6.
+- [x] UI supports JSON mode and audio mode, with JSON analysis tabs for Pause Analysis, Words, Phonemes, and IELTS Analysis. Validated in Phase 6.
+- [x] UI visualizes pause timelines, word score chips, and phoneme weakness rankings clearly enough for learners to understand what to practice next. Validated in Phase 6.
 
 ### Active
 
@@ -25,9 +27,6 @@ Vietnamese IELTS learners can identify their highest-priority pronunciation and 
 - [ ] App computes pronunciation metrics from JSON, including per-phoneme averages, systematic error patterns, word color bands, and IELTS-style Pronunciation band estimate.
 - [ ] App computes fluency metrics from word timings, including pause severity, pause ratio, speech rate/WPM, and IELTS-style Fluency band estimate.
 - [ ] App can ask Gemini for concise IELTS-oriented analysis that returns Pronunciation Band, Fluency Band, top 3 errors with examples, and 3 actionable drills.
-- [ ] UI presents a dashboard header with pronunciation percentage, Pronunciation Band, Fluency Band, and WPM.
-- [ ] UI supports JSON mode and audio mode, with JSON analysis tabs for Pause Analysis, Words, Phonemes, and IELTS Analysis.
-- [ ] UI visualizes pause timelines, word score chips, and phoneme weakness rankings clearly enough for learners to understand what to practice next.
 
 ### Out of Scope
 
@@ -96,6 +95,10 @@ Key learner-specific insights:
 
 ## Evolution
 
+## Current State
+
+Phase 6 complete — JSON analysis now presents a learner dashboard with priority guidance, four primary metrics, Pause Analysis / Words / Phonemes / IELTS Analysis tabs, pause timeline and ratio summaries, word chips, ranked phoneme weakness bars, polished AI feedback states, and secondary saved-session save/history/reopen controls. JSON analysis state persists across practice-path switching, and the dashboard/history layout now reaches the Phase 6 responsive width contract.
+
 This document evolves at phase transitions and milestone boundaries.
 
 **After each phase transition** (via `/gsd-transition`):
@@ -112,4 +115,4 @@ This document evolves at phase transitions and milestone boundaries.
 4. Update Context with current state
 
 ---
-*Last updated: 2026-05-07 after initialization*
+*Last updated: 2026-05-08 after Phase 6 completion*
