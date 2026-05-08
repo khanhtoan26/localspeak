@@ -762,6 +762,80 @@ select {
   line-height: 1.5;
 }
 
+.word-chip-legend,
+.word-chip-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 16px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.word-chip-legend {
+  color: var(--ink-soft);
+  font-size: 16px;
+  line-height: 1.5;
+}
+
+.word-chip-legend li {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.word-chip-legend__dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 999px;
+}
+
+.word-chip,
+.word-chip-legend__dot--weak {
+  border: 1px solid #edd0ca;
+  background: #f6ebe8;
+}
+
+.word-chip {
+  display: inline-flex;
+  min-height: 44px;
+  align-items: center;
+  border-radius: 999px;
+  color: var(--ink);
+  gap: 8px;
+  padding: 8px 16px;
+}
+
+.word-chip--okay,
+.word-chip-legend__dot--okay {
+  border-color: #eadcb8;
+  background: #f8f1df;
+}
+
+.word-chip--good,
+.word-chip-legend__dot--good {
+  border-color: #d9e8dd;
+  background: #edf5ef;
+}
+
+.word-chip strong {
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 1.5;
+}
+
+.word-chip span {
+  color: var(--ink-soft);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 600;
+  line-height: 1.2;
+}
+
+.weak-word-shortlist {
+  margin-top: 24px;
+}
+
 @media (max-width: 640px) {
   .json-analysis-page {
     padding: 16px;

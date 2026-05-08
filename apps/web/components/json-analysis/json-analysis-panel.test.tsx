@@ -671,18 +671,25 @@ describe("JsonAnalysisPanel", () => {
     ).toBeInTheDocument();
   });
 
-  it("renders original-order word bands with scores and timings", async () => {
+  it("renders sentence-order word chips and weak shortlist", async () => {
     renderPanel();
-    await previewAndAnalyze();
+    await previewAndAnalyze(createJsonAnalysisResponseFixture());
 
     fireEvent.click(screen.getByRole("button", { name: "Words" }));
 
     const wordRows = screen.getAllByTestId("word-row");
     expect(wordRows.map((row) => row.textContent)).toEqual([
-      expect.stringContaining("<script>alert(1)</script>Weak - 64%0.00s-0.50s"),
-      expect.stringContaining("steadyOkay - 72%0.90s-1.40s"),
-      expect.stringContaining("clearGood - 91%1.80s-2.20s"),
+      expect.stringContaining("three48%"),
+      expect.stringContaining("trees76%"),
+      expect.stringContaining("stood90%"),
     ]);
+    expect(
+      screen.getByLabelText("three, weak, 48 percent, from 0.20s to 0.75s"),
+    ).toHaveClass("word-chip--weak");
+    expect(screen.getByLabelText("Word score legend")).toHaveTextContent(
+      "WeakOkayGood",
+    );
+    expect(screen.getByText("Weak words to repeat")).toBeInTheDocument();
     expect(document.querySelector("script")).toBeNull();
   });
 
@@ -746,16 +753,15 @@ describe("JsonAnalysisPanel", () => {
     ).toBeInTheDocument();
   });
 
-  it("shows a positive empty weak-word state when no weak words are returned", async () => {
+  it("keeps sentence-order chips visible when no weak words are returned", async () => {
     renderPanel();
     await previewAndAnalyze(emptyAnalysisResponse);
 
     fireEvent.click(screen.getByRole("button", { name: "Words" }));
 
-    expect(screen.getByText("No major weak words found.")).toBeInTheDocument();
-    expect(
-      screen.getByText("Most word scores are in the okay or good range for this sample."),
-    ).toBeInTheDocument();
+    expect(screen.getAllByTestId("word-row")).toHaveLength(3);
+    expect(screen.queryByText("Weak words to repeat")).not.toBeInTheDocument();
+    expect(screen.queryByText("No major weak words found.")).not.toBeInTheDocument();
   });
 
   it("marks successful results stale when the input changes", async () => {
