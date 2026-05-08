@@ -61,9 +61,11 @@ Copy `apps/api/.env.example` to `apps/api/.env` for local development:
 PORT=3001
 DATABASE_URL=postgresql://localspeak:localspeak@localhost:5432/localspeak
 GEMINI_API_KEY=
+GEMINI_MODEL=gemini-2.0-flash
+DEEPGRAM_API_KEY=
 ```
 
-`GEMINI_API_KEY` and `DATABASE_URL` are backend-only values. Do not put them in frontend files and do not prefix them with `NEXT_PUBLIC_`.
+`GEMINI_API_KEY`, `DEEPGRAM_API_KEY`, and `DATABASE_URL` are backend-only values. Do not put them in frontend files and do not prefix them with `NEXT_PUBLIC_`.
 
 The API dev script loads `apps/api/.env` automatically at startup.
 

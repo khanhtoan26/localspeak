@@ -12,18 +12,12 @@ export const SavedSessionOwnerKeySchema = z.string().min(16).max(256);
 export const SavedSessionJsonSnapshotSchema = z
   .record(z.string(), z.unknown())
   .superRefine((value, context) => {
-    for (const key of RAW_VENDOR_KEYS) {
-      if (Object.hasOwn(value, key)) {
-        context.addIssue({
-          code: "custom",
-          path: [key],
-          message: `Do not store raw vendor payload field: ${key}.`,
-        });
-      }
-    }
+    addRawVendorKeyIssues(value, context);
   });
 
 const IsoTimestampSchema = z.string().datetime({ offset: true });
+const IeltsBandSchema = z.number().min(0).max(9);
+const WpmSchema = z.number().int().nonnegative();
 
 export const SavedSessionCreateRequestSchema = z.strictObject({
   ownerKey: SavedSessionOwnerKeySchema,
@@ -51,9 +45,9 @@ export const SavedSessionListItemSchema = z.strictObject({
   inputMode: SavedSessionInputModeSchema,
   title: z.string().nullable(),
   referenceText: z.string().nullable(),
-  pronunciationBand: z.number().nullable(),
-  fluencyBand: z.number().nullable(),
-  wpm: z.number().int().nullable(),
+  pronunciationBand: IeltsBandSchema.nullable(),
+  fluencyBand: IeltsBandSchema.nullable(),
+  wpm: WpmSchema.nullable(),
   createdAt: IsoTimestampSchema,
   updatedAt: IsoTimestampSchema,
 });
@@ -102,3 +96,34 @@ export type SavedSessionCreateResponse = z.infer<
 export type SavedSessionDetailResponse = z.infer<
   typeof SavedSessionDetailResponseSchema
 >;
+
+function addRawVendorKeyIssues(
+  value: unknown,
+  context: z.RefinementCtx,
+  path: Array<string | number> = [],
+): void {
+  if (Array.isArray(value)) {
+    value.forEach((item, index) =>
+      addRawVendorKeyIssues(item, context, [...path, index]),
+    );
+    return;
+  }
+
+  if (typeof value !== "object" || value === null) {
+    return;
+  }
+
+  for (const [key, child] of Object.entries(value)) {
+    const nextPath = [...path, key];
+
+    if (RAW_VENDOR_KEYS.has(key)) {
+      context.addIssue({
+        code: "custom",
+        path: nextPath,
+        message: `Do not store raw vendor payload field: ${key}.`,
+      });
+    }
+
+    addRawVendorKeyIssues(child, context, nextPath);
+  }
+}

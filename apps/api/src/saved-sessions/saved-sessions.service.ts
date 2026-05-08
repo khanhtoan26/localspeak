@@ -176,25 +176,43 @@ function extractPronunciationBand(
   request: SavedSessionCreateRequest,
 ): number | null {
   return (
-    numberAt(request.metrics, ["summary", "pronunciationBand"]) ??
-    numberAt(request.metrics, ["pronunciation", "band"]) ??
-    numberAt(request.feedback, ["pronunciationBand"])
+    ieltsBandAt(request.metrics, ["summary", "pronunciationBand"]) ??
+    ieltsBandAt(request.metrics, ["pronunciation", "band"]) ??
+    ieltsBandAt(request.feedback, ["pronunciationBand"])
   );
 }
 
 function extractFluencyBand(request: SavedSessionCreateRequest): number | null {
   return (
-    numberAt(request.metrics, ["summary", "fluencyBand"]) ??
-    numberAt(request.metrics, ["fluency", "band"]) ??
-    numberAt(request.feedback, ["fluencyBand"])
+    ieltsBandAt(request.metrics, ["summary", "fluencyBand"]) ??
+    ieltsBandAt(request.metrics, ["fluency", "band"]) ??
+    ieltsBandAt(request.feedback, ["fluencyBand"])
   );
 }
 
 function extractWpm(request: SavedSessionCreateRequest): number | null {
   return (
-    numberAt(request.metrics, ["summary", "wpm"]) ??
-    numberAt(request.metrics, ["fluency", "wpm"])
+    wpmAt(request.metrics, ["summary", "wpm"]) ??
+    wpmAt(request.metrics, ["fluency", "wpm"])
   );
+}
+
+function ieltsBandAt(
+  source: Record<string, unknown> | undefined,
+  path: string[],
+): number | null {
+  const value = numberAt(source, path);
+
+  return value !== null && value >= 0 && value <= 9 ? value : null;
+}
+
+function wpmAt(
+  source: Record<string, unknown> | undefined,
+  path: string[],
+): number | null {
+  const value = numberAt(source, path);
+
+  return value !== null && Number.isInteger(value) && value >= 0 ? value : null;
 }
 
 function numberAt(

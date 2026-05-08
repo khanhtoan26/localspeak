@@ -87,7 +87,7 @@ describe("SavedSessionsService", () => {
     await expect(
       service.create({
         ...createPayload,
-        metrics: { speechAssessment: {} },
+        metrics: { nested: { speechAssessment: {} } },
       }),
     ).rejects.toBeInstanceOf(BadRequestException);
 
@@ -126,6 +126,32 @@ describe("SavedSessionsService", () => {
         metrics: row.metrics,
       },
     });
+  });
+
+  it("ignores impossible denormalized summary metrics", async () => {
+    const { service, values } = buildService([
+      {
+        ...row,
+        pronunciationBand: null,
+        fluencyBand: null,
+        wpm: null,
+      },
+    ]);
+
+    await service.create({
+      ...createPayload,
+      metrics: {
+        summary: { pronunciationBand: 10, fluencyBand: -1, wpm: 142.5 },
+      },
+    });
+
+    expect(values).toHaveBeenCalledWith(
+      expect.objectContaining({
+        pronunciationBand: null,
+        fluencyBand: null,
+        wpm: null,
+      }),
+    );
   });
 
   it("lists sessions scoped by ownerKey and newest first", async () => {

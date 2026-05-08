@@ -106,6 +106,33 @@ describe("saved-session contracts", () => {
     expect(result.success).toBe(false);
   });
 
+  it("rejects nested raw vendor snapshots", () => {
+    const result = SavedSessionCreateRequestSchema.safeParse({
+      ownerKey,
+      inputMode: "json",
+      inputMetadata: {},
+      metrics: { nested: { speechAssessment: {} } },
+    });
+
+    expect(result.success).toBe(false);
+  });
+
+  it("rejects impossible summary metric response values", () => {
+    expect(
+      SavedSessionListResponseSchema.safeParse({
+        contract: "saved-session-list.v1",
+        sessions: [{ ...summaryFields, pronunciationBand: 10 }],
+      }).success,
+    ).toBe(false);
+
+    expect(
+      SavedSessionListResponseSchema.safeParse({
+        contract: "saved-session-list.v1",
+        sessions: [{ ...summaryFields, wpm: -1 }],
+      }).success,
+    ).toBe(false);
+  });
+
   it("validates list responses with summary-only fields", () => {
     const body = SavedSessionListResponseSchema.parse({
       contract: "saved-session-list.v1",
