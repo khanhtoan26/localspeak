@@ -2,6 +2,7 @@ import { validateApiEnv } from "./env";
 
 const validEnv = {
   GEMINI_API_KEY: "test-gemini-key",
+  DEEPGRAM_API_KEY: "test-deepgram-key",
 };
 
 describe("validateApiEnv", () => {
@@ -11,6 +12,7 @@ describe("validateApiEnv", () => {
       PORT: 3001,
       GEMINI_API_KEY: "test-gemini-key",
       GEMINI_MODEL: "gemini-2.0-flash",
+      DEEPGRAM_API_KEY: "test-deepgram-key",
     });
   });
 
@@ -26,6 +28,7 @@ describe("validateApiEnv", () => {
     expect(() =>
       validateApiEnv({
         GEMINI_API_KEY: "   ",
+        DEEPGRAM_API_KEY: "test-key",
       }),
     ).toThrow(/GEMINI_API_KEY is required/);
   });
@@ -34,12 +37,14 @@ describe("validateApiEnv", () => {
     expect(
       validateApiEnv({
         GEMINI_API_KEY: "  test-gemini-key  ",
+        DEEPGRAM_API_KEY: "test-deepgram-key",
       }),
     ).toEqual({
       NODE_ENV: "development",
       PORT: 3001,
       GEMINI_API_KEY: "test-gemini-key",
       GEMINI_MODEL: "gemini-2.0-flash",
+      DEEPGRAM_API_KEY: "test-deepgram-key",
     });
   });
 
@@ -48,12 +53,22 @@ describe("validateApiEnv", () => {
       validateApiEnv({
         GEMINI_API_KEY: "test-key",
         GEMINI_MODEL: "gemini-2.5-flash",
+        DEEPGRAM_API_KEY: "test-key",
       }),
     ).toEqual({
       NODE_ENV: "development",
       PORT: 3001,
       GEMINI_API_KEY: "test-key",
       GEMINI_MODEL: "gemini-2.5-flash",
+      DEEPGRAM_API_KEY: "test-key",
     });
+  });
+
+  it("fails fast when DEEPGRAM_API_KEY is missing", () => {
+    expect(() =>
+      validateApiEnv({
+        GEMINI_API_KEY: "test-key",
+      }),
+    ).toThrow(/DEEPGRAM_API_KEY is required/);
   });
 });
