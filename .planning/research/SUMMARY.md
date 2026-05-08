@@ -26,14 +26,27 @@ Already built capabilities that should be reused:
 
 ## Recommended v1.1 Scope
 
-The next milestone should focus on a **prompt-driven practice and final-report loop**, not the full voice-agent architecture yet:
+The next milestone should first fix the current UI foundation, then focus on a **prompt-driven practice and final-report loop**, not the full voice-agent architecture yet:
 
-1. Build shared question-bank contracts and seed data from the scope document.
-2. Add timed IELTS practice sessions for Parts 1/2/3.
-3. Add a strict server-side IELTS rubric evaluator across all four official criteria.
-4. Add final session reports with improved answer, corrections, vocabulary upgrades, and Vietnamese feedback.
-5. Save/reopen practice reports using the existing saved-session infrastructure.
-6. Add TOEIC Speaking scaffold with correct task metadata and labels, without pretending TOEIC uses IELTS band scoring.
+1. Rebuild the current UI/UX into a cohesive app shell and design system.
+2. Build shared question-bank contracts and seed data from the scope document.
+3. Add timed IELTS practice sessions for Parts 1/2/3.
+4. Add a strict server-side IELTS rubric evaluator across all four official criteria.
+5. Add final session reports with improved answer, corrections, vocabulary upgrades, and Vietnamese feedback.
+6. Save/reopen practice reports using the existing saved-session infrastructure.
+7. Add TOEIC Speaking scaffold with correct task metadata and labels, without pretending TOEIC uses IELTS band scoring.
+
+## UI/UX Research Update
+
+The user explicitly flagged the current UI as not good enough to build on. A short UI research pass for education/practice apps points to these priorities:
+
+- Speaking-practice screens should be simple and task-focused: prompt, timer, recording state, transcript/feedback readiness, and one obvious next action.
+- Feedback dashboards should lead with learner outcomes and actionable next steps, then expose details progressively.
+- Mobile layouts must avoid horizontal overflow, oversized cards, hidden controls, and dense side-by-side panels.
+- Navigation should clarify practice paths without making every mode feel like a separate unrelated app.
+- Empty, loading, error, retry, and saved-history states need consistent visual treatment.
+- Accessibility basics should be treated as part of the redesign, not a cleanup step.
+- Visual regression or Playwright coverage should protect the redesigned shell and responsive flows.
 
 ## Deferred From v1.1
 
@@ -61,8 +74,9 @@ These are valuable but too large or premature for this milestone:
 
 Recommended phases:
 
-1. **Phase 7:** Exam Question Bank & Contracts.
-2. **Phase 8:** Timed IELTS Practice Session Flow.
-3. **Phase 9:** IELTS Rubric Evaluation API.
-4. **Phase 10:** Session Report & Saved Practice History.
-5. **Phase 11:** TOEIC Speaking Scaffold & End-to-End Hardening.
+1. **Phase 7:** Comprehensive UI/UX Redesign & Design System.
+2. **Phase 8:** Exam Question Bank & Contracts.
+3. **Phase 9:** Timed IELTS Practice Session Flow.
+4. **Phase 10:** IELTS Rubric Evaluation API.
+5. **Phase 11:** Session Report & Saved Practice History.
+6. **Phase 12:** TOEIC Speaking Scaffold & End-to-End Hardening.

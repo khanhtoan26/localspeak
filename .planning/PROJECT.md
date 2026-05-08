@@ -12,9 +12,10 @@ Vietnamese learners can practice realistic IELTS/TOEIC speaking tasks, receive s
 
 ## Current Milestone: v1.1 Exam Practice & Rubric Feedback
 
-**Goal:** Turn the existing analysis dashboard into a prompt-driven IELTS/TOEIC speaking-practice MVP with question bank, timed practice flow, strict IELTS rubric evaluation, and saved session reports.
+**Goal:** First rebuild the current UI/UX into a cohesive, high-quality app foundation, then turn the product into a prompt-driven IELTS/TOEIC speaking-practice MVP with question bank, timed practice flow, strict IELTS rubric evaluation, and saved session reports.
 
 **Target features:**
+- Comprehensive UI/UX redesign and design-system cleanup before adding new exam-practice surfaces.
 - IELTS Part 1/2/3 question bank and TOEIC Speaking task scaffold sourced from `.scope/scope.md`.
 - Timed IELTS practice flow with prompt context, recording state, transcript/audio metrics, and responsive phone layout.
 - Server-side strict IELTS rubric evaluator for Fluency & Coherence, Lexical Resource, Grammatical Range & Accuracy, Pronunciation, and Overall Band.
@@ -33,6 +34,7 @@ Vietnamese learners can practice realistic IELTS/TOEIC speaking tasks, receive s
 
 ### Active
 
+- [ ] App provides a cohesive redesigned UI shell, design system, responsive layout, and accessible interaction patterns across existing JSON/audio flows.
 - [ ] App provides a shared IELTS/TOEIC question-bank schema and seed data from `.scope/scope.md`.
 - [ ] User can browse and select IELTS Speaking Part 1, Part 2, and Part 3 prompts.
 - [ ] User can browse TOEIC Speaking task types 1-11 with timing and scoring-scale metadata.
@@ -104,6 +106,7 @@ Key learner-specific insights:
 - **Scope discipline**: v1.1 adds rubric reports and prompt-driven practice, but not payments, full voice agent, TTS, raw audio storage, or B2B dashboards.
 - **Exam labeling**: IELTS and TOEIC practice must not share misleading scoring labels.
 - **UI direction**: Preserve the polished Phase 6 dashboard/sidebar foundation and add practice/report views without regressing phone-width layout.
+- **Redesign priority**: v1.1 Phase 7 should comprehensively rework the current UI/UX before question-bank and practice-session features are built on top of it.
 
 ## Key Decisions
 
@@ -117,6 +120,7 @@ Key learner-specific insights:
 | Expand v1.1 from Pronunciation/Fluency-only to full IELTS rubric reports | `.scope/scope.md` makes four-criterion rubric feedback central to the MVP. | Approved 2026-05-08 |
 | Treat TOEIC as scaffold first | TOEIC scoring differs from IELTS; build task/timing structure before full TOEIC evaluator. | Approved 2026-05-08 |
 | Defer TTS/voice agent and payments | Scope research identifies high cost/complexity; these depend on validated practice loop. | Approved 2026-05-08 |
+| Rebuild UI/UX before new v1.1 features | User judged current UI as poor; exam-practice work should not build on a weak interface foundation. | Approved 2026-05-08 |
 
 ## Evolution
 
@@ -124,7 +128,7 @@ Key learner-specific insights:
 
 Phase 6 is complete. JSON analysis now presents a learner dashboard with priority guidance, four primary metrics, Pause Analysis / Words / Phonemes / IELTS Analysis tabs, pause timeline and ratio summaries, word chips, ranked phoneme weakness bars, polished AI feedback states, secondary saved-session controls, Playwright UI smoke coverage, compact phone layout, and persistent sidebar navigation between JSON Analysis and Live Audio Practice.
 
-v1.1 planning is based on `.scope/scope.md` and begins at Phase 7.
+v1.1 planning is based on `.scope/scope.md` and begins at Phase 7 with a comprehensive UI/UX redesign before the exam-practice phases.
 
 This document evolves at phase transitions and milestone boundaries.
 

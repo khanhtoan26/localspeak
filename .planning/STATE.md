@@ -6,7 +6,7 @@ status: ready_to_plan
 last_updated: "2026-05-08T11:12:40.032Z"
 last_activity: 2026-05-08
 progress:
-  total_phases: 5
+  total_phases: 6
   completed_phases: 0
   total_plans: 0
   completed_plans: 0
@@ -24,10 +24,10 @@ See: .planning/PROJECT.md (updated 2026-05-08)
  
 ## Current Position
 
-Phase: 7 — Exam Question Bank & Contracts
+Phase: 7 — Comprehensive UI/UX Redesign & Design System
 Plan: Not started
 Status: Ready to discuss or plan
-Last activity: 2026-05-08 — Milestone v1.1 roadmap prepared from `.scope/scope.md`
+Last activity: 2026-05-08 — Milestone v1.1 roadmap updated with UI/UX redesign pre-phase
 
 ## Performance Metrics
 
@@ -71,6 +71,7 @@ Last activity: 2026-05-08 — Milestone v1.1 roadmap prepared from `.scope/scope
 
 - Phase 5 edited: deferred auth to backlog; Phase 5 now saved-analysis persistence service
 - Milestone v1.1 planned from `.scope/scope.md`: question bank, timed IELTS practice, strict rubric evaluation, saved reports, and TOEIC scaffold.
+- Phase 7 inserted as comprehensive UI/UX redesign before exam-practice phases; prior v1.1 phases renumbered to 8-12.
 
 ### Decisions
 
@@ -85,6 +86,7 @@ Recent decisions affecting current work:
 - Arch change: Drop Supabase entirely — use DATABASE_URL with Drizzle ORM, simple email/password sessions.
 - Arch change: Audio uses Gemini Live API with ephemeral tokens — browser streams directly to Gemini, no backend proxy.
 - Milestone v1.1: Expand from pronunciation/fluency-only analysis toward full IELTS rubric reports while deferring voice agent, TTS, payments, and auth.
+- Milestone v1.1: Rebuild current UI/UX before adding new exam-practice features.
 
 ### Pending Todos
 
@@ -110,5 +112,5 @@ Items acknowledged and carried forward from previous milestone close:
 ## Session Continuity
 
 Last session: 2026-05-08T11:12:40.032Z
-Stopped at: Milestone v1.1 ready for Phase 7 discussion/planning
+Stopped at: Milestone v1.1 ready for Phase 7 UI/UX discussion/planning
 Resume file: .planning/ROADMAP.md

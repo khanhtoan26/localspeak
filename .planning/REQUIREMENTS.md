@@ -3,7 +3,7 @@
 **Defined:** 2026-05-08
 **Milestone:** v1.1 Exam Practice & Rubric Feedback
 **Source:** `.scope/scope.md`
-**Core Value:** Vietnamese learners can practice realistic IELTS/TOEIC speaking tasks, receive strict rubric-based feedback, and know exactly what to improve next.
+**Core Value:** Vietnamese learners can practice realistic IELTS/TOEIC speaking tasks in a polished, confidence-building interface, receive strict rubric-based feedback, and know exactly what to improve next.
 
 ## Already Validated
 
@@ -44,6 +44,17 @@ These capabilities shipped before v1.1 and remain part of the foundation.
 ## v1.1 Requirements
 
 Requirements for the next milestone. These are derived from `.scope/scope.md` and scoped to a web-first MVP increment.
+
+### Comprehensive UI/UX Redesign
+
+- [ ] **UIX-01**: User experiences a cohesive app shell with clear navigation, hierarchy, and visual identity across JSON Analysis, Live Audio Practice, and upcoming exam-practice surfaces.
+- [ ] **UIX-02**: User can understand the primary next action on every major screen without competing controls or crowded panels.
+- [ ] **UIX-03**: UI uses a documented design system for spacing, typography, color, cards, buttons, forms, tabs, sidebars, timers, recording controls, feedback panels, and empty/loading/error states.
+- [ ] **UIX-04**: JSON Analysis is redesigned around learner outcomes: priority action first, readable metrics, compact analysis sections, and secondary technical/input controls.
+- [ ] **UIX-05**: Live Audio Practice is redesigned around a simple speaking flow: prompt/reference text, recording state, timer/waveform, transcript, and feedback/readiness states.
+- [ ] **UIX-06**: The app is responsive at phone width without horizontal overflow, oversized cards, or hidden primary actions.
+- [ ] **UIX-07**: The redesigned UI meets accessibility basics for keyboard navigation, focus states, semantic landmarks, touch targets, contrast, and screen-reader labels.
+- [ ] **UIX-08**: Playwright or equivalent UI coverage verifies core responsive flows and guards against regressions in navigation, JSON analysis, live audio, and empty/error states.
 
 ### Question Bank
 
@@ -143,39 +154,47 @@ Tracked from `.scope/scope.md`, but intentionally deferred beyond this milestone
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| QBANK-01 | Phase 7 | Pending |
-| QBANK-02 | Phase 7 | Pending |
-| QBANK-03 | Phase 7 | Pending |
-| QBANK-04 | Phase 7 | Pending |
-| QBANK-05 | Phase 7 | Pending |
-| PRACTICE-01 | Phase 8 | Pending |
-| PRACTICE-02 | Phase 8 | Pending |
-| PRACTICE-03 | Phase 8 | Pending |
-| PRACTICE-04 | Phase 8 | Pending |
-| PRACTICE-05 | Phase 8 | Pending |
-| RUBRIC-01 | Phase 9 | Pending |
-| RUBRIC-02 | Phase 9 | Pending |
-| RUBRIC-03 | Phase 9 | Pending |
-| RUBRIC-04 | Phase 9 | Pending |
-| RUBRIC-05 | Phase 10 | Pending |
-| RUBRIC-06 | Phase 10 | Pending |
-| RUBRIC-07 | Phase 10 | Pending |
-| RUBRIC-08 | Phase 10 | Pending |
-| TOEIC-01 | Phase 11 | Pending |
-| TOEIC-02 | Phase 11 | Pending |
-| TOEIC-03 | Phase 11 | Pending |
-| REPORT-01 | Phase 10 | Pending |
-| REPORT-02 | Phase 10 | Pending |
-| REPORT-03 | Phase 10 | Pending |
-| REPORT-04 | Phase 10 | Pending |
-| ARCH-05 | Phase 7 | Pending |
-| ARCH-06 | Phase 9 | Pending |
-| ARCH-07 | Phase 9 | Pending |
-| ARCH-08 | Phase 11 | Pending |
+| UIX-01 | Phase 7 | Pending |
+| UIX-02 | Phase 7 | Pending |
+| UIX-03 | Phase 7 | Pending |
+| UIX-04 | Phase 7 | Pending |
+| UIX-05 | Phase 7 | Pending |
+| UIX-06 | Phase 7 | Pending |
+| UIX-07 | Phase 7 | Pending |
+| UIX-08 | Phase 7 | Pending |
+| QBANK-01 | Phase 8 | Pending |
+| QBANK-02 | Phase 8 | Pending |
+| QBANK-03 | Phase 8 | Pending |
+| QBANK-04 | Phase 8 | Pending |
+| QBANK-05 | Phase 8 | Pending |
+| PRACTICE-01 | Phase 9 | Pending |
+| PRACTICE-02 | Phase 9 | Pending |
+| PRACTICE-03 | Phase 9 | Pending |
+| PRACTICE-04 | Phase 9 | Pending |
+| PRACTICE-05 | Phase 9 | Pending |
+| RUBRIC-01 | Phase 10 | Pending |
+| RUBRIC-02 | Phase 10 | Pending |
+| RUBRIC-03 | Phase 10 | Pending |
+| RUBRIC-04 | Phase 10 | Pending |
+| RUBRIC-05 | Phase 11 | Pending |
+| RUBRIC-06 | Phase 11 | Pending |
+| RUBRIC-07 | Phase 11 | Pending |
+| RUBRIC-08 | Phase 11 | Pending |
+| TOEIC-01 | Phase 12 | Pending |
+| TOEIC-02 | Phase 12 | Pending |
+| TOEIC-03 | Phase 12 | Pending |
+| REPORT-01 | Phase 11 | Pending |
+| REPORT-02 | Phase 11 | Pending |
+| REPORT-03 | Phase 11 | Pending |
+| REPORT-04 | Phase 11 | Pending |
+| ARCH-05 | Phase 8 | Pending |
+| ARCH-06 | Phase 10 | Pending |
+| ARCH-07 | Phase 10 | Pending |
+| ARCH-08 | Phase 12 | Pending |
 
 **Coverage:**
-- v1.1 requirements: 29 total
-- Mapped to phases: 29
+- v1.1 requirements: 37 total
+- Mapped to phases: 37
 - Unmapped: 0
 
 ---
