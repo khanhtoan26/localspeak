@@ -16,7 +16,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 - [x] **Phase 2: JSON Input & Pronunciation/Fluency Metrics** - Learner can submit speech assessment JSON and receive deterministic pronunciation/fluency metrics. (completed 2026-05-07)
 - [ ] **Phase 3: JSON-Mode IELTS Feedback** - Learner can request concise Gemini feedback from computed JSON metrics without exposing API keys.
 - [ ] **Phase 4: Audio Streaming via Gemini Live API** - Learner can record or stream audio from the browser and receive real-time pronunciation/fluency analysis via Gemini Live API.
-- [ ] **Phase 5: Saved Analysis Persistence Service (Drizzle + Postgres)** - App can persist and retrieve analysis sessions through a backend service using Drizzle + Postgres.
+- [x] **Phase 5: Saved Analysis Persistence Service (Drizzle + Postgres)** - App can persist and retrieve analysis sessions through a backend service using Drizzle + Postgres. (completed 2026-05-08)
 - [ ] **Phase 6: Learner Dashboard & Analysis Views** - Learner can understand results through dashboard metrics, mode switching, tabs, timelines, word chips, phoneme rankings, and streamed IELTS analysis UI.
 
 ## Phase Details
@@ -100,10 +100,10 @@ Plans:
 **Plans**: 4 (Wave 1: 05-01 contracts; Wave 1: 05-02 Drizzle schema/config; Wave 2: 05-03 database provider+service; Wave 3: 05-04 API+e2e+docs)
 
 Plans:
-- [ ] 05-01-PLAN.md — Saved-session contracts and contract tests
-- [ ] 05-02-PLAN.md — Drizzle dependencies, schema, config, and migration
-- [ ] 05-03-PLAN.md — Database provider and saved-sessions service
-- [ ] 05-04-PLAN.md — Saved-sessions API, e2e coverage, and docs
+- [x] 05-01-PLAN.md — Saved-session contracts and contract tests
+- [x] 05-02-PLAN.md — Drizzle dependencies, schema, config, and migration
+- [x] 05-03-PLAN.md — Database provider and saved-sessions service
+- [x] 05-04-PLAN.md — Saved-sessions API, e2e coverage, and docs
 **UI hint**: no
 
 ### Phase 6: Learner Dashboard & Analysis Views
@@ -131,7 +131,7 @@ Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 5 -> 6
 | 2. JSON Input & Pronunciation/Fluency Metrics | 4/4 | Complete | 2026-05-07 |
 | 3. JSON-Mode IELTS Feedback | 0/TBD | Not started | - |
 | 4. Audio Streaming via Gemini Live API | 0/TBD | Not started | - |
-| 5. Saved Analysis Persistence Service (Drizzle + Postgres) | 0/TBD | Not started | - |
+| 5. Saved Analysis Persistence Service (Drizzle + Postgres) | 4/4 | Complete | 2026-05-08 |
 | 6. Learner Dashboard & Analysis Views | 0/TBD | Not started | - |
 
 ## Requirement Coverage
@@ -158,10 +158,10 @@ Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 5 -> 6
 | AUD-03 | Phase 4 | Pending |
 | AUD-04 | Phase 4 | Pending |
 | GEM-03 | Phase 4 | Pending |
-| STORE-01 | Phase 5 | Pending |
-| STORE-02 | Phase 5 | Pending |
-| STORE-03 | Phase 5 | Pending |
-| ARCH-03 | Phase 5 | Pending |
+| STORE-01 | Phase 5 | Complete |
+| STORE-02 | Phase 5 | Complete |
+| STORE-03 | Phase 5 | Complete |
+| ARCH-03 | Phase 5 | Complete |
 | UI-01 | Phase 6 | Pending |
 | UI-02 | Phase 6 | Pending |
 | UI-03 | Phase 6 | Pending |
