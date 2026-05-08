@@ -74,6 +74,21 @@ select {
   position: sticky;
   top: 24px;
   align-self: start;
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  background: #fffdf9;
+  padding: 12px;
+}
+
+.practice-sidebar__eyebrow {
+  margin: 4px 4px 12px;
+  color: var(--ink-muted);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 600;
+  line-height: 1.2;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
 }
 
 .practice-content {
@@ -234,6 +249,7 @@ select {
 }
 
 .mode-switch-button {
+  position: relative;
   display: flex;
   width: 100%;
   min-width: 0;
@@ -248,9 +264,30 @@ select {
   line-height: 1.5;
   padding: 16px;
   text-align: left;
+  transition:
+    background 120ms ease,
+    border-color 120ms ease,
+    color 120ms ease;
 }
 
 .mode-switch-button[aria-pressed="true"] {
+  border-color: var(--accent);
+  background: var(--beige-soft);
+  color: var(--ink);
+}
+
+.mode-switch-button[aria-pressed="true"]::before {
+  position: absolute;
+  top: 12px;
+  bottom: 12px;
+  left: 8px;
+  width: 3px;
+  border-radius: 999px;
+  background: var(--accent);
+  content: "";
+}
+
+.mode-switch-button:hover {
   border-color: var(--accent);
   color: var(--ink);
 }
@@ -261,11 +298,13 @@ select {
 }
 
 .mode-switch-button__label {
+  padding-left: 8px;
   font-size: 16px;
   font-weight: 600;
 }
 
 .mode-switch-button__helper {
+  padding-left: 8px;
   color: var(--ink-soft);
   font-size: 16px;
   font-weight: 400;
@@ -283,15 +322,29 @@ select {
 
   .practice-sidebar {
     top: 12px;
+    border-radius: 16px;
+    padding: 8px;
+  }
+
+  .practice-sidebar__eyebrow {
+    display: none;
   }
 
   .mode-switch-button {
     border-radius: 12px;
-    padding: 12px 10px;
+    padding: 12px 8px 12px 12px;
+  }
+
+  .mode-switch-button[aria-pressed="true"]::before {
+    top: 10px;
+    bottom: 10px;
+    left: 6px;
   }
 
   .mode-switch-button__label {
+    padding-left: 6px;
     font-size: 14px;
+    line-height: 1.3;
   }
 
   .mode-switch-button__helper {

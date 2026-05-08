@@ -26,6 +26,7 @@ export default function Home() {
 
         <div className="practice-layout">
           <aside className="practice-sidebar">
+            <p className="practice-sidebar__eyebrow">Practice path</p>
             <div className="mode-switch-list" aria-label="Practice paths">
               <button
                 type="button"
