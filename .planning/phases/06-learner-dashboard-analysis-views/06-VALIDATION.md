@@ -1,9 +1,9 @@
 ---
 phase: 6
 slug: learner-dashboard-analysis-views
-status: draft
-nyquist_compliant: false
-wave_0_complete: false
+status: approved
+nyquist_compliant: true
+wave_0_complete: true
 created: 2026-05-08
 ---
 
@@ -38,13 +38,13 @@ created: 2026-05-08
 
 | Task ID | Plan | Wave | Requirement | Threat Ref | Secure Behavior | Test Type | Automated Command | File Exists | Status |
 |---------|------|------|-------------|------------|-----------------|-----------|-------------------|-------------|--------|
-| 06-W0-01 | TBD | 0 | UI-02 | — | Mode switching does not clear completed JSON results unexpectedly. | component | `pnpm --filter web test -- app/page.test.tsx` | ❌ W0 | ⬜ pending |
-| 06-W0-02 | TBD | 0 | UI-01, UI-03, UI-04, UI-05, UI-06, UI-07 | — | Dashboard and tabs preserve deterministic results when AI feedback fails. | component | `pnpm --filter web test -- components/json-analysis/json-analysis-panel.test.tsx` | ⚠️ update existing | ⬜ pending |
-| 06-W0-03 | TBD | 0 | UI-04 | — | SVG timeline and pause rows expose labels, duration, and before/after words without relying on color alone. | component | `pnpm --filter web test -- components/json-analysis/json-analysis-panel.test.tsx -t "pause"` | ⚠️ update existing | ⬜ pending |
-| 06-W0-04 | TBD | 0 | UI-05 | — | Word chips expose word, score, band, and timing as accessible text. | component | `pnpm --filter web test -- components/json-analysis/json-analysis-panel.test.tsx -t "word"` | ⚠️ update existing | ⬜ pending |
-| 06-W0-05 | TBD | 0 | UI-06 | — | Phoneme rows do not show unsupported Vietnamese-specific hints. | component | `pnpm --filter web test -- components/json-analysis/json-analysis-panel.test.tsx -t "phoneme"` | ⚠️ update existing | ⬜ pending |
-| 06-W0-06 | TBD | 0 | UI-07 | T-06-01 | AI feedback errors affect only IELTS Analysis; deterministic dashboard/tabs remain visible. | component | `pnpm --filter web test -- components/json-analysis/json-analysis-panel.test.tsx -t "AI feedback"` | ⚠️ update existing | ⬜ pending |
-| 06-W0-07 | TBD | 0 | UI-01, UI-07 | T-06-02 | Saved-session UI stores sanitized derived snapshots and does not include raw vendor payload keys. | component | `pnpm --filter web test -- components/json-analysis/saved-sessions-panel.test.tsx` | ❌ W0 | ⬜ pending |
+| 06-W0-01 | 06-01, 06-02 | 0 | UI-02 | — | Mode switching does not clear completed JSON results unexpectedly. | component | `pnpm --filter web test -- app/page.test.tsx` | ✅ exists | ✅ green |
+| 06-W0-02 | 06-01, 06-02, 06-03, 06-04 | 0 | UI-01, UI-03, UI-04, UI-05, UI-06, UI-07 | — | Dashboard and tabs preserve deterministic results when AI feedback fails. | component | `pnpm --filter web test -- components/json-analysis/json-analysis-panel.test.tsx` | ✅ updated | ✅ green |
+| 06-W0-03 | 06-03 | 0 | UI-04 | — | SVG timeline and pause rows expose labels, duration, and before/after words without relying on color alone. | component | `pnpm --filter web test -- components/json-analysis/json-analysis-panel.test.tsx -t "pause"` | ✅ updated | ✅ green |
+| 06-W0-04 | 06-03 | 0 | UI-05 | — | Word chips expose word, score, band, and timing as accessible text. | component | `pnpm --filter web test -- components/json-analysis/json-analysis-panel.test.tsx -t "word"` | ✅ updated | ✅ green |
+| 06-W0-05 | 06-03 | 0 | UI-06 | — | Phoneme rows do not show unsupported Vietnamese-specific hints. | component | `pnpm --filter web test -- components/json-analysis/json-analysis-panel.test.tsx -t "phoneme"` | ✅ updated | ✅ green |
+| 06-W0-06 | 06-04 | 0 | UI-07 | T-06-01 | AI feedback errors affect only IELTS Analysis; deterministic dashboard/tabs remain visible. | component | `pnpm --filter web test -- components/json-analysis/json-analysis-panel.test.tsx -t "AI feedback"` | ✅ updated | ✅ green |
+| 06-W0-07 | 06-04 | 0 | UI-01, UI-07 | T-06-02 | Saved-session UI stores sanitized derived snapshots and does not include raw vendor payload keys. | component | `pnpm --filter web test -- components/json-analysis/saved-sessions-panel.test.tsx` | ✅ exists | ✅ green |
 
 *Status: ⬜ pending · ✅ green · ❌ red · ⚠️ flaky*
 
@@ -52,10 +52,10 @@ created: 2026-05-08
 
 ## Wave 0 Requirements
 
-- [ ] `apps/web/app/page.test.tsx` — covers top-level JSON/audio mode labels/descriptions, selected state, and non-clearing behavior.
-- [ ] `apps/web/components/json-analysis/json-analysis-panel.test.tsx` — update existing old-tab/list-row assertions to cover the Phase 6 dashboard, tabs, pause timeline, word chips, phoneme visuals, and AI feedback states.
-- [ ] `apps/web/components/json-analysis/saved-sessions-panel.test.tsx` — create if saved-session UI is extracted into a dedicated component; cover save/list/reopen, ownerKey persistence, contract parsing, and raw vendor payload exclusion.
-- [ ] Accessibility assertions for SVG pause labels, word chip accessible names, and descriptive reopen buttons.
+- [x] `apps/web/app/page.test.tsx` — covers top-level JSON/audio mode labels/descriptions, selected state, and non-clearing behavior.
+- [x] `apps/web/components/json-analysis/json-analysis-panel.test.tsx` — update existing old-tab/list-row assertions to cover the Phase 6 dashboard, tabs, pause timeline, word chips, phoneme visuals, and AI feedback states.
+- [x] `apps/web/components/json-analysis/saved-sessions-panel.test.tsx` — create if saved-session UI is extracted into a dedicated component; cover save/list/reopen, ownerKey persistence, contract parsing, and raw vendor payload exclusion.
+- [x] Accessibility assertions for SVG pause labels, word chip accessible names, and descriptive reopen buttons.
 
 ---
 
@@ -79,11 +79,11 @@ created: 2026-05-08
 
 ## Validation Sign-Off
 
-- [ ] All tasks have `<automated>` verify or Wave 0 dependencies
-- [ ] Sampling continuity: no 3 consecutive tasks without automated verify
-- [ ] Wave 0 covers all MISSING references
-- [ ] No watch-mode flags
-- [ ] Feedback latency < 120s
-- [ ] `nyquist_compliant: true` set in frontmatter after Wave 0 tests are implemented
+- [x] All tasks have `<automated>` verify or Wave 0 dependencies
+- [x] Sampling continuity: no 3 consecutive tasks without automated verify
+- [x] Wave 0 covers all MISSING references
+- [x] No watch-mode flags
+- [x] Feedback latency < 120s
+- [x] `nyquist_compliant: true` set in frontmatter after Wave 0 tests are implemented
 
-**Approval:** pending
+Approval: approved 2026-05-08
