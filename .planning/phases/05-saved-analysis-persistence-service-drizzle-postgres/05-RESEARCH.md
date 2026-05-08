@@ -272,11 +272,11 @@ Recommended wave breakdown:
 
 Keep Phase 5 backend-only; do not build learner-facing save/history UI.
 
-## Open Questions for Planner
+## Open Questions (RESOLVED)
 
-1. Future ownership column name: `userId` vs `accountId`. Recommendation: use nullable `userId` unless planner chooses a neutral `accountId`, and document auth backlog may add FK later.
-2. JSONB snapshot strictness. Recommendation: validate known top-level save fields strictly, keep snapshots flexible but bounded, and reject obvious raw vendor payload fields.
-3. DB provider fail timing. Recommendation: fail fast in the database provider, while adjusting tests/docs so non-DB paths remain explicit and green.
+1. **RESOLVED — Future ownership column name:** Use nullable `userId` on persisted/list/detail records. Do not accept `userId` in create payloads. Auth backlog may add a foreign key or migration later.
+2. **RESOLVED — JSONB snapshot strictness:** Use strict top-level saved-session contracts with flexible but bounded JSONB snapshot records. Reject shallow raw-vendor keys `speechAssessment`, `rawSpeechAssessment`, and `vendorPayload` in `inputMetadata`, `metrics`, and `feedback`.
+3. **RESOLVED — DB provider fail timing:** Drizzle CLI config must fail immediately without `DATABASE_URL`, but Nest `AppModule` compilation for unrelated non-DB tests must not fail solely because `SavedSessionsModule` is imported. Use a lazy database provider/service that calls `getRequiredDatabaseUrl()` only when saved-session persistence methods need a real database. Saved-session routes still fail loudly without `DATABASE_URL`; no in-memory fallback is allowed.
 
 ## Sources
 
@@ -294,4 +294,3 @@ Keep Phase 5 backend-only; do not build learner-facing save/history UI.
 - Drizzle PostgreSQL column docs: `https://orm.drizzle.team/docs/column-types/pg`
 - Drizzle Kit migration docs: `https://orm.drizzle.team/docs/drizzle-kit-migrate`
 - Node Postgres pool docs: `https://node-postgres.com/apis/pool`
-

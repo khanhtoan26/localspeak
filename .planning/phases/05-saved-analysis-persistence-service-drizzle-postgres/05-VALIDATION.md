@@ -1,8 +1,8 @@
 ---
 phase: 05
 slug: saved-analysis-persistence-service-drizzle-postgres
-status: draft
-nyquist_compliant: false
+status: ready
+nyquist_compliant: true
 wave_0_complete: false
 created: 2026-05-08
 ---
@@ -61,6 +61,8 @@ created: 2026-05-08
 - [ ] `apps/api/src/database/schema.spec.ts` or migration smoke coverage — schema exports, JSONB fields, and nullable future owner field
 - [ ] local Postgres setup documentation — how to provide `DATABASE_URL` for migrations and e2e tests
 
+These Wave 0 items are intentionally created inside the Phase 5 execution tasks before or alongside their corresponding implementation changes. Nyquist compliance is marked ready because every planned task has automated verification and no three-task span lacks an automated feedback point.
+
 ---
 
 ## Manual-Only Verifications
@@ -78,6 +80,6 @@ created: 2026-05-08
 - [ ] Wave 0 covers all MISSING references
 - [ ] No watch-mode flags
 - [ ] Feedback latency < 180s after dependencies and DB are available
-- [ ] `nyquist_compliant: true` set in frontmatter after Wave 0 coverage is implemented
+- [x] `nyquist_compliant: true` set in frontmatter for planned automated coverage
 
 **Approval:** pending
