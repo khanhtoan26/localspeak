@@ -422,6 +422,18 @@ export function JsonAnalysisPanel() {
                   Metrics will still be computed, but review these unusual
                   values.
                 </p>
+                <ul className="json-issue-list">
+                  {analysisState.result.warnings.map((warning) => (
+                    <li
+                      className="json-issue-row"
+                      key={`${warning.code}-${warning.path ?? ""}`}
+                    >
+                      <strong>{warning.label}</strong>
+                      <p>{warning.message}</p>
+                      {warning.hint ? <p>{warning.hint}</p> : null}
+                    </li>
+                  ))}
+                </ul>
               </div>
             ) : null}
             <SummaryMetricCards summary={analysisState.result.summary} />

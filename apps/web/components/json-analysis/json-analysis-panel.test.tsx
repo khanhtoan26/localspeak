@@ -640,25 +640,35 @@ describe("JsonAnalysisPanel", () => {
     expect(screen.getByText("118")).toBeInTheDocument();
   });
 
-  it("renders deterministic summary tab copy and warning callouts", async () => {
+  it("renders exact Phase 6 tabs with Pause Analysis selected by default", async () => {
     renderPanel();
     await previewAndAnalyze();
 
-    expect(screen.getByRole("button", { name: "Summary" })).toHaveAttribute(
+    const tabs = screen.getAllByRole("button").filter((button) =>
+      ["Pause Analysis", "Words", "Phonemes", "IELTS Analysis"].includes(
+        button.textContent ?? "",
+      ),
+    );
+    expect(tabs.map((tab) => tab.textContent)).toEqual([
+      "Pause Analysis",
+      "Words",
+      "Phonemes",
+      "IELTS Analysis",
+    ]);
+    expect(screen.getByRole("button", { name: "Pause Analysis" })).toHaveAttribute(
       "aria-pressed",
       "true",
     );
-    expect(screen.getByRole("button", { name: "Words" })).toBeInTheDocument();
-    expect(screen.getByRole("button", { name: "Phonemes" })).toBeInTheDocument();
-    expect(screen.getByRole("button", { name: "Pauses" })).toBeInTheDocument();
-    expect(screen.getByText("What this means")).toBeInTheDocument();
-    expect(screen.getByText("Pronunciation signals")).toBeInTheDocument();
-    expect(screen.getByText("Fluency signals")).toBeInTheDocument();
-    expect(screen.getByText("Warnings")).toBeInTheDocument();
-    expect(screen.getByText(/This suggests/)).toBeInTheDocument();
+    expect(screen.queryByRole("button", { name: "Summary" })).not.toBeInTheDocument();
+    expect(screen.queryByRole("button", { name: "Pauses" })).not.toBeInTheDocument();
     expect(screen.queryByText(/Gemini says|examiner thinks|IELTS examiner/i)).not.toBeInTheDocument();
     expect(screen.getByText("Very high WPM")).toBeInTheDocument();
     expect(screen.getByText("The computed speaking rate is unusually high.")).toBeInTheDocument();
+
+    fireEvent.click(screen.getByRole("button", { name: "IELTS Analysis" }));
+    expect(
+      screen.getByText(/Click "Get AI Feedback" above to receive personalized IELTS/i),
+    ).toBeInTheDocument();
   });
 
   it("renders original-order word bands with scores and timings", async () => {
@@ -705,7 +715,7 @@ describe("JsonAnalysisPanel", () => {
     renderPanel();
     await previewAndAnalyze();
 
-    fireEvent.click(screen.getByRole("button", { name: "Pauses" }));
+    fireEvent.click(screen.getByRole("button", { name: "Pause Analysis" }));
 
     expect(screen.getByText("Critical")).toBeInTheDocument();
     expect(screen.getByText("Noticeable")).toBeInTheDocument();
@@ -720,7 +730,7 @@ describe("JsonAnalysisPanel", () => {
     cleanup();
     renderPanel();
     await previewAndAnalyze(emptyAnalysisResponse);
-    fireEvent.click(screen.getByRole("button", { name: "Pauses" }));
+    fireEvent.click(screen.getByRole("button", { name: "Pause Analysis" }));
 
     expect(screen.getByText("No notable pauses found.")).toBeInTheDocument();
     expect(
