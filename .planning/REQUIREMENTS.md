@@ -44,13 +44,13 @@ Requirements for initial release. Each maps to roadmap phases.
 
 ### UI
 
-- [ ] **UI-01**: User sees a dashboard header with pronunciation percentage, Pronunciation Band, Fluency Band, and WPM.
-- [ ] **UI-02**: User can switch between JSON mode and audio mode.
-- [ ] **UI-03**: JSON mode provides Pause Analysis, Words, Phonemes, and IELTS Analysis tabs.
-- [ ] **UI-04**: Pause Analysis tab shows summary stats, SVG timeline with word blocks and shaded pauses, and pause list sorted by duration.
-- [ ] **UI-05**: Words tab shows score-colored word chips.
-- [ ] **UI-06**: Phonemes tab shows ranked phoneme weakness bars grouped by ARPAbet label.
-- [ ] **UI-07**: IELTS Analysis tab can trigger Gemini analysis and display streamed output.
+- [x] **UI-01**: User sees a dashboard header with pronunciation percentage, Pronunciation Band, Fluency Band, and WPM.
+- [x] **UI-02**: User can switch between JSON mode and audio mode.
+- [x] **UI-03**: JSON mode provides Pause Analysis, Words, Phonemes, and IELTS Analysis tabs.
+- [x] **UI-04**: Pause Analysis tab shows summary stats, SVG timeline with word blocks and shaded pauses, and pause list sorted by duration.
+- [x] **UI-05**: Words tab shows score-colored word chips.
+- [x] **UI-06**: Phonemes tab shows ranked phoneme weakness bars grouped by ARPAbet label.
+- [x] **UI-07**: IELTS Analysis tab can trigger Gemini analysis and display streamed output.
 
 ### Architecture
 
@@ -119,13 +119,13 @@ Which phases cover which requirements. Updated during roadmap creation.
 | GEM-02 | Phase 3 | Pending |
 | GEM-03 | Phase 4 | Pending |
 | GEM-04 | Phase 3 | Pending |
-| UI-01 | Phase 6 | Pending |
-| UI-02 | Phase 6 | Pending |
-| UI-03 | Phase 6 | Pending |
-| UI-04 | Phase 6 | Pending |
-| UI-05 | Phase 6 | Pending |
-| UI-06 | Phase 6 | Pending |
-| UI-07 | Phase 6 | Pending |
+| UI-01 | Phase 6 | Complete |
+| UI-02 | Phase 6 | Complete |
+| UI-03 | Phase 6 | Complete |
+| UI-04 | Phase 6 | Complete |
+| UI-05 | Phase 6 | Complete |
+| UI-06 | Phase 6 | Complete |
+| UI-07 | Phase 6 | Complete |
 | ARCH-01 | Phase 1 | Complete |
 | ARCH-02 | Phase 1 | Complete |
 | ARCH-03 | Phase 5 | Pending |
