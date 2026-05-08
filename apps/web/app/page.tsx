@@ -20,30 +20,37 @@ export default function Home() {
           </p>
         </header>
 
-        {/* Mode tabs */}
-        <div className="json-tab-list">
+        <div className="mode-switch-list" aria-label="Practice paths">
           <button
             type="button"
-            className="json-tab-button"
+            className="mode-switch-button"
+            aria-label="JSON Analysis"
             aria-pressed={mode === "json"}
             onClick={() => setMode("json")}
           >
-            JSON Analysis
+            <span className="mode-switch-button__label">JSON Analysis</span>
+            <span className="mode-switch-button__helper">
+              Import assessment data to inspect scores, pauses, words, and phonemes.
+            </span>
           </button>
           <button
             type="button"
-            className="json-tab-button"
+            className="mode-switch-button"
+            aria-label="Live Audio Practice"
             aria-pressed={mode === "audio"}
             onClick={() => setMode("audio")}
           >
-            Live Audio
+            <span className="mode-switch-button__label">
+              Live Audio Practice
+            </span>
+            <span className="mode-switch-button__helper">
+              Record from your microphone and watch the AI coach respond live.
+            </span>
           </button>
         </div>
 
-        {/* Mode content */}
         {mode === "json" ? <JsonAnalysisPanel /> : <AudioModePanel />}
       </div>
     </main>
   );
 }
-

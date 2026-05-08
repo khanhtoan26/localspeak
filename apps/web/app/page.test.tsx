@@ -7,16 +7,25 @@ describe("Home page mode switch", () => {
     cleanup();
   });
 
-  it("renders current JSON and audio modes with accessible selected state", () => {
+  it("renders Phase 6 practice paths with helper copy and selected state", () => {
     render(<Home />);
 
     expect(
       screen.getByRole("button", { name: "JSON Analysis" }),
     ).toHaveAttribute("aria-pressed", "true");
-    expect(screen.getByRole("button", { name: "Live Audio" })).toHaveAttribute(
-      "aria-pressed",
-      "false",
-    );
+    expect(
+      screen.getByRole("button", { name: "Live Audio Practice" }),
+    ).toHaveAttribute("aria-pressed", "false");
+    expect(
+      screen.getByText(
+        "Import assessment data to inspect scores, pauses, words, and phonemes.",
+      ),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByText(
+        "Record from your microphone and watch the AI coach respond live.",
+      ),
+    ).toBeInTheDocument();
   });
 
   it("does not claim Gemini Live while the audio path still uses Deepgram", () => {
