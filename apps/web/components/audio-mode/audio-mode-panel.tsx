@@ -8,43 +8,28 @@ import { scorePronunciation } from "../../lib/audio/score-pronunciation";
 import type { PronunciationResult } from "../../lib/audio/score-pronunciation";
 
 function WordScoreCard({ result }: { result: PronunciationResult }) {
-  const levelColor: Record<string, string> = {
-    good: "var(--color-ok)",
-    ok: "var(--color-warning, #f59e0b)",
-    weak: "var(--color-error)",
-    missed: "var(--color-muted, #6b7280)",
-  };
-
   return (
-    <div className="json-analysis-card" style={{ marginTop: "16px" }}>
-      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "12px" }}>
-        <span className="json-input-label" style={{ margin: 0 }}>Pronunciation Score</span>
-        <span style={{
-          fontSize: "1.5rem",
-          fontWeight: 700,
-          color: result.overallScore >= 80 ? "var(--color-ok)" : result.overallScore >= 60 ? "var(--color-warning, #f59e0b)" : "var(--color-error)",
-        }}>
+    <div className="json-analysis-card audio-score-card">
+      <div className="audio-score-card__header">
+        <span className="json-input-label audio-score-card__label">
+          Pronunciation Score
+        </span>
+        <span
+          className={`audio-score-card__value audio-score-card__value--${getScoreLevel(
+            result.overallScore,
+          )}`}
+        >
           {result.overallScore}/100
         </span>
       </div>
 
       {/* Word-by-word scores */}
-      <div style={{ display: "flex", flexWrap: "wrap", gap: "6px", marginBottom: "16px" }}>
+      <div className="audio-word-chip-list">
         {result.wordScores.map((ws, i) => (
           <span
             key={i}
+            className={`audio-word-chip audio-word-chip--${ws.level}`}
             title={ws.spoken ? `"${ws.spoken}" (${Math.round(ws.confidence * 100)}%)` : "not detected"}
-            style={{
-              padding: "4px 8px",
-              borderRadius: "6px",
-              fontSize: "0.875rem",
-              fontWeight: 500,
-              color: "var(--color-bg)",
-              backgroundColor: levelColor[ws.level],
-              opacity: ws.level === "missed" ? 0.5 : 1,
-              textDecoration: ws.level === "missed" ? "line-through" : "none",
-              cursor: "default",
-            }}
           >
             {ws.expected}
           </span>
@@ -52,17 +37,24 @@ function WordScoreCard({ result }: { result: PronunciationResult }) {
       </div>
 
       {/* Fluency metrics */}
-      <div style={{ display: "flex", gap: "24px", fontSize: "0.8rem", color: "var(--color-muted, #888)" }}>
-        <span>⏱ {result.fluency.wordsPerMinute} WPM</span>
-        <span>⏸ {result.fluency.hesitationCount} pause{result.fluency.hesitationCount !== 1 ? "s" : ""}</span>
-        <span>🕐 {result.fluency.totalDurationSeconds}s</span>
+      <div className="audio-fluency-meta">
+        <span>{result.fluency.wordsPerMinute} WPM</span>
+        <span>
+          {result.fluency.hesitationCount} pause
+          {result.fluency.hesitationCount !== 1 ? "s" : ""}
+        </span>
+        <span>{result.fluency.totalDurationSeconds}s total</span>
       </div>
 
-      <p style={{ marginTop: "12px", fontSize: "0.875rem", color: "var(--color-fg)" }}>
-        {result.summary}
-      </p>
+      <p className="audio-score-card__summary">{result.summary}</p>
     </div>
   );
+}
+
+function getScoreLevel(score: number): "good" | "okay" | "weak" {
+  if (score >= 80) return "good";
+  if (score >= 60) return "okay";
+  return "weak";
 }
 
 export function AudioModePanel() {
@@ -94,13 +86,12 @@ export function AudioModePanel() {
         value={referenceText}
         onChange={(e) => setReferenceText(e.target.value)}
         placeholder="Enter the sentence you want to practice..."
-        className="json-input-textarea"
-        style={{ minHeight: "auto", padding: "12px 16px" }}
+        className="json-input-textarea audio-reference-input"
         disabled={status === "recording" || status === "connecting"}
       />
 
       {/* Record button with waveform */}
-      <div style={{ marginTop: "24px" }}>
+      <div className="audio-section">
         <RecordButton
           status={status}
           onStart={() => void start()}
@@ -116,7 +107,7 @@ export function AudioModePanel() {
       )}
 
       {/* Live transcript */}
-      <div style={{ marginTop: "24px" }}>
+      <div className="audio-section">
         <LiveAnalysisPanel
           analysis={displayText}
           isStreaming={status === "recording"}

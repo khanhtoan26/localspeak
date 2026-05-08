@@ -13,10 +13,16 @@ type TabName = (typeof tabs)[number];
 type ResultTabsProps = {
   analysis: JsonAnalysisResponse;
   aiCoachState: AiCoachState;
+  onRequestFeedback: () => void;
   onRetryFeedback: () => void;
 };
 
-export function ResultTabs({ analysis, aiCoachState, onRetryFeedback }: ResultTabsProps) {
+export function ResultTabs({
+  analysis,
+  aiCoachState,
+  onRequestFeedback,
+  onRetryFeedback,
+}: ResultTabsProps) {
   const [activeTab, setActiveTab] = useState<TabName>("Pause Analysis");
 
   return (
@@ -47,7 +53,11 @@ export function ResultTabs({ analysis, aiCoachState, onRetryFeedback }: ResultTa
           <PhonemesTab patterns={analysis.weakPhonemePatterns} />
         ) : null}
         {activeTab === "IELTS Analysis" ? (
-          <AiCoachTab state={aiCoachState} onRetry={onRetryFeedback} />
+          <AiCoachTab
+            state={aiCoachState}
+            onRequestFeedback={onRequestFeedback}
+            onRetry={onRetryFeedback}
+          />
         ) : null}
       </div>
     </section>

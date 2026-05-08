@@ -19,7 +19,7 @@ export function WordsTab({ words }: WordsTabProps) {
   if (words.length === 0) {
     return (
       <section className="json-empty-state">
-        <h2 className="json-analysis-card__title">No major weak words found.</h2>
+        <h2 className="json-analysis-card__title">No major weak words found</h2>
         <p className="json-analysis-card__detail">
           Most word scores are in the okay or good range for this sample.
         </p>

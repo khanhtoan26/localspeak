@@ -10,37 +10,15 @@ export function LiveAnalysisPanel({
   isStreaming,
 }: LiveAnalysisPanelProps) {
   return (
-    <div
-      style={{
-        background: "var(--ink)",
-        color: "#f5f5f0",
-        borderRadius: "14px",
-        padding: "16px",
-        minHeight: "160px",
-        fontFamily: "var(--font-mono)",
-        fontSize: "14px",
-        lineHeight: "1.6",
-      }}
-    >
+    <div className="audio-live-panel">
       {!analysis && !isStreaming ? (
-        <p style={{ color: "var(--ink-muted)", fontStyle: "italic", margin: 0 }}>
+        <p className="audio-live-panel__empty">
           Live analysis will appear here…
         </p>
       ) : (
-        <div style={{ whiteSpace: "pre-wrap" }}>
+        <div className="audio-live-panel__text">
           {analysis}
-          {isStreaming && (
-            <span
-              style={{
-                display: "inline-block",
-                width: "2px",
-                height: "1em",
-                background: "#f5f5f0",
-                marginLeft: "1px",
-                animation: "blink 1s step-end infinite",
-              }}
-            />
-          )}
+          {isStreaming && <span className="audio-live-panel__cursor" />}
         </div>
       )}
     </div>

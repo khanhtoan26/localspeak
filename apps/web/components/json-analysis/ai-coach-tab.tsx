@@ -10,18 +10,30 @@ type AiCoachState =
 
 type AiCoachTabProps = {
   state: AiCoachState;
+  onRequestFeedback: () => void;
   onRetry: () => void;
 };
 
 export type { AiCoachState };
 
-export function AiCoachTab({ state, onRetry }: AiCoachTabProps) {
+export function AiCoachTab({
+  state,
+  onRequestFeedback,
+  onRetry,
+}: AiCoachTabProps) {
   if (state.status === "idle") {
     return (
       <section className="json-analysis-card">
         <p className="json-analysis-card__detail">
           Get AI feedback after reviewing the deterministic metrics.
         </p>
+        <button
+          type="button"
+          className="json-primary-button json-action-button json-action-button--ai"
+          onClick={onRequestFeedback}
+        >
+          Get AI Feedback
+        </button>
       </section>
     );
   }
@@ -49,7 +61,7 @@ export function AiCoachTab({ state, onRetry }: AiCoachTabProps) {
         </p>
         <button
           type="button"
-          className="json-action-button"
+          className="json-primary-button json-action-button json-action-button--ai"
           onClick={onRetry}
         >
           Retry AI Feedback

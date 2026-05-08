@@ -140,7 +140,7 @@ export function useDeepgramSession(referenceText: string): AudioSessionState {
       const data = await res.json();
       apiKey = data.accessToken;
     } catch {
-      setError("Unable to get streaming token. Please try again.");
+      setError("Unable to connect to AI coach. Check your internet connection and try again.");
       setStatus("error");
       return;
     }
@@ -151,7 +151,7 @@ export function useDeepgramSession(referenceText: string): AudioSessionState {
       stream = await navigator.mediaDevices.getUserMedia({ audio: true });
     } catch {
       setError(
-        "Microphone access is required. Please allow microphone in browser settings.",
+        "Microphone access is required. Please allow microphone access in your browser settings.",
       );
       setStatus("error");
       return;
@@ -202,7 +202,7 @@ export function useDeepgramSession(referenceText: string): AudioSessionState {
         source.connect(workletNode);
         workletNode.connect(audioCtx.destination);
       } catch {
-        setError("Failed to initialize audio capture.");
+        setError("Unable to connect to AI coach. Check your internet connection and try again.");
         setStatus("error");
         cleanup();
       }
@@ -246,7 +246,7 @@ export function useDeepgramSession(referenceText: string): AudioSessionState {
     };
 
     ws.onerror = () => {
-      setError("Connection error — please try again.");
+      setError("Connection lost — please try again.");
       setStatus("error");
       cleanup();
     };

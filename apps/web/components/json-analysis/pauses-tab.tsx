@@ -15,7 +15,7 @@ export function PausesTab({ pauses, pauseRatio }: PausesTabProps) {
   if (pauses.length === 0) {
     return (
       <section className="json-empty-state">
-        <h2 className="json-analysis-card__title">No notable pauses found.</h2>
+        <h2 className="json-analysis-card__title">No notable pauses found</h2>
         <p className="json-analysis-card__detail">
           The word timings did not include pauses long enough to flag in this analysis.
         </p>
@@ -101,8 +101,8 @@ export function PausesTab({ pauses, pauseRatio }: PausesTabProps) {
       <section className="pause-practice-cue">
         <h3 className="json-analysis-subtitle">Practice this pause first</h3>
         <p>
-          Say "{longestPause.beforeWord} {longestPause.afterWord}" in one breath,
-          then repeat the full sentence around that gap.
+          Try saying "{longestPause.beforeWord} {longestPause.afterWord}" as one
+          short phrase, then repeat the full sentence around that gap.
         </p>
       </section>
 
@@ -118,7 +118,7 @@ export function PausesTab({ pauses, pauseRatio }: PausesTabProps) {
               {pause.afterWord}"
             </span>
             <span>
-              gap: {pause.startTime.toFixed(2)}s-{pause.endTime.toFixed(2)}s
+              gap: {pause.startTime.toFixed(2)}s to {pause.endTime.toFixed(2)}s
             </span>
             <p>{pause.explanation}</p>
           </li>

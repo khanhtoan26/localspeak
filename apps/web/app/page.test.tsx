@@ -23,7 +23,7 @@ describe("Home page mode switch", () => {
     ).toBeInTheDocument();
     expect(
       screen.getByText(
-        "Record from your microphone and watch the AI coach respond live.",
+        "Record from your microphone and watch live transcript feedback.",
       ),
     ).toBeInTheDocument();
   });

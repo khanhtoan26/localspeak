@@ -321,7 +321,7 @@ describe("JsonAnalysisPanel", () => {
     expect(
       screen.getByLabelText("Speech assessment JSON input"),
     ).toBeInTheDocument();
-    expect(screen.getByText("Paste speech assessment JSON to begin.")).toBeInTheDocument();
+    expect(screen.getByText("Start with an analysis")).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "Analyze JSON" })).toBeDisabled();
     expect(
       screen.getByText("Paste JSON or load the sample to continue."),
@@ -515,7 +515,7 @@ describe("JsonAnalysisPanel", () => {
       "Clear the pasted JSON and current results? This cannot be undone.",
     );
     expect(screen.getByLabelText("Speech assessment JSON input")).toHaveValue("");
-    expect(screen.getByText("Paste speech assessment JSON to begin.")).toBeInTheDocument();
+    expect(screen.getByText("Start with an analysis")).toBeInTheDocument();
   });
 
   it("keeps malformed backend preview responses out of success UI", async () => {
@@ -600,7 +600,7 @@ describe("JsonAnalysisPanel", () => {
 
     expect(
       screen.getByText(
-        "We couldn't analyze this JSON. The backend may be unavailable or the response did not match the contract.",
+        "We couldn't analyze this JSON yet. Check the format and try again.",
       ),
     ).toBeInTheDocument();
     expect(
@@ -675,9 +675,9 @@ describe("JsonAnalysisPanel", () => {
     renderPanel();
     await previewAndAnalyze(createJsonAnalysisResponseFixture());
 
+    fireEvent.click(screen.getByRole("button", { name: "IELTS Analysis" }));
     vi.mocked(fetch).mockImplementationOnce(() => new Promise(() => undefined));
     fireEvent.click(screen.getByRole("button", { name: "Get AI Feedback" }));
-    fireEvent.click(screen.getByRole("button", { name: "IELTS Analysis" }));
 
     expect(
       screen.getByText("Generating personalized IELTS feedback…"),
@@ -688,11 +688,10 @@ describe("JsonAnalysisPanel", () => {
     cleanup();
     renderPanel();
     await previewAndAnalyze(createJsonAnalysisResponseFixture());
+    fireEvent.click(screen.getByRole("button", { name: "IELTS Analysis" }));
     vi.mocked(fetch).mockRejectedValueOnce(new Error("offline"));
-
     fireEvent.click(screen.getByRole("button", { name: "Get AI Feedback" }));
     await flushPromises();
-    fireEvent.click(screen.getByRole("button", { name: "IELTS Analysis" }));
 
     expect(
       screen.getByText(
@@ -750,7 +749,7 @@ describe("JsonAnalysisPanel", () => {
     await previewAndAnalyze(emptyAnalysisResponse);
     fireEvent.click(screen.getByRole("button", { name: "Phonemes" }));
 
-    expect(screen.getByText("No repeated weak pattern found.")).toBeInTheDocument();
+    expect(screen.getByText("No repeated weak sound pattern found")).toBeInTheDocument();
     expect(
       screen.getByText(
         "The JSON did not show the same low-scoring phone repeated at least twice.",
@@ -773,12 +772,12 @@ describe("JsonAnalysisPanel", () => {
     expect(screen.getByText("Critical pause")).toBeInTheDocument();
     expect(screen.getByText("Noticeable pause")).toBeInTheDocument();
     expect(screen.getByText("0.95s between \"trees\" and \"stood\"")).toBeInTheDocument();
-    expect(screen.getByText("gap: 2.10s-3.05s")).toBeInTheDocument();
+    expect(screen.getByText("gap: 2.10s to 3.05s")).toBeInTheDocument();
     expect(
       screen.getByText("This pause may interrupt fluency between key content words."),
     ).toBeInTheDocument();
     expect(
-      screen.getByText(/Say "trees stood" in one breath/),
+      screen.getByText(/Try saying "trees stood" as one short phrase/),
     ).toBeInTheDocument();
     expect(screen.queryByText("Long pause")).not.toBeInTheDocument();
 
@@ -787,7 +786,7 @@ describe("JsonAnalysisPanel", () => {
     await previewAndAnalyze(emptyAnalysisResponse);
     fireEvent.click(screen.getByRole("button", { name: "Pause Analysis" }));
 
-    expect(screen.getByText("No notable pauses found.")).toBeInTheDocument();
+    expect(screen.getByText("No notable pauses found")).toBeInTheDocument();
     expect(
       screen.getByText(
         "The word timings did not include pauses long enough to flag in this analysis.",

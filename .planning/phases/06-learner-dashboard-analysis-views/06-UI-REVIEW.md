@@ -1,7 +1,8 @@
 ---
 phase: 06-learner-dashboard-analysis-views
-status: complete_code_only_review
+status: complete_post_polish_review
 overall_score: 14/24
+post_polish_score: 20/24
 scores:
   copywriting: 3
   visuals: 2
@@ -48,3 +49,26 @@ baseline: UI-SPEC design contract
 - `saved-sessions-panel.tsx`, `globals.css`: Keep save visible, but put saved history behind a disclosure and reduce card weight.
 - `audio-mode-panel.tsx`, `record-button.tsx`, `live-analysis-panel.tsx`, `globals.css`: Replace inline styling with tokenized audio classes.
 - `validation-preview-card.tsx`, `pauses-tab.tsx`, `words-tab.tsx`, `phonemes-tab.tsx`, `record-button.tsx`, `use-deepgram-session.ts`: Align copy with the UI-SPEC.
+
+## Post-Polish Re-Audit
+
+**Verdict:** PASS with non-blocking follow-ups. The prior blocking hierarchy, audio design-system, AI CTA, and saved-history issues are addressed.
+
+| Pillar | Score | Key Finding |
+|--------|-------|-------------|
+| Copywriting | 3/4 | Empty states, AI CTA, saved history, and audio errors are aligned; remaining copy drift is minor. |
+| Visuals | 3/4 | Results lead after analysis, AI feedback is contextual, and saved sessions are secondary/collapsible. |
+| Color | 3/4 | Audio mode now uses tokenized classes and no longer breaks the Phase 6 visual system. |
+| Typography | 4/4 | Audio typography no longer introduces off-contract sizes or weights. |
+| Spacing | 3/4 | Main dashboard and audio controls use the shared spacing system; nested shell padding can be refined later. |
+| Experience Design | 4/4 | Loading, error, empty, retry, save, reopen, and deterministic-result states remain covered. |
+
+**Overall:** 20/24
+
+### Resolution Summary
+
+1. Dashboard results now render before input/validation after a successful analysis; JSON editing is moved into a secondary disclosure.
+2. AI feedback is requested from the IELTS Analysis tab idle state instead of a standalone button between metrics and tabs.
+3. Saved-session history is collapsed under a lighter secondary panel with date metadata and descriptive reopen labels.
+4. Audio mode uses shared CSS classes/tokens for recording controls, waveform, live transcript, score card, word chips, and reference input.
+5. UI copy was normalized for JSON empty states, pause/word/phoneme empty states, pause practice cues, analyze errors, and audio-mode helper/error text.

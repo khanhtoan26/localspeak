@@ -129,7 +129,10 @@ describe("SavedSessionsPanel", () => {
     );
 
     expect(await screen.findByText("Three trees practice")).toBeInTheDocument();
-    fireEvent.click(screen.getByRole("button", { name: "Reopen Result" }));
+    expect(screen.getByText("JSON Analysis · May 8, 2026")).toBeInTheDocument();
+    fireEvent.click(
+      screen.getByRole("button", { name: "Reopen result from May 8, 2026" }),
+    );
 
     await waitFor(() =>
       expect(fetchMock).toHaveBeenCalledWith(

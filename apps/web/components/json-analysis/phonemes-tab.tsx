@@ -19,7 +19,9 @@ export function PhonemesTab({ patterns }: PhonemesTabProps) {
   if (topPatterns.length === 0) {
     return (
       <section className="json-empty-state">
-        <h2 className="json-analysis-card__title">No repeated weak pattern found.</h2>
+        <h2 className="json-analysis-card__title">
+          No repeated weak sound pattern found
+        </h2>
         <p className="json-analysis-card__detail">
           The JSON did not show the same low-scoring phone repeated at least twice.
         </p>

@@ -23,7 +23,7 @@ const PREVIEW_UNAVAILABLE_COPY =
 const PREVIEW_CONTRACT_MISMATCH_COPY =
   "Backend preview response did not match the expected contract.";
 const ANALYZE_ERROR_COPY =
-  "We couldn't analyze this JSON. The backend may be unavailable or the response did not match the contract.";
+  "We couldn't analyze this JSON yet. Check the format and try again.";
 const ANALYZE_ERROR_NEXT_STEP =
   "Check the validation preview, then try Analyze JSON again.";
 
@@ -398,41 +398,6 @@ export function JsonAnalysisPanel() {
           </p>
         </header>
 
-        <JsonInputCard
-          jsonText={jsonText}
-          fileName={fileName}
-          fileError={fileError}
-          lastValidationStatus={lastValidationStatus}
-          canAnalyze={canAnalyze}
-          isAnalyzing={analysisState.status === "loading"}
-          disabledHelper={disabledHelper}
-          onJsonTextChange={resetForNewInput}
-          onFileNameChange={setFileName}
-          onFileErrorChange={setFileError}
-          onLoadSample={() => void handleLoadSample()}
-          onClear={handleClear}
-          onAnalyze={() => void handleAnalyze()}
-        />
-
-        <ValidationPreviewCard
-          syntaxState={syntaxState}
-          preview={preview}
-          previewError={previewError}
-          isPreviewing={isPreviewing}
-        />
-
-        {resultsStale ? (
-          <p className="json-analysis-stale">
-            Input changed. Analyze again to update results.
-          </p>
-        ) : null}
-
-        {analysisState.status === "loading" ? (
-          <p className="json-analysis-loading" aria-live="polite">
-            Computing deterministic metrics from the JSON...
-          </p>
-        ) : null}
-
         {analysisState.status === "done" ? (
           <section className="json-results-region" aria-live="polite">
             {reopenedMarker ? (
@@ -465,20 +430,11 @@ export function JsonAnalysisPanel() {
               </div>
             ) : null}
             <SummaryMetricCards summary={analysisState.result.summary} />
-            <button
-              type="button"
-              className="json-primary-button json-action-button json-action-button--ai"
-              onClick={() => void handleGetFeedback()}
-              disabled={aiCoachState.status === "loading"}
-            >
-              {aiCoachState.status === "loading"
-                ? "Generating…"
-                : "Get AI Feedback"}
-            </button>
             <div className="json-results-main">
               <ResultTabs
                 analysis={analysisState.result}
                 aiCoachState={aiCoachState}
+                onRequestFeedback={() => void handleGetFeedback()}
                 onRetryFeedback={() => void handleGetFeedback()}
               />
               <SavedSessionsPanel
@@ -488,6 +444,71 @@ export function JsonAnalysisPanel() {
               />
             </div>
           </section>
+        ) : null}
+
+        {analysisState.status === "done" ? (
+          <details className="json-input-disclosure">
+            <summary>Change JSON input</summary>
+            <div className="json-input-disclosure__content">
+              {resultsStale ? (
+                <p className="json-analysis-stale">
+                  Input changed. Analyze again to update results.
+                </p>
+              ) : null}
+              <JsonInputCard
+                jsonText={jsonText}
+                fileName={fileName}
+                fileError={fileError}
+                lastValidationStatus={lastValidationStatus}
+                canAnalyze={canAnalyze}
+                isAnalyzing={false}
+                disabledHelper={disabledHelper}
+                onJsonTextChange={resetForNewInput}
+                onFileNameChange={setFileName}
+                onFileErrorChange={setFileError}
+                onLoadSample={() => void handleLoadSample()}
+                onClear={handleClear}
+                onAnalyze={() => void handleAnalyze()}
+              />
+              <ValidationPreviewCard
+                syntaxState={syntaxState}
+                preview={preview}
+                previewError={previewError}
+                isPreviewing={isPreviewing}
+              />
+            </div>
+          </details>
+        ) : (
+          <>
+            <JsonInputCard
+              jsonText={jsonText}
+              fileName={fileName}
+              fileError={fileError}
+              lastValidationStatus={lastValidationStatus}
+              canAnalyze={canAnalyze}
+              isAnalyzing={analysisState.status === "loading"}
+              disabledHelper={disabledHelper}
+              onJsonTextChange={resetForNewInput}
+              onFileNameChange={setFileName}
+              onFileErrorChange={setFileError}
+              onLoadSample={() => void handleLoadSample()}
+              onClear={handleClear}
+              onAnalyze={() => void handleAnalyze()}
+            />
+
+            <ValidationPreviewCard
+              syntaxState={syntaxState}
+              preview={preview}
+              previewError={previewError}
+              isPreviewing={isPreviewing}
+            />
+          </>
+        )}
+
+        {analysisState.status === "loading" ? (
+          <p className="json-analysis-loading" aria-live="polite">
+            Computing deterministic metrics from the JSON...
+          </p>
         ) : null}
 
         {analysisState.status === "error" ? (

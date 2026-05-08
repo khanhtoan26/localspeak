@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-import type { AudioSessionStatus } from "./use-audio-session";
+import type { AudioSessionStatus } from "./use-deepgram-session";
 
 interface RecordButtonProps {
   status: AudioSessionStatus;
@@ -47,52 +47,26 @@ export function RecordButton({
   const isConnecting = status === "connecting";
 
   return (
-    <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: "12px" }}>
+    <div className="audio-record-control">
       <button
         type="button"
         onClick={isRecording ? onStop : onStart}
         disabled={disabled || isConnecting}
-        className={isRecording ? "json-primary-button" : "json-primary-button"}
-        style={{
-          borderRadius: "999px",
-          background: isRecording ? "var(--danger)" : "var(--ink)",
-          borderColor: isRecording ? "var(--danger)" : "var(--ink)",
-          display: "inline-flex",
-          alignItems: "center",
-          gap: "8px",
-        }}
+        className={`json-primary-button audio-record-button${
+          isRecording ? " audio-record-button--recording" : ""
+        }`}
       >
         {isRecording && (
-          <span
-            style={{
-              width: "10px",
-              height: "10px",
-              background: "#fca5a5",
-              borderRadius: "999px",
-              animation: "blink 1s step-end infinite",
-            }}
-          />
+          <span className="audio-record-button__dot" />
         )}
-        {isConnecting ? "Connecting..." : isRecording ? "Stop" : "Record"}
+        {isConnecting ? "Connecting…" : isRecording ? "Stop Recording" : "Record"}
       </button>
 
       {/* Waveform visualization */}
       {isRecording && (
-        <div
-          ref={barsRef}
-          style={{ display: "flex", alignItems: "flex-end", gap: "2px", height: "40px" }}
-        >
+        <div ref={barsRef} className="audio-waveform" aria-hidden="true">
           {Array.from({ length: 24 }, (_, i) => (
-            <div
-              key={i}
-              style={{
-                width: "3px",
-                background: "var(--accent)",
-                borderRadius: "2px",
-                height: "4px",
-                transition: "height 75ms",
-              }}
-            />
+            <div key={i} className="audio-waveform__bar" />
           ))}
         </div>
       )}

@@ -37,6 +37,7 @@ export function SavedSessionsPanel({
   const [ownerKey] = useState(() => tryGetOrCreateOwnerKey());
   const [loadState, setLoadState] = useState<LoadState>({ status: "loading" });
   const [saveStatus, setSaveStatus] = useState<string | null>(null);
+  const [isSaving, setIsSaving] = useState(false);
   const [reopenError, setReopenError] = useState<string | null>(null);
 
   const loadSessions = useCallback(async () => {
@@ -65,6 +66,7 @@ export function SavedSessionsPanel({
   const handleSave = useCallback(async () => {
     if (!ownerKey) return;
 
+    setIsSaving(true);
     setSaveStatus(null);
     const feedback = aiCoachState.status === "done" ? aiCoachState.feedback : undefined;
     const body = buildSaveRequest(ownerKey, analysis, feedback);
@@ -81,6 +83,8 @@ export function SavedSessionsPanel({
       await loadSessions();
     } catch {
       setSaveStatus(SAVE_ERROR);
+    } finally {
+      setIsSaving(false);
     }
   }, [aiCoachState, analysis, loadSessions, ownerKey]);
 
@@ -132,8 +136,9 @@ export function SavedSessionsPanel({
           type="button"
           className="json-secondary-button"
           onClick={() => void handleSave()}
+          disabled={isSaving}
         >
-          Save Result
+          {isSaving ? "Saving…" : "Save Result"}
         </button>
       </div>
 
@@ -158,29 +163,45 @@ export function SavedSessionsPanel({
       ) : null}
 
       {loadState.status === "ready" && loadState.sessions.length > 0 ? (
-        <ol className="saved-sessions-list">
-          {loadState.sessions.map((session) => (
-            <li className="saved-session-row" key={session.id}>
-              <div>
-                <strong>{session.title ?? "Saved speaking attempt"}</strong>
-                <span>
-                  Band {session.pronunciationBand ?? "-"} / Fluency{" "}
-                  {session.fluencyBand ?? "-"} / {session.wpm ?? "-"} WPM
-                </span>
-              </div>
-              <button
-                type="button"
-                className="json-secondary-button"
-                onClick={() => void handleReopen(session.id)}
-              >
-                Reopen Result
-              </button>
-            </li>
-          ))}
-        </ol>
+        <details className="saved-sessions-history">
+          <summary>View saved attempts</summary>
+          <ol className="saved-sessions-list">
+            {loadState.sessions.map((session) => {
+              const formattedDate = formatSavedSessionDate(session.createdAt);
+              return (
+                <li className="saved-session-row" key={session.id}>
+                  <div>
+                    <strong>{session.title ?? "Saved speaking attempt"}</strong>
+                    <span>{`JSON Analysis · ${formattedDate}`}</span>
+                    <span>
+                      Band {session.pronunciationBand ?? "-"} / Fluency{" "}
+                      {session.fluencyBand ?? "-"} / {session.wpm ?? "-"} WPM
+                    </span>
+                  </div>
+                  <button
+                    type="button"
+                    className="json-secondary-button"
+                    aria-label={`Reopen result from ${formattedDate}`}
+                    onClick={() => void handleReopen(session.id)}
+                  >
+                    Reopen Result
+                  </button>
+                </li>
+              );
+            })}
+          </ol>
+        </details>
       ) : null}
     </aside>
   );
+}
+
+function formatSavedSessionDate(value: string): string {
+  return new Intl.DateTimeFormat("en", {
+    month: "short",
+    day: "numeric",
+    year: "numeric",
+  }).format(new Date(value));
 }
 
 function buildSaveRequest(

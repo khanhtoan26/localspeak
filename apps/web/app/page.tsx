@@ -48,7 +48,7 @@ export default function Home() {
               Live Audio Practice
             </span>
             <span className="mode-switch-button__helper">
-              Record from your microphone and watch the AI coach respond live.
+              Record from your microphone and watch live transcript feedback.
             </span>
           </button>
         </div>

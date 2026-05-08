@@ -41,10 +41,10 @@ export function ValidationPreviewCard({
   if (syntaxState.status === "empty") {
     return (
       <section className="json-analysis-card" aria-live="polite">
-        <h2 className="json-analysis-card__title">Paste speech assessment JSON to begin.</h2>
+        <h2 className="json-analysis-card__title">Start with an analysis</h2>
         <p className="json-analysis-card__detail">
-          Use your speech assessment response, upload a .json file, or load the
-          sample JSON to preview deterministic pronunciation and fluency metrics.
+          Paste assessment JSON, load the sample, or switch to Live Audio
+          Practice to see your pronunciation dashboard.
         </p>
       </section>
     );
