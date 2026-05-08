@@ -34,7 +34,7 @@ export interface AudioSessionState {
 
 const KEEPALIVE_INTERVAL_MS = 3000;
 
-function buildDeepgramUrl(apiKey: string, referenceText: string): string {
+function buildDeepgramUrl(referenceText: string): string {
   const params = new URLSearchParams({
     model: "nova-3",
     language: "en-US",
@@ -46,7 +46,6 @@ function buildDeepgramUrl(apiKey: string, referenceText: string): string {
     encoding: "linear16",
     sample_rate: "16000",
     channels: "1",
-    api_key: apiKey,
   });
 
   // Add keyterm hints from reference text (boost expected words)
@@ -132,13 +131,13 @@ export function useDeepgramSession(referenceText: string): AudioSessionState {
     setTranscript({ interim: "", final: "", words: [] });
     setError(null);
 
-    // 1. Fetch API key from backend
-    let apiKey: string;
+    // 1. Fetch short-lived browser token from backend
+    let accessToken: string;
     try {
       const res = await fetch("/api/deepgram-token");
       if (!res.ok) throw new Error("Token fetch failed");
       const data = await res.json();
-      apiKey = data.accessToken;
+      accessToken = data.accessToken;
     } catch {
       setError("Unable to connect to AI coach. Check your internet connection and try again.");
       setStatus("error");
@@ -159,8 +158,8 @@ export function useDeepgramSession(referenceText: string): AudioSessionState {
     streamRef.current = stream;
 
     // 3. Connect WebSocket to Deepgram
-    const url = buildDeepgramUrl(apiKey, referenceText);
-    const ws = new WebSocket(url);
+    const url = buildDeepgramUrl(referenceText);
+    const ws = new WebSocket(url, ["bearer", accessToken]);
     wsRef.current = ws;
 
     ws.onopen = async () => {

@@ -69,6 +69,10 @@ DEEPGRAM_API_KEY=
 
 The API dev script loads `apps/api/.env` automatically at startup.
 
+If Deepgram requests fail with `SELF_SIGNED_CERT_IN_CHAIN`, your network is likely presenting a corporate/local proxy certificate that Node does not trust. Install or export that proxy/root CA certificate and start the API with `NODE_EXTRA_CA_CERTS=/absolute/path/to/root-ca.pem pnpm dev:api`. Do not use `NODE_TLS_REJECT_UNAUTHORIZED=0` as a project default; it disables TLS verification for the whole Node process and does not fix browser WebSocket TLS.
+
+If you only need a temporary local workaround, run `pnpm dev:api:insecure-tls` and restart the API. Use this only on a trusted development machine; it disables TLS certificate verification for the API process.
+
 ### Local Postgres and migrations
 
 Start a local Postgres database:

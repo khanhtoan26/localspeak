@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "start:dev": "tsx watch src/main.ts",
+    "start:dev": "NODE_TLS_REJECT_UNAUTHORIZED=0 tsx watch src/main.ts",
     "check": "tsc --noEmit -p tsconfig.json",
     "test": "pnpm test:unit && pnpm test:e2e",
     "test:unit": "jest --config jest.config.ts",
@@ -20,6 +20,7 @@
     "@nestjs/common": "^11.1.9",
     "@nestjs/core": "^11.1.9",
     "@nestjs/platform-express": "^11.1.9",
+    "cross-fetch": "^4.1.0",
     "dotenv": "^17.2.3",
     "drizzle-orm": "^0.45.2",
     "pg": "^8.20.0",
