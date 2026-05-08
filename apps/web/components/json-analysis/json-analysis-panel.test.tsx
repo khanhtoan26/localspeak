@@ -1,4 +1,11 @@
-import { act, cleanup, fireEvent, render, screen } from "@testing-library/react";
+import {
+  act,
+  cleanup,
+  fireEvent,
+  render,
+  screen,
+  within,
+} from "@testing-library/react";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import {
   JSON_ANALYSIS_MAX_BYTES,
@@ -6,6 +13,7 @@ import {
 } from "@localspeak/contracts";
 import fixture from "../../../../.artifacts/speech-response.json";
 import { JsonAnalysisPanel } from "./json-analysis-panel";
+import { createJsonAnalysisResponseFixture } from "./test-fixtures";
 
 const parsedFixture = SpeechAssessmentResponseSchema.parse(fixture);
 
@@ -601,17 +609,21 @@ describe("JsonAnalysisPanel", () => {
     expect(screen.queryByText("Pronunciation percentage")).not.toBeInTheDocument();
   });
 
-  it("renders ordered summary metrics with exact helper copy and formatting", async () => {
+  it("renders dashboard priority and exact four primary metrics", async () => {
     renderPanel();
-    await previewAndAnalyze();
+    await previewAndAnalyze(createJsonAnalysisResponseFixture());
 
     expect(screen.getAllByTestId("summary-metric-label").map((node) => node.textContent)).toEqual([
-      "Pronunciation percentage",
+      "Pronunciation",
       "Pronunciation Band",
       "Fluency Band",
       "WPM",
-      "Pause ratio",
     ]);
+    expect(screen.getByText("What should I practice next?")).toBeInTheDocument();
+    expect(screen.getByText("Start with the TH / θ sound pattern.")).toBeInTheDocument();
+    expect(
+      screen.getByText("3 repeated weak occurrences appeared in three."),
+    ).toBeInTheDocument();
     expect(screen.getByText("Computed from word and phone scores.")).toBeInTheDocument();
     expect(
       screen.getByText("Estimated from deterministic score thresholds."),
@@ -620,14 +632,12 @@ describe("JsonAnalysisPanel", () => {
       screen.getByText("Estimated from WPM, pause ratio, and critical pauses."),
     ).toBeInTheDocument();
     expect(screen.getByText("Words per minute from word timings.")).toBeInTheDocument();
-    expect(
-      screen.getByText("Share of speaking time spent in detected pauses."),
-    ).toBeInTheDocument();
-    expect(screen.getByText("89%")).toBeInTheDocument();
+    const metricGrid = screen.getByLabelText("Summary metrics");
+    expect(within(metricGrid).queryByText("Pause ratio")).not.toBeInTheDocument();
+    expect(screen.getByText("82%")).toBeInTheDocument();
     expect(screen.getByText("7.0")).toBeInTheDocument();
-    expect(screen.getByText("5.5")).toBeInTheDocument();
-    expect(screen.getByText("153")).toBeInTheDocument();
-    expect(screen.getByText("33%")).toBeInTheDocument();
+    expect(screen.getByText("6.5")).toBeInTheDocument();
+    expect(screen.getByText("118")).toBeInTheDocument();
   });
 
   it("renders deterministic summary tab copy and warning callouts", async () => {

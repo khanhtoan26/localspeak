@@ -2,7 +2,7 @@ import type { JsonAnalysisSummary } from "@localspeak/contracts";
 
 const metricHelpers = [
   {
-    label: "Pronunciation percentage",
+    label: "Pronunciation",
     helper: "Computed from word and phone scores.",
     value: (summary: JsonAnalysisSummary) =>
       `${summary.pronunciationPercentage}%`,
@@ -22,12 +22,6 @@ const metricHelpers = [
     label: "WPM",
     helper: "Words per minute from word timings.",
     value: (summary: JsonAnalysisSummary) => String(summary.wpm),
-  },
-  {
-    label: "Pause ratio",
-    helper: "Share of speaking time spent in detected pauses.",
-    value: (summary: JsonAnalysisSummary) =>
-      `${Math.round(summary.pauseRatio * 100)}%`,
   },
 ];
 

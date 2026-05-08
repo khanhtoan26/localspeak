@@ -42,6 +42,64 @@ type AnalysisState =
   | { status: "done"; result: JsonAnalysisResponse }
   | { status: "error"; message: string; nextStep: string };
 
+export function derivePracticePriority(analysis: JsonAnalysisResponse): {
+  priority: string;
+  reason: string;
+} {
+  const weakPattern = analysis.weakPhonemePatterns[0];
+  if (weakPattern) {
+    const sound = `${weakPattern.arpabet}${
+      weakPattern.ipaExamples.length > 0
+        ? ` / ${weakPattern.ipaExamples.join(", ")}`
+        : ""
+    }`;
+    return {
+      priority: `Start with the ${sound} sound pattern.`,
+      reason: `${weakPattern.weakOccurrenceCount} repeated weak occurrence${
+        weakPattern.weakOccurrenceCount === 1 ? "" : "s"
+      } appeared in ${weakPattern.exampleWords.slice(0, 3).join(", ")}.`,
+    };
+  }
+
+  const longestPause = [...analysis.pauses].sort(
+    (left, right) => right.duration - left.duration,
+  )[0];
+  if (longestPause) {
+    return {
+      priority: `Smooth the pause between "${longestPause.beforeWord}" and "${longestPause.afterWord}".`,
+      reason: `That gap lasted ${longestPause.duration.toFixed(
+        2,
+      )}s and was marked as ${longestPause.severity}.`,
+    };
+  }
+
+  const weakWords = analysis.words.filter((word) => word.band === "weak");
+  if (weakWords.length > 0) {
+    return {
+      priority: `Repeat ${weakWords[0].word} and nearby weak words.`,
+      reason: `${weakWords.length} word${
+        weakWords.length === 1 ? "" : "s"
+      } scored in the weak band.`,
+    };
+  }
+
+  if (analysis.summary.wpm < 120 || analysis.summary.pauseRatio >= 0.15) {
+    return {
+      priority: "Practice a steadier speaking rhythm.",
+      reason: `WPM is ${analysis.summary.wpm} and pause ratio is ${Math.round(
+        analysis.summary.pauseRatio * 100,
+      )}%.`,
+    };
+  }
+
+  return {
+    priority:
+      "Analyze a speaking attempt to see your highest-priority pronunciation or fluency issue.",
+    reason:
+      "LocalSpeak uses your word scores, weak sound patterns, pauses, and WPM to choose one focused next step.",
+  };
+}
+
 function parseJson(text: string): SyntaxState {
   if (text.trim().length === 0) return { status: "empty" };
 
@@ -354,6 +412,7 @@ export function JsonAnalysisPanel() {
 
         {analysisState.status === "done" ? (
           <section className="json-results-region" aria-live="polite">
+            <PracticePriorityCard analysis={analysisState.result} />
             {analysisState.result.warnings.length > 0 ? (
               <div className="json-analysis-card json-analysis-card--warning">
                 <h2 className="json-analysis-card__title">
@@ -399,6 +458,25 @@ export function JsonAnalysisPanel() {
         ) : null}
       </section>
     </main>
+  );
+}
+
+function PracticePriorityCard({
+  analysis,
+}: {
+  analysis: JsonAnalysisResponse;
+}) {
+  const priority = derivePracticePriority(analysis);
+
+  return (
+    <section className="json-priority-card" aria-labelledby="json-priority-title">
+      <p className="json-analysis-pill">IELTS Coach</p>
+      <h2 id="json-priority-title" className="json-analysis-card__title">
+        What should I practice next?
+      </h2>
+      <p className="json-priority-card__priority">{priority.priority}</p>
+      <p className="json-priority-card__reason">{priority.reason}</p>
+    </section>
   );
 }
 

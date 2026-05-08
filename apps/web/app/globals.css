@@ -477,9 +477,32 @@ select {
   gap: 24px;
 }
 
+.json-priority-card {
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  background: var(--card);
+  padding: 24px;
+}
+
+.json-priority-card__priority {
+  margin: 16px 0 0;
+  color: var(--ink);
+  font-size: 20px;
+  font-weight: 600;
+  line-height: 1.2;
+}
+
+.json-priority-card__reason {
+  margin: 8px 0 0;
+  color: var(--ink-soft);
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 1.5;
+}
+
 .json-metric-grid {
   display: grid;
-  grid-template-columns: repeat(5, minmax(0, 1fr));
+  grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: 8px;
 }
 
