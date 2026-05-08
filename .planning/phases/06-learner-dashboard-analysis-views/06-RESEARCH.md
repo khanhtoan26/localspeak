@@ -139,11 +139,11 @@ Current `WordsTab` returns an empty state when no weak words exist. Phase 6 shou
 
 Current shared logic uses `word.band`; UI-SPEC includes illustrative chip thresholds. Prefer the existing contract `word.band` for chip coloring unless the plan explicitly includes a shared threshold update and contract test changes.
 
-## Open Questions for Planning
+## Open Questions for Planning (RESOLVED)
 
-1. Should Phase 6 reconcile audio from Deepgram to Gemini Live, or only avoid incorrect labels? Recommendation: include a Wave 0 audit/decision and do not label current behavior as Gemini Live unless code confirms it.
-2. Should word chip colors follow current backend `word.band` thresholds or UI-SPEC thresholds? Recommendation: prefer `word.band` to avoid duplicating inconsistent thresholds.
-3. Where should `ownerKey` live for unauthenticated saved history? Recommendation: add a small browser ownerKey utility using `localStorage`; treat it as a local-history partition, not authentication.
+1. Audio mismatch — **RESOLVED:** Phase 6 will not claim Gemini Live while current code imports `useDeepgramSession`; it will use generic `Live Audio Practice` / `AI coach` copy unless implementation is reconciled before execution.
+2. Word chip colors — **RESOLVED:** Use existing contract `word.band` for chip color and labels; do not duplicate UI-only thresholds.
+3. ownerKey — **RESOLVED:** Store unauthenticated saved-history ownership in browser `localStorage` under `localspeak.ownerKey.v1`; treat it as local-history partitioning, not authentication.
 
 ## Environment Availability
 
