@@ -1,4 +1,4 @@
-import { cleanup, render, screen } from "@testing-library/react";
+import { cleanup, fireEvent, render, screen } from "@testing-library/react";
 import { afterEach, describe, expect, it } from "vitest";
 import Home from "./page";
 
@@ -32,5 +32,26 @@ describe("Home page mode switch", () => {
     render(<Home />);
 
     expect(screen.queryByText(/Gemini Live/i)).not.toBeInTheDocument();
+  });
+
+  it("keeps JSON analysis state mounted across mode switches", () => {
+    const { container } = render(<Home />);
+
+    expect(container.querySelector(".status-shell--dashboard")).toBeInTheDocument();
+    fireEvent.change(screen.getByLabelText("Speech assessment JSON input"), {
+      target: { value: "persisted analysis state" },
+    });
+
+    fireEvent.click(screen.getByRole("button", { name: "Live Audio Practice" }));
+    expect(
+      container.querySelector(".status-shell--dashboard"),
+    ).not.toBeInTheDocument();
+    expect(screen.getByLabelText("Reference sentence")).toBeInTheDocument();
+
+    fireEvent.click(screen.getByRole("button", { name: "JSON Analysis" }));
+    expect(container.querySelector(".status-shell--dashboard")).toBeInTheDocument();
+    expect(screen.getByLabelText("Speech assessment JSON input")).toHaveValue(
+      "persisted analysis state",
+    );
   });
 });

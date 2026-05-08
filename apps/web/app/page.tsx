@@ -11,7 +11,11 @@ export default function Home() {
 
   return (
     <main className="status-page">
-      <div className="status-shell">
+      <div
+        className={`status-shell${
+          mode === "json" ? " status-shell--dashboard" : ""
+        }`}
+      >
         <header className="status-header">
           <span className="status-tag">IELTS Coach</span>
           <h1 className="status-title">LocalSpeak</h1>
@@ -49,7 +53,12 @@ export default function Home() {
           </button>
         </div>
 
-        {mode === "json" ? <JsonAnalysisPanel /> : <AudioModePanel />}
+        <div className="mode-panel" hidden={mode !== "json"}>
+          <JsonAnalysisPanel />
+        </div>
+        <div className="mode-panel" hidden={mode !== "audio"}>
+          <AudioModePanel />
+        </div>
       </div>
     </main>
   );

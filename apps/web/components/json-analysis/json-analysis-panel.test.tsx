@@ -765,6 +765,8 @@ describe("JsonAnalysisPanel", () => {
     fireEvent.click(screen.getByRole("button", { name: "Pause Analysis" }));
 
     expect(screen.getByLabelText("Pause summary")).toBeInTheDocument();
+    expect(screen.getByText("Pause ratio")).toBeInTheDocument();
+    expect(screen.getByText("24%")).toBeInTheDocument();
     expect(screen.getByRole("img", { name: "Pause timeline" })).toBeInTheDocument();
     expect(screen.getByLabelText("Pause severity legend")).toBeInTheDocument();
     expect(screen.getByText("Practice this pause first")).toBeInTheDocument();

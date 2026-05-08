@@ -36,7 +36,12 @@ export function ResultTabs({ analysis, aiCoachState, onRetryFeedback }: ResultTa
       </div>
 
       <div className="json-tab-panel">
-        {activeTab === "Pause Analysis" ? <PausesTab pauses={analysis.pauses} /> : null}
+        {activeTab === "Pause Analysis" ? (
+          <PausesTab
+            pauses={analysis.pauses}
+            pauseRatio={analysis.summary.pauseRatio}
+          />
+        ) : null}
         {activeTab === "Words" ? <WordsTab words={analysis.words} /> : null}
         {activeTab === "Phonemes" ? (
           <PhonemesTab patterns={analysis.weakPhonemePatterns} />

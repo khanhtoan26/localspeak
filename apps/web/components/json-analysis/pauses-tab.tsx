@@ -8,9 +8,10 @@ const severityLabels: Record<PauseSeverity, string> = {
 
 type PausesTabProps = {
   pauses: PauseMetric[];
+  pauseRatio: number;
 };
 
-export function PausesTab({ pauses }: PausesTabProps) {
+export function PausesTab({ pauses, pauseRatio }: PausesTabProps) {
   if (pauses.length === 0) {
     return (
       <section className="json-empty-state">
@@ -39,6 +40,10 @@ export function PausesTab({ pauses }: PausesTabProps) {
         <div className="pause-summary-card">
           <span>Critical pauses</span>
           <strong>{criticalCount}</strong>
+        </div>
+        <div className="pause-summary-card">
+          <span>Pause ratio</span>
+          <strong>{Math.round(pauseRatio * 100)}%</strong>
         </div>
         <div className="pause-summary-card">
           <span>Longest pause</span>
