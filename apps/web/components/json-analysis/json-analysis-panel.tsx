@@ -378,7 +378,12 @@ export function JsonAnalysisPanel() {
 
   return (
     <main className="json-analysis-page">
-      <section className="json-analysis-shell" aria-label="JSON analysis">
+      <section
+        className={`json-analysis-shell${
+          analysisState.status === "done" ? " json-analysis-shell--with-history" : ""
+        }`}
+        aria-label="JSON analysis"
+      >
         <header className="json-analysis-header">
           <span className="json-analysis-tag">JSON Mode</span>
           <h1 className="json-analysis-title">
@@ -468,16 +473,18 @@ export function JsonAnalysisPanel() {
                 ? "Generating…"
                 : "Get AI Feedback"}
             </button>
-            <ResultTabs
-              analysis={analysisState.result}
-              aiCoachState={aiCoachState}
-              onRetryFeedback={() => void handleGetFeedback()}
-            />
-            <SavedSessionsPanel
-              analysis={analysisState.result}
-              aiCoachState={aiCoachState}
-              onReopen={handleReopenSavedResult}
-            />
+            <div className="json-results-main">
+              <ResultTabs
+                analysis={analysisState.result}
+                aiCoachState={aiCoachState}
+                onRetryFeedback={() => void handleGetFeedback()}
+              />
+              <SavedSessionsPanel
+                analysis={analysisState.result}
+                aiCoachState={aiCoachState}
+                onReopen={handleReopenSavedResult}
+              />
+            </div>
           </section>
         ) : null}
 

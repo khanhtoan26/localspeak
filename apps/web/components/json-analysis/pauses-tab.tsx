@@ -46,41 +46,43 @@ export function PausesTab({ pauses }: PausesTabProps) {
         </div>
       </div>
 
-      <svg
-        className="pause-timeline"
-        role="img"
-        aria-labelledby="pause-timeline-title"
-        aria-describedby="pause-timeline-desc"
-        viewBox="0 0 100 24"
-        preserveAspectRatio="none"
-      >
-        <title id="pause-timeline-title">Pause timeline</title>
-        <desc id="pause-timeline-desc">
-          Visual timeline of notable pauses with severity labels.
-        </desc>
-        <line className="pause-timeline__axis" x1="0" x2="100" y1="12" y2="12" />
-        {pauses.map((pause) => {
-          const x = (pause.startTime / maxEndTime) * 100;
-          const width = Math.max(((pause.endTime - pause.startTime) / maxEndTime) * 100, 2);
-          const label = `${severityLabels[pause.severity]} pause, ${pause.duration.toFixed(
-            2,
-          )} seconds, between "${pause.beforeWord}" and "${pause.afterWord}"`;
+      <div className="pause-timeline-scroll">
+        <svg
+          className="pause-timeline"
+          role="img"
+          aria-labelledby="pause-timeline-title"
+          aria-describedby="pause-timeline-desc"
+          viewBox="0 0 100 24"
+          preserveAspectRatio="none"
+        >
+          <title id="pause-timeline-title">Pause timeline</title>
+          <desc id="pause-timeline-desc">
+            Visual timeline of notable pauses with severity labels.
+          </desc>
+          <line className="pause-timeline__axis" x1="0" x2="100" y1="12" y2="12" />
+          {pauses.map((pause) => {
+            const x = (pause.startTime / maxEndTime) * 100;
+            const width = Math.max(((pause.endTime - pause.startTime) / maxEndTime) * 100, 2);
+            const label = `${severityLabels[pause.severity]} pause, ${pause.duration.toFixed(
+              2,
+            )} seconds, between "${pause.beforeWord}" and "${pause.afterWord}"`;
 
-          return (
-            <g key={`${pause.index}-${pause.startTime}-${pause.endTime}`}>
-              <title>{label}</title>
-              <rect
-                className={`pause-timeline__segment pause-timeline__segment--${pause.severity}`}
-                x={x}
-                y="6"
-                width={width}
-                height="12"
-                rx="1"
-              />
-            </g>
-          );
-        })}
-      </svg>
+            return (
+              <g key={`${pause.index}-${pause.startTime}-${pause.endTime}`}>
+                <title>{label}</title>
+                <rect
+                  className={`pause-timeline__segment pause-timeline__segment--${pause.severity}`}
+                  x={x}
+                  y="6"
+                  width={width}
+                  height="12"
+                  rx="1"
+                />
+              </g>
+            );
+          })}
+        </svg>
+      </div>
 
       <ul className="pause-legend" aria-label="Pause severity legend">
         {Object.entries(severityLabels).map(([severity, label]) => (
