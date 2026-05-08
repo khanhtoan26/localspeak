@@ -400,6 +400,7 @@ select {
 .json-input-textarea:focus-visible,
 .json-primary-button:focus-visible,
 .json-secondary-button:focus-visible,
+.json-secondary-button:has(.json-input-file:focus-visible),
 .json-link-button:focus-visible {
   border-color: var(--accent);
   outline: 2px solid var(--accent);

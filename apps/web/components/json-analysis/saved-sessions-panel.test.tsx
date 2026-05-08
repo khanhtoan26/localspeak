@@ -67,8 +67,13 @@ describe("SavedSessionsPanel", () => {
 
     await waitFor(() =>
       expect(fetchMock).toHaveBeenCalledWith(
-        "/api/saved-sessions?ownerKey=22222222-2222-4222-8222-222222222222",
-        { cache: "no-store" },
+        "/api/saved-sessions",
+        {
+          cache: "no-store",
+          headers: {
+            "X-Localspeak-Owner-Key": "22222222-2222-4222-8222-222222222222",
+          },
+        },
       ),
     );
     expect(window.localStorage.getItem("localspeak.ownerKey.v1")).toBe(
@@ -95,22 +100,23 @@ describe("SavedSessionsPanel", () => {
   it("lists saved sessions and reopens a saved result through detail parsing", async () => {
     const savedSession = createSavedSessionFixture();
     const onReopen = vi.fn();
+    const fetchMock = vi
+      .fn()
+      .mockImplementationOnce(() =>
+        jsonResponse({
+          contract: "saved-session-list.v1",
+          sessions: [toListItem(savedSession)],
+        }),
+      )
+      .mockImplementationOnce(() =>
+        jsonResponse({
+          contract: "saved-session-detail.v1",
+          session: savedSession,
+        }),
+      );
     vi.stubGlobal(
       "fetch",
-      vi
-        .fn()
-        .mockImplementationOnce(() =>
-          jsonResponse({
-            contract: "saved-session-list.v1",
-            sessions: [toListItem(savedSession)],
-          }),
-        )
-        .mockImplementationOnce(() =>
-          jsonResponse({
-            contract: "saved-session-detail.v1",
-            session: savedSession,
-          }),
-        ),
+      fetchMock,
     );
 
     render(
@@ -124,6 +130,17 @@ describe("SavedSessionsPanel", () => {
     expect(await screen.findByText("Three trees practice")).toBeInTheDocument();
     fireEvent.click(screen.getByRole("button", { name: "Reopen Result" }));
 
+    await waitFor(() =>
+      expect(fetchMock).toHaveBeenCalledWith(
+        `/api/saved-sessions/${savedSession.id}`,
+        {
+          cache: "no-store",
+          headers: {
+            "X-Localspeak-Owner-Key": "22222222-2222-4222-8222-222222222222",
+          },
+        },
+      ),
+    );
     await waitFor(() =>
       expect(onReopen).toHaveBeenCalledWith(
         expect.objectContaining({

@@ -194,7 +194,9 @@ export function JsonAnalysisPanel() {
             technical:
               error instanceof Error && error.name === "ZodError"
                 ? PREVIEW_CONTRACT_MISMATCH_COPY
-                : PREVIEW_CONTRACT_MISMATCH_COPY,
+                : error instanceof Error
+                  ? `Preview request failed: ${error.message}`
+                  : "Preview request failed for an unknown reason.",
           });
         })
         .finally(() => {
@@ -377,7 +379,7 @@ export function JsonAnalysisPanel() {
   );
 
   return (
-    <main className="json-analysis-page">
+    <section className="json-analysis-page" aria-label="JSON analysis dashboard">
       <section
         className={`json-analysis-shell${
           analysisState.status === "done" ? " json-analysis-shell--with-history" : ""
@@ -502,7 +504,7 @@ export function JsonAnalysisPanel() {
           </section>
         ) : null}
       </section>
-    </main>
+    </section>
   );
 }
 

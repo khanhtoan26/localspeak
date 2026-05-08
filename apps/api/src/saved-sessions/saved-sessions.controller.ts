@@ -2,11 +2,11 @@ import {
   Body,
   Controller,
   Get,
+  Headers,
   HttpCode,
   Inject,
   Param,
   Post,
-  Query,
 } from "@nestjs/common";
 import { SavedSessionsService } from "./saved-sessions.service";
 
@@ -24,12 +24,15 @@ export class SavedSessionsController {
   }
 
   @Get()
-  list(@Query("ownerKey") ownerKey: unknown) {
+  list(@Headers("x-localspeak-owner-key") ownerKey: unknown) {
     return this.savedSessionsService.listByOwnerKey(ownerKey);
   }
 
   @Get(":id")
-  get(@Param("id") id: unknown, @Query("ownerKey") ownerKey: unknown) {
+  get(
+    @Param("id") id: unknown,
+    @Headers("x-localspeak-owner-key") ownerKey: unknown,
+  ) {
     return this.savedSessionsService.getByIdForOwner(id, ownerKey);
   }
 }

@@ -42,8 +42,11 @@ export function SavedSessionsPanel({
   const loadSessions = useCallback(async () => {
     try {
       const response = await fetch(
-        `/api/saved-sessions?ownerKey=${encodeURIComponent(ownerKey)}`,
-        { cache: "no-store" },
+        "/api/saved-sessions",
+        {
+          cache: "no-store",
+          headers: { "X-Localspeak-Owner-Key": ownerKey },
+        },
       );
       if (!response.ok) throw new Error(`List failed with status ${response.status}`);
       const data = SavedSessionListResponseSchema.parse(await response.json());
@@ -82,8 +85,11 @@ export function SavedSessionsPanel({
       setReopenError(null);
       try {
         const response = await fetch(
-          `/api/saved-sessions/${sessionId}?ownerKey=${encodeURIComponent(ownerKey)}`,
-          { cache: "no-store" },
+          `/api/saved-sessions/${sessionId}`,
+          {
+            cache: "no-store",
+            headers: { "X-Localspeak-Owner-Key": ownerKey },
+          },
         );
         if (!response.ok) throw new Error(`Fetch failed with status ${response.status}`);
         const data = SavedSessionDetailResponseSchema.parse(await response.json());

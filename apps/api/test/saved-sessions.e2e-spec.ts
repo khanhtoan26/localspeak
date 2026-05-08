@@ -99,7 +99,8 @@ describe("SavedSessionsController (e2e)", () => {
 
   it("lists only records for the requested ownerKey", async () => {
     const ownerAResponse = await request(app.getHttpServer())
-      .get(`/saved-sessions?ownerKey=${ownerA}`)
+      .get("/saved-sessions")
+      .set("X-Localspeak-Owner-Key", ownerA)
       .expect(200);
 
     const ownerAList = SavedSessionListResponseSchema.parse(ownerAResponse.body);
@@ -108,7 +109,8 @@ describe("SavedSessionsController (e2e)", () => {
     );
 
     const ownerBResponse = await request(app.getHttpServer())
-      .get(`/saved-sessions?ownerKey=${ownerB}`)
+      .get("/saved-sessions")
+      .set("X-Localspeak-Owner-Key", ownerB)
       .expect(200);
 
     const ownerBList = SavedSessionListResponseSchema.parse(ownerBResponse.body);
@@ -121,7 +123,8 @@ describe("SavedSessionsController (e2e)", () => {
 
   it("fetches detail only for the matching ownerKey", async () => {
     const response = await request(app.getHttpServer())
-      .get(`/saved-sessions/${savedSessionId}?ownerKey=${ownerA}`)
+      .get(`/saved-sessions/${savedSessionId}`)
+      .set("X-Localspeak-Owner-Key", ownerA)
       .expect(200);
 
     const body = SavedSessionDetailResponseSchema.parse(response.body);
@@ -140,7 +143,8 @@ describe("SavedSessionsController (e2e)", () => {
 
   it("returns 404 for wrong owner", async () => {
     const response = await request(app.getHttpServer())
-      .get(`/saved-sessions/${savedSessionId}?ownerKey=${ownerB}`)
+      .get(`/saved-sessions/${savedSessionId}`)
+      .set("X-Localspeak-Owner-Key", ownerB)
       .expect(404);
 
     expectNoUnsafeDetails(response.body);
