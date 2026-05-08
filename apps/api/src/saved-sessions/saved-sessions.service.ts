@@ -16,6 +16,7 @@ import {
   type SavedSessionCreateRequest,
 } from "@localspeak/contracts";
 import { and, desc, eq } from "drizzle-orm";
+import type { ZodIssue } from "zod";
 import { DatabaseProvider } from "../database/database.provider";
 import {
   savedAnalysisSessions,
@@ -39,7 +40,7 @@ export class SavedSessionsService {
       throw new BadRequestException({
         contract: "saved-session-error.v1",
         message: "Invalid saved-session create payload.",
-        issues: parsed.error.issues.slice(0, 5),
+        issues: toSafeIssues(parsed.error.issues),
       });
     }
 
@@ -74,7 +75,7 @@ export class SavedSessionsService {
       throw new BadRequestException({
         contract: "saved-session-error.v1",
         message: "Invalid saved-session list query.",
-        issues: parsed.error.issues.slice(0, 5),
+        issues: toSafeIssues(parsed.error.issues),
       });
     }
 
@@ -97,7 +98,7 @@ export class SavedSessionsService {
       throw new BadRequestException({
         contract: "saved-session-error.v1",
         message: "Invalid saved-session fetch query.",
-        issues: parsed.error.issues.slice(0, 5),
+        issues: toSafeIssues(parsed.error.issues),
       });
     }
 
@@ -213,4 +214,26 @@ function numberAt(
 
 function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === "object" && value !== null && !Array.isArray(value);
+}
+
+function toSafeIssues(issues: ZodIssue[]) {
+  return issues.slice(0, 5).map((issue) => {
+    if (issue.path.some((segment) => isRawVendorKey(String(segment)))) {
+      return {
+        ...issue,
+        path: ["snapshot"],
+        message: "Raw vendor payload fields are not allowed.",
+      };
+    }
+
+    return issue;
+  });
+}
+
+function isRawVendorKey(value: string): boolean {
+  return (
+    value === "speechAssessment" ||
+    value === "rawSpeechAssessment" ||
+    value === "vendorPayload"
+  );
 }
