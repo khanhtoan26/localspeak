@@ -20,3 +20,23 @@ export type ApiEnv = z.infer<typeof ApiEnvSchema>;
 export function validateApiEnv(config: Record<string, unknown>): ApiEnv {
   return ApiEnvSchema.parse(config);
 }
+
+export function getRequiredDatabaseUrl(
+  config: Record<string, unknown> = process.env,
+): string {
+  const result = z
+    .preprocess(
+      (value) => (typeof value === "string" ? value.trim() : ""),
+      z
+        .string()
+        .min(1, "DATABASE_URL is required for saved-session persistence")
+        .url("DATABASE_URL must be a valid URL"),
+    )
+    .safeParse(config.DATABASE_URL);
+
+  if (!result.success) {
+    throw new Error("DATABASE_URL is required for saved-session persistence");
+  }
+
+  return result.data;
+}

@@ -1,4 +1,4 @@
-import { validateApiEnv } from "./env";
+import { getRequiredDatabaseUrl, validateApiEnv } from "./env";
 
 const validEnv = {
   GEMINI_API_KEY: "test-gemini-key",
@@ -70,5 +70,27 @@ describe("validateApiEnv", () => {
         GEMINI_API_KEY: "test-key",
       }),
     ).toThrow(/DEEPGRAM_API_KEY is required/);
+  });
+});
+
+describe("getRequiredDatabaseUrl", () => {
+  it("returns a valid DATABASE_URL", () => {
+    expect(
+      getRequiredDatabaseUrl({
+        DATABASE_URL: "postgresql://localspeak:localspeak@localhost:5432/localspeak",
+      }),
+    ).toBe("postgresql://localspeak:localspeak@localhost:5432/localspeak");
+  });
+
+  it("fails when DATABASE_URL is missing", () => {
+    expect(() => getRequiredDatabaseUrl({})).toThrow(
+      /DATABASE_URL is required for saved-session persistence/,
+    );
+  });
+
+  it("fails when DATABASE_URL is blank", () => {
+    expect(() => getRequiredDatabaseUrl({ DATABASE_URL: "   " })).toThrow(
+      /DATABASE_URL is required for saved-session persistence/,
+    );
   });
 });
