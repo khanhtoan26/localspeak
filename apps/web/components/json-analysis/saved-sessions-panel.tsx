@@ -11,7 +11,7 @@ import {
   type SavedSessionListItem,
 } from "@localspeak/contracts";
 import type { AiCoachState } from "./ai-coach-tab";
-import { getOrCreateOwnerKey } from "../../lib/saved-sessions/owner-key";
+import { tryGetOrCreateOwnerKey } from "../../lib/saved-sessions/owner-key";
 
 type SavedSessionsPanelProps = {
   analysis: JsonAnalysisResponse;
@@ -34,12 +34,14 @@ export function SavedSessionsPanel({
   aiCoachState,
   onReopen,
 }: SavedSessionsPanelProps) {
-  const [ownerKey] = useState(() => getOrCreateOwnerKey());
+  const [ownerKey] = useState(() => tryGetOrCreateOwnerKey());
   const [loadState, setLoadState] = useState<LoadState>({ status: "loading" });
   const [saveStatus, setSaveStatus] = useState<string | null>(null);
   const [reopenError, setReopenError] = useState<string | null>(null);
 
   const loadSessions = useCallback(async () => {
+    if (!ownerKey) return;
+
     try {
       const response = await fetch(
         "/api/saved-sessions",
@@ -61,6 +63,8 @@ export function SavedSessionsPanel({
   }, [loadSessions]);
 
   const handleSave = useCallback(async () => {
+    if (!ownerKey) return;
+
     setSaveStatus(null);
     const feedback = aiCoachState.status === "done" ? aiCoachState.feedback : undefined;
     const body = buildSaveRequest(ownerKey, analysis, feedback);
@@ -82,6 +86,8 @@ export function SavedSessionsPanel({
 
   const handleReopen = useCallback(
     async (sessionId: string) => {
+      if (!ownerKey) return;
+
       setReopenError(null);
       try {
         const response = await fetch(
@@ -101,6 +107,17 @@ export function SavedSessionsPanel({
     },
     [onReopen, ownerKey],
   );
+
+  if (!ownerKey) {
+    return (
+      <aside className="saved-sessions-panel" aria-label="Saved sessions">
+        <h2 className="json-analysis-card__title">Saved attempts unavailable</h2>
+        <p className="json-analysis-card__detail">
+          This browser cannot create secure local saved-session keys.
+        </p>
+      </aside>
+    );
+  }
 
   return (
     <aside className="saved-sessions-panel" aria-label="Saved sessions">

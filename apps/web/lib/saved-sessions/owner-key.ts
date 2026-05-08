@@ -1,16 +1,28 @@
 const OWNER_KEY_STORAGE_KEY = "localspeak.ownerKey.v1";
 
 export function getOrCreateOwnerKey(): string {
+  const ownerKey = tryGetOrCreateOwnerKey();
+  if (!ownerKey) {
+    throw new Error("Secure random generation is unavailable.");
+  }
+  return ownerKey;
+}
+
+export function tryGetOrCreateOwnerKey(): string | null {
   const existing = window.localStorage.getItem(OWNER_KEY_STORAGE_KEY);
   if (existing) return existing;
 
   const cryptoApi = globalThis.crypto;
-  const ownerKey =
-    typeof cryptoApi?.randomUUID === "function"
-      ? cryptoApi.randomUUID()
-      : createOwnerKeyFromSecureBytes(cryptoApi);
-  window.localStorage.setItem(OWNER_KEY_STORAGE_KEY, ownerKey);
-  return ownerKey;
+  try {
+    const ownerKey =
+      typeof cryptoApi?.randomUUID === "function"
+        ? cryptoApi.randomUUID()
+        : createOwnerKeyFromSecureBytes(cryptoApi);
+    window.localStorage.setItem(OWNER_KEY_STORAGE_KEY, ownerKey);
+    return ownerKey;
+  } catch {
+    return null;
+  }
 }
 
 function createOwnerKeyFromSecureBytes(cryptoApi: Crypto | undefined): string {

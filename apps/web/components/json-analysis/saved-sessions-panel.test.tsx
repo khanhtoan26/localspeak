@@ -169,4 +169,24 @@ describe("SavedSessionsPanel", () => {
       await screen.findByText("We couldn't load saved attempts. Refresh and try again."),
     ).toBeInTheDocument();
   });
+
+  it("disables saved attempts when secure ownerKey creation is unavailable", () => {
+    vi.stubGlobal("crypto", {});
+    const fetchMock = vi.fn();
+    vi.stubGlobal("fetch", fetchMock);
+
+    render(
+      <SavedSessionsPanel
+        analysis={createJsonAnalysisResponseFixture()}
+        aiCoachState={{ status: "idle" }}
+        onReopen={vi.fn()}
+      />,
+    );
+
+    expect(screen.getByText("Saved attempts unavailable")).toBeInTheDocument();
+    expect(
+      screen.getByText("This browser cannot create secure local saved-session keys."),
+    ).toBeInTheDocument();
+    expect(fetchMock).not.toHaveBeenCalled();
+  });
 });
