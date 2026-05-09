@@ -49,7 +49,7 @@ Plans:
 - [x] 07-03-PLAN.md — Shared primitives + JSON Analysis part 1 (status-card, status-panel, summary-metric-cards, result-tabs, pauses/words/phonemes tabs)
 
 **Wave 4** *(blocked on Wave 3 completion)*
-- [ ] 07-04-PLAN.md — JSON Analysis part 2 + Audio panel (ai-coach-tab, json-input-card, validation-preview-card, json-analysis-panel Collapsible, audio-mode-panel)
+- [x] 07-04-PLAN.md — JSON Analysis part 2 + Audio panel (ai-coach-tab, json-input-card, validation-preview-card, json-analysis-panel Collapsible, audio-mode-panel)
 
 **Wave 5** *(blocked on Wave 4 completion)*
 - [ ] 07-05-PLAN.md — Tests (update dashboard-ui.spec.ts, create responsive.spec.ts)
