@@ -52,7 +52,7 @@ Plans:
 - [x] 07-04-PLAN.md — JSON Analysis part 2 + Audio panel (ai-coach-tab, json-input-card, validation-preview-card, json-analysis-panel Collapsible, audio-mode-panel)
 
 **Wave 5** *(blocked on Wave 4 completion)*
-- [ ] 07-05-PLAN.md — Tests (update dashboard-ui.spec.ts, create responsive.spec.ts)
+- [x] 07-05-PLAN.md — Tests (update dashboard-ui.spec.ts, create responsive.spec.ts)
 **UI hint**: yes
 
 ### Phase 8: Exam Question Bank & Contracts
