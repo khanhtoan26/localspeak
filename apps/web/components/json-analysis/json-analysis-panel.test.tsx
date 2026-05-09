@@ -6,6 +6,7 @@ import {
   screen,
   within,
 } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import {
   JSON_ANALYSIS_MAX_BYTES,
@@ -277,6 +278,11 @@ async function flushPromises() {
 
 function renderPanel() {
   render(<JsonAnalysisPanel />);
+}
+
+// Radix UI Tabs (v1.1.x) activates via onMouseDown; fireEvent.click alone doesn't trigger it
+function clickTab(name: string) {
+  fireEvent.mouseDown(screen.getByRole("tab", { name }), { button: 0, ctrlKey: false });
 }
 
 async function previewValid() {
@@ -644,9 +650,9 @@ describe("JsonAnalysisPanel", () => {
     renderPanel();
     await previewAndAnalyze();
 
-    const tabs = screen.getAllByRole("button").filter((button) =>
+    const tabs = screen.getAllByRole("tab").filter((tab) =>
       ["Pause Analysis", "Words", "Phonemes", "IELTS Analysis"].includes(
-        button.textContent ?? "",
+        tab.textContent ?? "",
       ),
     );
     expect(tabs.map((tab) => tab.textContent)).toEqual([
@@ -655,17 +661,17 @@ describe("JsonAnalysisPanel", () => {
       "Phonemes",
       "IELTS Analysis",
     ]);
-    expect(screen.getByRole("button", { name: "Pause Analysis" })).toHaveAttribute(
-      "aria-pressed",
+    expect(screen.getByRole("tab", { name: "Pause Analysis" })).toHaveAttribute(
+      "aria-selected",
       "true",
     );
-    expect(screen.queryByRole("button", { name: "Summary" })).not.toBeInTheDocument();
-    expect(screen.queryByRole("button", { name: "Pauses" })).not.toBeInTheDocument();
+    expect(screen.queryByRole("tab", { name: "Summary" })).not.toBeInTheDocument();
+    expect(screen.queryByRole("tab", { name: "Pauses" })).not.toBeInTheDocument();
     expect(screen.queryByText(/Gemini says|examiner thinks|IELTS examiner/i)).not.toBeInTheDocument();
     expect(screen.getByText("Very high WPM")).toBeInTheDocument();
     expect(screen.getByText("The computed speaking rate is unusually high.")).toBeInTheDocument();
 
-    fireEvent.click(screen.getByRole("button", { name: "IELTS Analysis" }));
+    clickTab("IELTS Analysis");
     expect(
       screen.getByText("Get AI feedback after reviewing the deterministic metrics."),
     ).toBeInTheDocument();
@@ -675,7 +681,7 @@ describe("JsonAnalysisPanel", () => {
     renderPanel();
     await previewAndAnalyze(createJsonAnalysisResponseFixture());
 
-    fireEvent.click(screen.getByRole("button", { name: "IELTS Analysis" }));
+    clickTab("IELTS Analysis");
     vi.mocked(fetch).mockImplementationOnce(() => new Promise(() => undefined));
     fireEvent.click(screen.getByRole("button", { name: "Get AI Feedback" }));
 
@@ -683,12 +689,12 @@ describe("JsonAnalysisPanel", () => {
       screen.getByText("Generating personalized IELTS feedback…"),
     ).toBeInTheDocument();
     expect(screen.getByText("What should I practice next?")).toBeInTheDocument();
-    expect(screen.getByRole("button", { name: "Pause Analysis" })).toBeInTheDocument();
+    expect(screen.getByRole("tab", { name: "Pause Analysis" })).toBeInTheDocument();
 
     cleanup();
     renderPanel();
     await previewAndAnalyze(createJsonAnalysisResponseFixture());
-    fireEvent.click(screen.getByRole("button", { name: "IELTS Analysis" }));
+    clickTab("IELTS Analysis");
     vi.mocked(fetch).mockRejectedValueOnce(new Error("offline"));
     fireEvent.click(screen.getByRole("button", { name: "Get AI Feedback" }));
     await flushPromises();
@@ -700,14 +706,14 @@ describe("JsonAnalysisPanel", () => {
     ).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "Retry AI Feedback" })).toBeInTheDocument();
     expect(screen.getByText("What should I practice next?")).toBeInTheDocument();
-    expect(screen.getByRole("button", { name: "Pause Analysis" })).toBeInTheDocument();
+    expect(screen.getByRole("tab", { name: "Pause Analysis" })).toBeInTheDocument();
   });
 
   it("renders sentence-order word chips and weak shortlist", async () => {
     renderPanel();
     await previewAndAnalyze(createJsonAnalysisResponseFixture());
 
-    fireEvent.click(screen.getByRole("button", { name: "Words" }));
+    clickTab("Words");
 
     const wordRows = screen.getAllByTestId("word-row");
     expect(wordRows.map((row) => row.textContent)).toEqual([
@@ -717,7 +723,7 @@ describe("JsonAnalysisPanel", () => {
     ]);
     expect(
       screen.getByLabelText("three, weak, 48 percent, from 0.20s to 0.75s"),
-    ).toHaveClass("word-chip--weak");
+    ).toHaveClass("text-danger");
     expect(screen.getByLabelText("Word score legend")).toHaveTextContent(
       "WeakOkayGood",
     );
@@ -729,7 +735,7 @@ describe("JsonAnalysisPanel", () => {
     renderPanel();
     await previewAndAnalyze(createJsonAnalysisResponseFixture());
 
-    fireEvent.click(screen.getByRole("button", { name: "Phonemes" }));
+    clickTab("Phonemes");
 
     const phonemeRows = screen.getAllByTestId("phoneme-row");
     expect(phonemeRows[0]).toHaveTextContent("TH / θ");
@@ -747,7 +753,7 @@ describe("JsonAnalysisPanel", () => {
     cleanup();
     renderPanel();
     await previewAndAnalyze(emptyAnalysisResponse);
-    fireEvent.click(screen.getByRole("button", { name: "Phonemes" }));
+    clickTab("Phonemes");
 
     expect(screen.getByText("No repeated weak sound pattern found")).toBeInTheDocument();
     expect(
@@ -761,7 +767,7 @@ describe("JsonAnalysisPanel", () => {
     renderPanel();
     await previewAndAnalyze(createJsonAnalysisResponseFixture());
 
-    fireEvent.click(screen.getByRole("button", { name: "Pause Analysis" }));
+    clickTab("Pause Analysis");
 
     expect(screen.getByLabelText("Pause summary")).toBeInTheDocument();
     expect(screen.getByText("Pause ratio")).toBeInTheDocument();
@@ -784,7 +790,7 @@ describe("JsonAnalysisPanel", () => {
     cleanup();
     renderPanel();
     await previewAndAnalyze(emptyAnalysisResponse);
-    fireEvent.click(screen.getByRole("button", { name: "Pause Analysis" }));
+    clickTab("Pause Analysis");
 
     expect(screen.getByText("No notable pauses found")).toBeInTheDocument();
     expect(
@@ -798,7 +804,7 @@ describe("JsonAnalysisPanel", () => {
     renderPanel();
     await previewAndAnalyze(emptyAnalysisResponse);
 
-    fireEvent.click(screen.getByRole("button", { name: "Words" }));
+    clickTab("Words");
 
     expect(screen.getAllByTestId("word-row")).toHaveLength(3);
     expect(screen.queryByText("Weak words to repeat")).not.toBeInTheDocument();
