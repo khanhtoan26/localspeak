@@ -12,6 +12,8 @@ import {
 } from "@localspeak/contracts";
 import type { AiCoachState } from "./ai-coach-tab";
 import { tryGetOrCreateOwnerKey } from "../../lib/saved-sessions/owner-key";
+import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
 
 type SavedSessionsPanelProps = {
   analysis: JsonAnalysisResponse;
@@ -114,9 +116,9 @@ export function SavedSessionsPanel({
 
   if (!ownerKey) {
     return (
-      <aside className="saved-sessions-panel" aria-label="Saved sessions">
-        <h2 className="json-analysis-card__title">Saved attempts unavailable</h2>
-        <p className="json-analysis-card__detail">
+      <aside className="flex flex-col gap-4" aria-label="Saved sessions">
+        <h2 className="text-xl font-semibold text-foreground m-0">Saved attempts unavailable</h2>
+        <p className="text-base text-muted-foreground">
           This browser cannot create secure local saved-session keys.
         </p>
       </aside>
@@ -124,68 +126,73 @@ export function SavedSessionsPanel({
   }
 
   return (
-    <aside className="saved-sessions-panel" aria-label="Saved sessions">
-      <div className="json-analysis-card__header">
+    <aside className="flex flex-col gap-4" aria-label="Saved sessions">
+      <div className="flex items-start justify-between gap-4">
         <div>
-          <h2 className="json-analysis-card__title">Saved attempts</h2>
-          <p className="json-analysis-card__detail">
+          <h2 className="text-xl font-semibold text-foreground m-0">Saved attempts</h2>
+          <p className="text-base text-muted-foreground mt-1">
             Save this result or reopen a recent attempt from this browser.
           </p>
         </div>
-        <button
+        <Button
           type="button"
-          className="json-secondary-button"
+          variant="outline"
           onClick={() => void handleSave()}
           disabled={isSaving}
+          className="min-h-[44px] shrink-0"
         >
           {isSaving ? "Saving…" : "Save Result"}
-        </button>
+        </Button>
       </div>
 
-      {saveStatus ? <p className="saved-sessions-status">{saveStatus}</p> : null}
-      {reopenError ? <p className="json-analysis-error">{reopenError}</p> : null}
+      {saveStatus ? <p className="text-sm text-muted-foreground">{saveStatus}</p> : null}
+      {reopenError ? <p className="text-sm text-danger font-medium">{reopenError}</p> : null}
 
       {loadState.status === "loading" ? (
-        <p className="json-analysis-card__detail">Loading saved attempts...</p>
+        <p className="text-base text-muted-foreground">Loading saved attempts...</p>
       ) : null}
 
       {loadState.status === "error" ? (
-        <p className="json-analysis-error">{loadState.message}</p>
+        <p className="text-sm text-danger font-medium">{loadState.message}</p>
       ) : null}
 
       {loadState.status === "ready" && loadState.sessions.length === 0 ? (
-        <section className="json-empty-state">
-          <h3 className="json-analysis-subtitle">No saved attempts yet</h3>
-          <p className="json-analysis-card__detail">
+        <section className="flex flex-col gap-2">
+          <h3 className="text-base font-semibold text-foreground m-0">No saved attempts yet</h3>
+          <p className="text-base text-muted-foreground">
             Save a result to reopen it later from this browser.
           </p>
         </section>
       ) : null}
 
       {loadState.status === "ready" && loadState.sessions.length > 0 ? (
-        <details className="saved-sessions-history">
-          <summary>View saved attempts</summary>
-          <ol className="saved-sessions-list">
+        <details className="flex flex-col gap-2">
+          <summary className="cursor-pointer text-sm font-medium text-foreground">View saved attempts</summary>
+          <ol className="flex flex-col gap-2 mt-2 list-none p-0">
             {loadState.sessions.map((session) => {
               const formattedDate = formatSavedSessionDate(session.createdAt);
               return (
-                <li className="saved-session-row" key={session.id}>
-                  <div>
-                    <strong>{session.title ?? "Saved speaking attempt"}</strong>
-                    <span>{`JSON Analysis · ${formattedDate}`}</span>
-                    <span>
-                      Band {session.pronunciationBand ?? "-"} / Fluency{" "}
-                      {session.fluencyBand ?? "-"} / {session.wpm ?? "-"} WPM
-                    </span>
-                  </div>
-                  <button
-                    type="button"
-                    className="json-secondary-button"
-                    aria-label={`Reopen result from ${formattedDate}`}
-                    onClick={() => void handleReopen(session.id)}
-                  >
-                    Reopen Result
-                  </button>
+                <li key={session.id}>
+                  <Card className="p-4 min-w-0 flex items-start justify-between gap-4">
+                    <div className="flex flex-col gap-1 min-w-0">
+                      <strong className="text-sm font-semibold text-foreground">{session.title ?? "Saved speaking attempt"}</strong>
+                      <span className="font-mono text-[11px] text-subtle">{`JSON Analysis · ${formattedDate}`}</span>
+                      <span className="font-mono text-[11px] text-subtle">
+                        Band {session.pronunciationBand ?? "-"} / Fluency{" "}
+                        {session.fluencyBand ?? "-"} / {session.wpm ?? "-"} WPM
+                      </span>
+                    </div>
+                    <Button
+                      type="button"
+                      variant="outline"
+                      size="sm"
+                      className="shrink-0 min-h-[44px]"
+                      aria-label={`Reopen result from ${formattedDate}`}
+                      onClick={() => void handleReopen(session.id)}
+                    >
+                      Reopen Result
+                    </Button>
+                  </Card>
                 </li>
               );
             })}

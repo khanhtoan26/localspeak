@@ -299,7 +299,7 @@ async function previewAndAnalyze(response: unknown = analysisResponse) {
     .mockImplementationOnce(() => jsonResponse(response));
 
   await previewValid();
-  fireEvent.click(screen.getByRole("button", { name: "Analyze JSON" }));
+  fireEvent.click(screen.getByRole("button", { name: "Analyze Pronunciation" }));
   await flushPromises();
 }
 
@@ -328,7 +328,7 @@ describe("JsonAnalysisPanel", () => {
       screen.getByLabelText("Speech assessment JSON input"),
     ).toBeInTheDocument();
     expect(screen.getByText("Start with an analysis")).toBeInTheDocument();
-    expect(screen.getByRole("button", { name: "Analyze JSON" })).toBeDisabled();
+    expect(screen.getByRole("button", { name: "Analyze Pronunciation" })).toBeDisabled();
     expect(
       screen.getByText("Paste JSON or load the sample to continue."),
     ).toBeInTheDocument();
@@ -424,7 +424,7 @@ describe("JsonAnalysisPanel", () => {
       screen.getByText("Metrics will still be computed, but review these unusual values."),
     ).toBeInTheDocument();
     expect(screen.getByText("Very high WPM")).toBeInTheDocument();
-    expect(screen.getByRole("button", { name: "Analyze JSON" })).toBeEnabled();
+    expect(screen.getByRole("button", { name: "Analyze Pronunciation" })).toBeEnabled();
   });
 
   it("loads the sample JSON after confirmation and triggers preview", async () => {
@@ -590,7 +590,7 @@ describe("JsonAnalysisPanel", () => {
       expect.anything(),
     );
 
-    fireEvent.click(screen.getByRole("button", { name: "Analyze JSON" }));
+    fireEvent.click(screen.getByRole("button", { name: "Analyze Pronunciation" }));
     await flushPromises();
 
     expect(fetch).toHaveBeenCalledWith("/api/json-analysis/analyze", {
