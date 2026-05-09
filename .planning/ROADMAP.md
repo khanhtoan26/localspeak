@@ -43,7 +43,7 @@ Plans:
 - [ ] 07-01-PLAN.md — Tailwind v4 + Shadcn infrastructure setup (tsconfig @/* alias, postcss, globals.css, shadcn init, 11 components, Playwright Chromium)
 
 **Wave 2** *(blocked on Wave 1 completion)*
-- [ ] 07-02-PLAN.md — App shell & navigation (layout.tsx font loading, page.tsx grouped sidebar + mobile bottom nav)
+- [x] 07-02-PLAN.md — App shell & navigation (layout.tsx font loading, page.tsx grouped sidebar + mobile bottom nav)
 
 **Wave 3** *(blocked on Wave 2 completion)*
 - [ ] 07-03-PLAN.md — Shared primitives + JSON Analysis part 1 (status-card, status-panel, summary-metric-cards, result-tabs, pauses/words/phonemes tabs)
