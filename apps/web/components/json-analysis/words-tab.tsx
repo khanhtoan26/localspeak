@@ -6,6 +6,20 @@ const bandLabels: Record<WordBand, string> = {
   good: "Good",
 };
 
+const legendDotColor: Record<WordBand, string> = {
+  weak: "bg-danger",
+  okay: "bg-warning",
+  good: "bg-success",
+};
+
+const chipBase = "inline-flex flex-col items-center rounded-xl px-3 py-1.5 text-sm font-medium min-h-[44px] justify-center";
+
+const chipColor: Record<WordBand, string> = {
+  weak: "bg-[#fdf1ee] text-danger border border-[#edd0ca]",
+  okay: "bg-[#fdf7ec] text-warning border border-[#eadcb8]",
+  good: "bg-[#f0f7f2] text-success border border-[#d9e8dd]",
+};
+
 type WordsTabProps = {
   words: WordMetric[];
 };
@@ -18,9 +32,9 @@ export function WordsTab({ words }: WordsTabProps) {
 
   if (words.length === 0) {
     return (
-      <section className="json-empty-state">
-        <h2 className="json-analysis-card__title">No major weak words found</h2>
-        <p className="json-analysis-card__detail">
+      <section className="flex flex-col gap-2 py-8 items-start">
+        <h2 className="text-xl font-semibold text-foreground m-0">No major weak words found</h2>
+        <p className="text-base text-muted-foreground">
           Most word scores are in the okay or good range for this sample.
         </p>
       </section>
@@ -28,20 +42,20 @@ export function WordsTab({ words }: WordsTabProps) {
   }
 
   return (
-    <section className="json-analysis-card">
-      <h2 className="json-analysis-card__title">Words</h2>
-      <ul className="word-chip-legend" aria-label="Word score legend">
+    <section className="flex flex-col gap-4">
+      <h2 className="text-xl font-semibold text-foreground m-0">Words</h2>
+      <ul className="flex flex-wrap gap-4 text-sm list-none p-0 m-0" aria-label="Word score legend">
         {Object.entries(bandLabels).map(([band, label]) => (
           <li key={band}>
-            <span className={`word-chip-legend__dot word-chip-legend__dot--${band}`} />
+            <span className={`inline-block w-2 h-2 rounded-full mr-1 ${legendDotColor[band as WordBand]}`} />
             {label}
           </li>
         ))}
       </ul>
-      <ol className="word-chip-list" aria-label="Sentence-order word scores">
+      <ol className="flex flex-wrap gap-1.5 list-none p-0 m-0" aria-label="Sentence-order word scores">
         {words.map((word) => (
           <li
-            className={`word-chip word-chip--${word.band}`}
+            className={`${chipBase} ${chipColor[word.band]}`}
             aria-label={`${word.word}, ${word.band}, ${word.scorePercent} percent, from ${word.startTime.toFixed(
               2,
             )}s to ${word.endTime.toFixed(2)}s`}
@@ -54,12 +68,12 @@ export function WordsTab({ words }: WordsTabProps) {
         ))}
       </ol>
       {weakWords.length > 0 ? (
-        <section className="weak-word-shortlist">
-          <h3 className="json-analysis-subtitle">Weak words to repeat</h3>
-          <ol className="json-result-list">
+        <section className="rounded-xl bg-sidebar p-4">
+          <h3 className="text-base font-semibold text-foreground m-0 mb-2">Weak words to repeat</h3>
+          <ol className="flex flex-col gap-2 list-none p-0 m-0">
             {weakWords.map((word) => (
               <li
-                className="json-result-row json-result-row--weak"
+                className="flex flex-col gap-1 rounded-xl p-3 text-sm border border-[#edd0ca] bg-[#fdf1ee]"
                 key={`${word.index}-${word.word}-weak`}
               >
                 <strong>{word.word}</strong>
