@@ -37,7 +37,13 @@ v1.0 established the web/backend foundation, deterministic JSON pronunciation an
   5. Phone-width layouts have no horizontal overflow, oversized cards, hidden primary actions, or mismatched JSON/audio layout density.
   6. Keyboard navigation, focus states, semantic landmarks, touch targets, contrast, and screen-reader labels are covered for the redesigned shell.
   7. Playwright or equivalent UI coverage protects navigation, JSON analysis, live audio, responsive layout, and empty/error states.
-**Plans**: TBD
+**Plans**: 5 plans
+Plans:
+- [ ] 07-01-PLAN.md — Tailwind v4 + Shadcn infrastructure setup (tsconfig @/* alias, postcss, globals.css, shadcn init, 11 components, Playwright Chromium)
+- [ ] 07-02-PLAN.md — App shell & navigation (layout.tsx font loading, page.tsx grouped sidebar + mobile bottom nav)
+- [ ] 07-03-PLAN.md — Shared primitives + JSON Analysis part 1 (status-card, status-panel, summary-metric-cards, result-tabs, pauses/words/phonemes tabs)
+- [ ] 07-04-PLAN.md — JSON Analysis part 2 + Audio panel (ai-coach-tab, json-input-card, validation-preview-card, json-analysis-panel Collapsible, audio-mode-panel)
+- [ ] 07-05-PLAN.md — Tests (update dashboard-ui.spec.ts, create responsive.spec.ts)
 **UI hint**: yes
 
 ### Phase 8: Exam Question Bank & Contracts
@@ -124,7 +130,7 @@ Phases execute in numeric order: 7 -> 8 -> 9 -> 10 -> 11 -> 12
 | 2. JSON Input & Pronunciation/Fluency Metrics | 4/4 | Complete | 2026-05-07 |
 | 5. Saved Analysis Persistence Service | 4/4 | Complete | 2026-05-08 |
 | 6. Learner Dashboard & Analysis Views | 5/5 | Complete | 2026-05-08 |
-| 7. Comprehensive UI/UX Redesign & Design System | 0/TBD | Not started | - |
+| 7. Comprehensive UI/UX Redesign & Design System | 0/5 | Not started | - |
 | 8. Exam Question Bank & Contracts | 0/TBD | Not started | - |
 | 9. Timed IELTS Practice Session Flow | 0/TBD | Not started | - |
 | 10. IELTS Rubric Evaluation API | 0/TBD | Not started | - |
