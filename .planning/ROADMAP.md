@@ -46,7 +46,7 @@ Plans:
 - [x] 07-02-PLAN.md — App shell & navigation (layout.tsx font loading, page.tsx grouped sidebar + mobile bottom nav)
 
 **Wave 3** *(blocked on Wave 2 completion)*
-- [ ] 07-03-PLAN.md — Shared primitives + JSON Analysis part 1 (status-card, status-panel, summary-metric-cards, result-tabs, pauses/words/phonemes tabs)
+- [x] 07-03-PLAN.md — Shared primitives + JSON Analysis part 1 (status-card, status-panel, summary-metric-cards, result-tabs, pauses/words/phonemes tabs)
 
 **Wave 4** *(blocked on Wave 3 completion)*
 - [ ] 07-04-PLAN.md — JSON Analysis part 2 + Audio panel (ai-coach-tab, json-input-card, validation-preview-card, json-analysis-panel Collapsible, audio-mode-panel)
