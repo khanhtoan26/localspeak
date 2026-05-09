@@ -671,22 +671,25 @@ Wave 5: Test updates
 
 ---
 
-## Open Questions
+## Open Questions (RESOLVED)
 
 1. **Font Loading Strategy**
    - What we know: Fonts are declared in `:root` CSS vars (`--font-display`, `--font-body`, `--font-mono`) but there is no `<link>` or `next/font` loading. The public directory only contains `audio-worklet-processor.js`.
    - What's unclear: Whether fonts display correctly in the current app (system fallbacks may cover Inter; Instrument Serif and JetBrains Mono likely fall back to serif/monospace).
    - Recommendation: Add `next/font/google` in `layout.tsx` for Inter and JetBrains Mono (both available on Google Fonts). Instrument Serif may need a CSS `@import` from Google Fonts or `next/font/local` if a font file is added.
+   - RESOLVED: Plan 02 (07-02-PLAN.md) adds Inter and JetBrains_Mono via next/font/google in layout.tsx with CSS variable mapping (`--font-sans`, `--font-mono`). Instrument Serif uses the Georgia system fallback for Phase 7 — acceptable per discretion note in CONTEXT.md.
 
 2. **shadcn init Interactive Prompts**
    - What we know: `pnpm dlx shadcn@latest init` is interactive — it asks about style (Default/New York), base color, CSS variables, etc.
    - What's unclear: Whether the CLI can be run non-interactively in CI or if specific flags can pre-answer the prompts.
    - Recommendation: Run interactively during Wave 0. Choose "New York" style, base color "neutral" (then override with custom hex values in `@theme`), CSS variables: yes.
+   - RESOLVED: Plan 01 Task 2 documents the exact interactive answers (New York style, neutral base color, CSS variables: yes). The executor runs the command interactively from inside apps/web/ and restores the @theme inline block if shadcn init overwrites globals.css with HSL tokens.
 
 3. **Playwright Browser Installation**
    - What we know: Playwright 1.59.1 is installed as a devDependency. The Playwright browser binaries are NOT installed (`~/.cache/ms-playwright` does not exist).
    - What's unclear: Whether the test environment has internet access to download browsers.
    - Recommendation: Wave 0 must include `pnpm dlx playwright install chromium` or `pnpm exec playwright install chromium` from `apps/web/`. If CI is involved, this needs to be a setup step.
+   - RESOLVED: Plan 01 Task 2 includes `pnpm exec playwright install chromium` as an explicit step with an acceptance criterion requiring exit 0. The test environment has internet access (local development machine). CI environments should add this as a setup step before running test:e2e.
 
 ---
 
