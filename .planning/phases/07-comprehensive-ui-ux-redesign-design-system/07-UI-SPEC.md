@@ -72,8 +72,8 @@ Declared values (all multiples of 4 — 8-point scale):
 
 Exceptions:
 - Touch targets (all interactive elements): minimum 44px height/width — hard requirement (source: CONTEXT.md D-14, UIX-07)
-- Mobile page padding: 12px (3-unit exception needed for phone-width density; source: existing globals.css media query pattern)
-- Sidebar sticky top offset: 24px desktop, 12px mobile
+- Mobile page padding: 8px
+- Sidebar sticky top offset: 24px desktop, 8px mobile
 
 ---
 
@@ -217,7 +217,7 @@ Visual hierarchy — outcome first, input secondary (source: CONTEXT.md D-11, UI
 4. **JSON input collapsible** (Shadcn Collapsible): collapsed by default after analysis completes; expanded on initial load or when user needs to re-paste
 
 JSON input states:
-- **Pre-analysis**: Collapsible open, Textarea visible, "Analyze" primary button enabled when text present
+- **Pre-analysis**: Collapsible open, Textarea visible, "Analyze Pronunciation" primary button enabled when text present
 - **Analyzing**: Button disabled (`opacity: 0.56`), Skeleton replaces metric cards
 - **Post-analysis**: Collapsible auto-collapsed; metrics and tabs visible; "Edit Input" or disclosure summary to re-open
 - **Stale**: Warning banner (warning color, Body role) above metrics when input has changed since last analysis
@@ -322,7 +322,7 @@ Every interactive element minimum: 44×44px. Applies to:
 
 | Element | Copy |
 |---------|------|
-| Primary CTA — JSON Analysis | "Analyze" (single word, sentence case — on the analyze button in JsonAnalysisPanel) |
+| Primary CTA — JSON Analysis | "Analyze Pronunciation" (verb + noun, sentence case — on the analyze button in JsonAnalysisPanel) |
 | Primary CTA — JSON post-analysis | "Edit Input" (re-opens collapsible disclosure) |
 | Primary CTA — Audio | "Start Recording" (idle state) / "Stop Recording" (recording state) |
 | Primary CTA — AI Coach | "Get AI Feedback" (idle) / "Retry AI Feedback" (error state) |
