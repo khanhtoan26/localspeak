@@ -39,10 +39,19 @@ v1.0 established the web/backend foundation, deterministic JSON pronunciation an
   7. Playwright or equivalent UI coverage protects navigation, JSON analysis, live audio, responsive layout, and empty/error states.
 **Plans**: 5 plans
 Plans:
+**Wave 1**
 - [ ] 07-01-PLAN.md — Tailwind v4 + Shadcn infrastructure setup (tsconfig @/* alias, postcss, globals.css, shadcn init, 11 components, Playwright Chromium)
+
+**Wave 2** *(blocked on Wave 1 completion)*
 - [ ] 07-02-PLAN.md — App shell & navigation (layout.tsx font loading, page.tsx grouped sidebar + mobile bottom nav)
+
+**Wave 3** *(blocked on Wave 2 completion)*
 - [ ] 07-03-PLAN.md — Shared primitives + JSON Analysis part 1 (status-card, status-panel, summary-metric-cards, result-tabs, pauses/words/phonemes tabs)
+
+**Wave 4** *(blocked on Wave 3 completion)*
 - [ ] 07-04-PLAN.md — JSON Analysis part 2 + Audio panel (ai-coach-tab, json-input-card, validation-preview-card, json-analysis-panel Collapsible, audio-mode-panel)
+
+**Wave 5** *(blocked on Wave 4 completion)*
 - [ ] 07-05-PLAN.md — Tests (update dashboard-ui.spec.ts, create responsive.spec.ts)
 **UI hint**: yes
 
