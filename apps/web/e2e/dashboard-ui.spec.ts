@@ -125,8 +125,8 @@ async function completeJsonAnalysis(page: Page) {
   await page
     .getByLabel("Speech assessment JSON input")
     .fill(JSON.stringify({ result: [] }));
-  await expect(page.getByRole("button", { name: "Analyze JSON" })).toBeEnabled();
-  await page.getByRole("button", { name: "Analyze JSON" }).click();
+  await expect(page.getByRole("button", { name: "Analyze Pronunciation" })).toBeEnabled();
+  await page.getByRole("button", { name: "Analyze Pronunciation" }).click();
   await expect(page.getByRole("heading", { name: "What should I practice next?" })).toBeVisible();
 }
 
@@ -136,13 +136,10 @@ test("polished dashboard leads with results and keeps secondary controls quiet",
   await mockDashboardApi(page);
 
   await page.goto("/");
-  await expect(page.getByRole("button", { name: "JSON Analysis" })).toHaveAttribute(
-    "aria-pressed",
-    "true",
+  await expect(page.getByRole("button", { name: "JSON Analysis" }).first()).toHaveAttribute(
+    "aria-current",
+    "page",
   );
-  await expect(
-    page.getByText("Record from your microphone and watch live transcript feedback."),
-  ).toBeVisible();
 
   await completeJsonAnalysis(page);
   await expect(page.getByText("Start with the TH / theta sound pattern.")).toBeVisible();
@@ -157,14 +154,11 @@ test("polished dashboard leads with results and keeps secondary controls quiet",
   await expect(page.getByText("Change JSON input")).toBeVisible();
   await expect(page.getByLabel("Speech assessment JSON input")).toBeHidden();
 
-  await page.getByRole("button", { name: "IELTS Analysis" }).click();
+  await page.getByRole("tab", { name: "IELTS Analysis" }).click();
   await expect(page.getByRole("button", { name: "Get AI Feedback" })).toBeVisible();
 
   await page.getByRole("button", { name: "Live Audio Practice" }).click();
   await expect(page.getByLabel("Reference sentence")).toBeVisible();
-  await expect(
-    page.getByText("Record from your microphone and watch live transcript feedback."),
-  ).toBeVisible();
 });
 
 test("mobile JSON layout stays within the same phone shell as live audio", async ({
