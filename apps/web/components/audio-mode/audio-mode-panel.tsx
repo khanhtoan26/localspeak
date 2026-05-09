@@ -6,29 +6,51 @@ import { RecordButton } from "./record-button";
 import { LiveAnalysisPanel } from "./live-analysis-panel";
 import { scorePronunciation } from "../../lib/audio/score-pronunciation";
 import type { PronunciationResult } from "../../lib/audio/score-pronunciation";
+import { Input } from "@/components/ui/input";
+import { Card } from "@/components/ui/card";
+import { cn } from "@/lib/utils";
+
+const scoreColor: Record<"good" | "okay" | "weak", string> = {
+  good: "text-success",
+  okay: "text-warning",
+  weak: "text-danger",
+};
+
+function getChipColor(level: "good" | "ok" | "weak" | "missed"): string {
+  switch (level) {
+    case "good":
+      return "bg-[#f0f7f2] text-success border border-[#d9e8dd]";
+    case "ok":
+      return "bg-[#fdf7ec] text-warning border border-[#eadcb8]";
+    case "weak":
+    case "missed":
+      return "bg-[#fdf1ee] text-danger border border-[#edd0ca]";
+  }
+}
 
 function WordScoreCard({ result }: { result: PronunciationResult }) {
+  const level = getScoreLevel(result.overallScore);
+
   return (
-    <div className="json-analysis-card audio-score-card">
-      <div className="audio-score-card__header">
-        <span className="json-input-label audio-score-card__label">
+    <Card className="p-4 min-w-0">
+      <div className="flex items-center justify-between gap-4 mb-3">
+        <span className="font-mono text-[11px] font-semibold uppercase tracking-[0.06em] text-subtle">
           Pronunciation Score
         </span>
-        <span
-          className={`audio-score-card__value audio-score-card__value--${getScoreLevel(
-            result.overallScore,
-          )}`}
-        >
+        <span className={cn("font-display text-3xl", scoreColor[level])}>
           {result.overallScore}/100
         </span>
       </div>
 
       {/* Word-by-word scores */}
-      <div className="audio-word-chip-list">
+      <div className="flex flex-wrap gap-1.5">
         {result.wordScores.map((ws, i) => (
           <span
             key={i}
-            className={`audio-word-chip audio-word-chip--${ws.level}`}
+            className={cn(
+              "inline-flex items-center rounded-xl px-3 py-1.5 text-sm font-medium min-h-[44px]",
+              getChipColor(ws.level),
+            )}
             title={ws.spoken ? `"${ws.spoken}" (${Math.round(ws.confidence * 100)}%)` : "not detected"}
           >
             {ws.expected}
@@ -37,7 +59,7 @@ function WordScoreCard({ result }: { result: PronunciationResult }) {
       </div>
 
       {/* Fluency metrics */}
-      <div className="audio-fluency-meta">
+      <div className="flex flex-wrap gap-3 font-mono text-[11px] text-subtle mt-2">
         <span>{result.fluency.wordsPerMinute} WPM</span>
         <span>
           {result.fluency.hesitationCount} pause
@@ -46,8 +68,8 @@ function WordScoreCard({ result }: { result: PronunciationResult }) {
         <span>{result.fluency.totalDurationSeconds}s total</span>
       </div>
 
-      <p className="audio-score-card__summary">{result.summary}</p>
-    </div>
+      <p className="text-sm text-muted-foreground mt-2">{result.summary}</p>
+    </Card>
   );
 }
 
@@ -75,23 +97,23 @@ export function AudioModePanel() {
     : transcript.interim || "";
 
   return (
-    <div className="json-analysis-card">
+    <div className="flex flex-col gap-4 rounded-[18px] border border-border bg-card p-4">
       {/* Reference text input */}
-      <label htmlFor="reference-text" className="json-input-label">
+      <label htmlFor="reference-text" className="block font-mono text-[11px] font-semibold uppercase tracking-[0.06em] text-subtle">
         Reference sentence
       </label>
-      <input
+      <Input
         id="reference-text"
         type="text"
         value={referenceText}
         onChange={(e) => setReferenceText(e.target.value)}
         placeholder="Enter the sentence you want to practice..."
-        className="json-input-textarea audio-reference-input"
+        className="bg-input"
         disabled={status === "recording" || status === "connecting"}
       />
 
       {/* Record button with waveform */}
-      <div className="audio-section">
+      <div className="flex flex-col gap-2">
         <RecordButton
           status={status}
           onStart={() => void start()}
@@ -103,11 +125,11 @@ export function AudioModePanel() {
 
       {/* Error display */}
       {error && (
-        <p className="json-analysis-error">{error}</p>
+        <p className="text-sm text-danger font-medium">{error}</p>
       )}
 
       {/* Live transcript */}
-      <div className="audio-section">
+      <div className="flex flex-col gap-2">
         <LiveAnalysisPanel
           analysis={displayText}
           isStreaming={status === "recording"}

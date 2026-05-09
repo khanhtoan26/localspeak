@@ -16,6 +16,12 @@ import { ResultTabs } from "./result-tabs";
 import { SavedSessionsPanel } from "./saved-sessions-panel";
 import { SummaryMetricCards } from "./summary-metric-cards";
 import { ValidationPreviewCard } from "./validation-preview-card";
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
+import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
+import { Skeleton } from "@/components/ui/skeleton";
+import { ChevronDown } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 const PREVIEW_DEBOUNCE_MS = 600;
 const PREVIEW_UNAVAILABLE_COPY =
@@ -25,7 +31,7 @@ const PREVIEW_CONTRACT_MISMATCH_COPY =
 const ANALYZE_ERROR_COPY =
   "We couldn't analyze this JSON yet. Check the format and try again.";
 const ANALYZE_ERROR_NEXT_STEP =
-  "Check the validation preview, then try Analyze JSON again.";
+  "Check the validation preview, then try Analyze Pronunciation again.";
 
 type SyntaxState =
   | { status: "empty" }
@@ -133,6 +139,7 @@ export function JsonAnalysisPanel() {
     status: "idle",
   });
   const [reopenedMarker, setReopenedMarker] = useState<string | null>(null);
+  const [isInputOpen, setIsInputOpen] = useState(false);
 
   const syntaxState = useMemo(() => parseJson(jsonText), [jsonText]);
 
@@ -244,6 +251,7 @@ export function JsonAnalysisPanel() {
       setAnalysisState({ status: "done", result });
       setResultsStale(false);
       setReopenedMarker(null);
+      setIsInputOpen(false); // Auto-collapse input when analysis completes (UIX-02)
     } catch {
       setAnalysisState({
         status: "error",
@@ -379,19 +387,17 @@ export function JsonAnalysisPanel() {
   );
 
   return (
-    <section className="json-analysis-page" aria-label="JSON analysis dashboard">
+    <section className="flex flex-col gap-4" aria-label="JSON analysis dashboard">
       <section
-        className={`json-analysis-shell${
-          analysisState.status === "done" ? " json-analysis-shell--with-history" : ""
-        }`}
+        className="flex flex-col gap-4"
         aria-label="JSON analysis"
       >
-        <header className="json-analysis-header">
-          <span className="json-analysis-tag">JSON Mode</span>
-          <h1 className="json-analysis-title">
+        <header className="pt-2 pb-1">
+          <span className="inline-flex items-center rounded-full bg-sidebar text-primary text-[11px] font-semibold uppercase tracking-[0.06em] px-2 py-1">JSON Mode</span>
+          <h1 className="font-display text-3xl text-foreground mt-4 mb-2">
             Analyze speech assessment JSON
           </h1>
-          <p className="json-analysis-intro">
+          <p className="text-base text-muted-foreground m-0">
             Paste a speech assessment response, load the sample, or upload a
             JSON file to preview deterministic pronunciation and fluency
             metrics.
@@ -399,26 +405,26 @@ export function JsonAnalysisPanel() {
         </header>
 
         {analysisState.status === "done" ? (
-          <section className="json-results-region" aria-live="polite">
+          <section className="flex flex-col gap-4" aria-live="polite">
             {reopenedMarker ? (
-              <p className="json-analysis-pill saved-session-marker">
+              <p className="inline-flex items-center rounded-full bg-sidebar text-muted-foreground text-[11px] font-semibold uppercase tracking-[0.06em] px-2 py-1">
                 {reopenedMarker}
               </p>
             ) : null}
             <PracticePriorityCard analysis={analysisState.result} />
             {analysisState.result.warnings.length > 0 ? (
-              <div className="json-analysis-card json-analysis-card--warning">
-                <h2 className="json-analysis-card__title">
+              <Card className="border-[#eadcb8] p-4 min-w-0">
+                <h2 className="text-xl font-semibold text-foreground m-0">
                   Analyzable with warnings
                 </h2>
-                <p className="json-analysis-card__detail">
+                <p className="text-base text-muted-foreground mt-3">
                   Metrics will still be computed, but review these unusual
                   values.
                 </p>
-                <ul className="json-issue-list">
+                <ul className="flex flex-col gap-2 mt-3 list-none p-0">
                   {analysisState.result.warnings.map((warning) => (
                     <li
-                      className="json-issue-row"
+                      className="flex flex-col gap-1 text-sm"
                       key={`${warning.code}-${warning.path ?? ""}`}
                     >
                       <strong>{warning.label}</strong>
@@ -427,10 +433,10 @@ export function JsonAnalysisPanel() {
                     </li>
                   ))}
                 </ul>
-              </div>
+              </Card>
             ) : null}
             <SummaryMetricCards summary={analysisState.result.summary} />
-            <div className="json-results-main">
+            <div className="flex flex-col gap-4 min-w-0">
               <ResultTabs
                 analysis={analysisState.result}
                 aiCoachState={aiCoachState}
@@ -447,11 +453,16 @@ export function JsonAnalysisPanel() {
         ) : null}
 
         {analysisState.status === "done" ? (
-          <details className="json-input-disclosure">
-            <summary>Change JSON input</summary>
-            <div className="json-input-disclosure__content">
+          <Collapsible open={isInputOpen} onOpenChange={setIsInputOpen}>
+            <CollapsibleTrigger asChild>
+              <Button variant="ghost" className="w-full justify-between min-h-[44px] font-medium">
+                {isInputOpen ? "Hide JSON input" : "Change JSON input"}
+                <ChevronDown className={cn("h-4 w-4 transition-transform", isInputOpen && "rotate-180")} />
+              </Button>
+            </CollapsibleTrigger>
+            <CollapsibleContent className="flex flex-col gap-3 pt-2">
               {resultsStale ? (
-                <p className="json-analysis-stale">
+                <p className="text-sm text-warning font-medium">
                   Input changed. Analyze again to update results.
                 </p>
               ) : null}
@@ -476,8 +487,8 @@ export function JsonAnalysisPanel() {
                 previewError={previewError}
                 isPreviewing={isPreviewing}
               />
-            </div>
-          </details>
+            </CollapsibleContent>
+          </Collapsible>
         ) : (
           <>
             <JsonInputCard
@@ -506,23 +517,28 @@ export function JsonAnalysisPanel() {
         )}
 
         {analysisState.status === "loading" ? (
-          <p className="json-analysis-loading" aria-live="polite">
-            Computing deterministic metrics from the JSON...
-          </p>
+          <div className="flex flex-col gap-3 py-4" aria-live="polite">
+            <div role="status" aria-label="Computing metrics" className="space-y-3">
+              <Skeleton className="h-4 w-3/4" />
+              <Skeleton className="h-4 w-1/2" />
+              <Skeleton className="h-4 w-2/3" />
+            </div>
+            <p className="text-base text-muted-foreground">Computing deterministic metrics from the JSON...</p>
+          </div>
         ) : null}
 
         {analysisState.status === "error" ? (
-          <section
-            className="json-analysis-card json-analysis-card--danger"
+          <Card
+            className="border-[#edd0ca] p-4 min-w-0"
             aria-live="polite"
           >
-            <h2 className="json-analysis-card__title">
+            <h2 className="text-xl font-semibold text-foreground m-0">
               {analysisState.message}
             </h2>
-            <p className="json-analysis-card__detail">
+            <p className="text-base text-muted-foreground mt-3">
               {analysisState.nextStep}
             </p>
-          </section>
+          </Card>
         ) : null}
       </section>
     </section>
@@ -537,14 +553,14 @@ function PracticePriorityCard({
   const priority = derivePracticePriority(analysis);
 
   return (
-    <section className="json-priority-card" aria-labelledby="json-priority-title">
-      <p className="json-analysis-pill">IELTS Coach</p>
-      <h2 id="json-priority-title" className="json-analysis-card__title">
+    <Card className="p-5 min-w-0 bg-sidebar border-border" aria-labelledby="json-priority-title">
+      <p className="inline-flex items-center rounded-full bg-background text-primary text-[11px] font-semibold uppercase tracking-[0.06em] px-2 py-1 mb-2">IELTS Coach</p>
+      <h2 id="json-priority-title" className="text-xl font-semibold text-foreground m-0">
         What should I practice next?
       </h2>
-      <p className="json-priority-card__priority">{priority.priority}</p>
-      <p className="json-priority-card__reason">{priority.reason}</p>
-    </section>
+      <p className="font-display text-2xl text-foreground mt-3 mb-1">{priority.priority}</p>
+      <p className="text-base text-muted-foreground m-0">{priority.reason}</p>
+    </Card>
   );
 }
 

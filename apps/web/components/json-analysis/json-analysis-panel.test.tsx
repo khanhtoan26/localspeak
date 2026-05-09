@@ -610,7 +610,7 @@ describe("JsonAnalysisPanel", () => {
       ),
     ).toBeInTheDocument();
     expect(
-      screen.getByText("Check the validation preview, then try Analyze JSON again."),
+      screen.getByText("Check the validation preview, then try Analyze Pronunciation again."),
     ).toBeInTheDocument();
     expect(screen.queryByText("Pronunciation percentage")).not.toBeInTheDocument();
   });
@@ -814,6 +814,10 @@ describe("JsonAnalysisPanel", () => {
   it("marks successful results stale when the input changes", async () => {
     renderPanel();
     await previewAndAnalyze();
+
+    // After analysis completes, the JSON input is hidden inside a closed Collapsible.
+    // Open it by clicking the trigger button before interacting with the textarea.
+    fireEvent.click(screen.getByRole("button", { name: /Change JSON input/i }));
 
     fireEvent.change(screen.getByLabelText("Speech assessment JSON input"), {
       target: { value: JSON.stringify({ ...parsedFixture, msg: "changed" }) },
