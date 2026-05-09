@@ -18,11 +18,11 @@ export function PhonemesTab({ patterns }: PhonemesTabProps) {
 
   if (topPatterns.length === 0) {
     return (
-      <section className="json-empty-state">
-        <h2 className="json-analysis-card__title">
+      <section className="flex flex-col gap-2 py-8 items-start">
+        <h2 className="text-xl font-semibold text-foreground m-0">
           No repeated weak sound pattern found
         </h2>
-        <p className="json-analysis-card__detail">
+        <p className="text-base text-muted-foreground">
           The JSON did not show the same low-scoring phone repeated at least twice.
         </p>
       </section>
@@ -30,11 +30,11 @@ export function PhonemesTab({ patterns }: PhonemesTabProps) {
   }
 
   return (
-    <section className="json-analysis-card">
-      <h2 className="json-analysis-card__title">Phonemes</h2>
-      <ul className="json-result-list">
+    <section className="flex flex-col gap-4">
+      <h2 className="text-xl font-semibold text-foreground m-0">Phonemes</h2>
+      <ul className="flex flex-col gap-3 list-none p-0 m-0">
         {topPatterns.map((pattern) => (
-          <li className="json-result-row" data-testid="phoneme-row" key={pattern.arpabet}>
+          <li className="flex flex-col gap-1 rounded-xl border border-border p-4 text-sm" data-testid="phoneme-row" key={pattern.arpabet}>
             <strong>
               {pattern.arpabet} / {pattern.ipaExamples.join(", ")}
             </strong>
@@ -43,11 +43,11 @@ export function PhonemesTab({ patterns }: PhonemesTabProps) {
               {Math.round(pattern.averageScore * 100)}%
             </span>
             <div
-              className="phoneme-bar"
+              className="w-full h-2 rounded-full bg-border overflow-hidden mt-1"
               aria-label={`${pattern.arpabet} weakness impact`}
             >
               <span
-                className="phoneme-bar__fill"
+                className="block h-full rounded-full bg-danger transition-all"
                 style={{ width: `${Math.round((1 - pattern.averageScore) * 100)}%` }}
               />
             </div>
@@ -55,7 +55,7 @@ export function PhonemesTab({ patterns }: PhonemesTabProps) {
               <span>Examples: {pattern.exampleWords.join(", ")}</span>
             ) : null}
             <p>{pattern.explanation}</p>
-            {pattern.hint ? <p className="phoneme-hint">{pattern.hint}</p> : null}
+            {pattern.hint ? <p className="text-sm text-muted-foreground italic border-l-2 border-primary pl-3 mt-1">{pattern.hint}</p> : null}
           </li>
         ))}
       </ul>
