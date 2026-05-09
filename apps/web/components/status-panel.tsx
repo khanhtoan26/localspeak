@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useState } from "react";
 import { z } from "zod";
+import { Button } from "@/components/ui/button";
 import { StatusCard, type StatusBadge } from "./status-card";
 
 const API_UNAVAILABLE_COPY =
@@ -111,12 +112,12 @@ export function StatusPanel() {
   }, [refreshStatus]);
 
   return (
-    <main className="status-page">
-      <section className="status-shell" aria-label="LocalSpeak foundation status">
-        <header className="status-header">
-          <span className="status-tag">LocalSpeak</span>
-          <h1 className="status-title">LocalSpeak</h1>
-          <p className="status-intro">
+    <main className="min-h-screen p-6 bg-background">
+      <section className="w-full max-w-[720px] mx-auto flex flex-col gap-4" aria-label="LocalSpeak foundation status">
+        <header className="pt-8 pb-2">
+          <span className="inline-flex items-center rounded-full bg-sidebar text-primary text-[11px] font-semibold uppercase tracking-[0.06em] px-2 py-1">LocalSpeak</span>
+          <h1 className="font-display text-3xl text-foreground mt-4 mb-2">LocalSpeak</h1>
+          <p className="text-base text-muted-foreground m-0">
             Monorepo foundation status for the Next.js frontend, NestJS API, and
             shared contracts.
           </p>
@@ -125,16 +126,15 @@ export function StatusPanel() {
         <StatusCard title="API Health" {...apiHealth} />
         <StatusCard title="Contract Fixture" {...contractFixture} />
 
-        <button
-          className="status-refresh"
+        <Button
           type="button"
           disabled={isRefreshing}
           onClick={() => void refreshStatus()}
         >
           Refresh Status
-        </button>
+        </Button>
 
-        <p className="status-helper">
+        <p className="text-sm text-muted-foreground">
           This page proves the frontend can reach the backend and validate the
           shared speech JSON fixture.
         </p>

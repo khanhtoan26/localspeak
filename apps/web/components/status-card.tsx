@@ -1,3 +1,6 @@
+import { Badge } from "@/components/ui/badge";
+import { Card } from "@/components/ui/card";
+
 export type StatusBadge =
   | "Checking"
   | "OK"
@@ -12,25 +15,30 @@ type StatusCardProps = {
   meta?: string;
 };
 
-const badgeClassName: Record<StatusBadge, string> = {
-  Checking: "status-badge--checking",
-  OK: "status-badge--ok",
-  Valid: "status-badge--valid",
-  Unavailable: "status-badge--unavailable",
-  Invalid: "status-badge--invalid",
-};
-
 export function StatusCard({ title, badge, detail, meta }: StatusCardProps) {
+  const badgeElement = (() => {
+    switch (badge) {
+      case "Checking":
+        return <Badge variant="secondary">{badge}</Badge>;
+      case "OK":
+      case "Valid":
+        return <Badge className="bg-success text-white">{badge}</Badge>;
+      case "Unavailable":
+      case "Invalid":
+        return <Badge variant="destructive">{badge}</Badge>;
+    }
+  })();
+
   return (
-    <article className="status-card">
-      <div className="status-card__header">
-        <h2 className="status-card__title">{title}</h2>
-        <span className={`status-badge ${badgeClassName[badge]}`}>{badge}</span>
+    <Card className="p-4">
+      <div className="flex items-start justify-between gap-4">
+        <h2 className="text-xl font-semibold text-foreground m-0">{title}</h2>
+        {badgeElement}
       </div>
-      <div className="status-card__body" aria-live="polite">
-        <p className="status-card__detail">{detail}</p>
-        {meta ? <p className="status-card__meta">{meta}</p> : null}
+      <div className="mt-4" aria-live="polite">
+        <p className="text-base text-muted-foreground m-0">{detail}</p>
+        {meta ? <p className="font-mono text-[11px] text-subtle mt-2 m-0">{meta}</p> : null}
       </div>
-    </article>
+    </Card>
   );
 }
