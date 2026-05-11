@@ -2,6 +2,7 @@
 
 # Instructions for GSD
 
+- **_NEVER END THE CONVERSATION, ALWAYS ASK USER FOR THE NEXT ACTION_**
 - Use the get-shit-done skill when the user asks for GSD or uses a `gsd-*` command.
 - Treat `/gsd-...` or `gsd-...` as command invocations and load the matching file from `.github/skills/gsd-*`.
 - When a command says to spawn a subagent, prefer a matching custom agent from `.github/agents`.
