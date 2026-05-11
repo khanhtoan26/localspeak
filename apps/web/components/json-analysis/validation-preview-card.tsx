@@ -9,6 +9,7 @@ import type {
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
+import { StatePanel } from "@/components/design-system/state-panel";
 
 type SyntaxState =
   | { status: "empty" }
@@ -43,75 +44,68 @@ export function ValidationPreviewCard({
 
   if (syntaxState.status === "empty") {
     return (
-      <Card className="p-4 min-w-0" aria-live="polite">
-        <h2 className="text-xl font-semibold text-foreground m-0">Start with an analysis</h2>
-        <p className="text-base text-muted-foreground mt-3">
-          Paste assessment JSON, load the sample, or switch to Live Audio
-          Practice to see your pronunciation dashboard.
-        </p>
-      </Card>
+      <StatePanel
+        title="Validation preview"
+        description="Paste JSON, upload a .json file, or load the sample to validate pronunciation evidence before analysis."
+      />
     );
   }
 
   if (syntaxState.status === "invalid") {
     return (
-      <Card className="p-4 min-w-0 border-[#edd0ca]" aria-live="polite">
-        <h2 className="text-xl font-semibold text-foreground m-0">This does not look like valid JSON yet.</h2>
-        <p className="text-base text-muted-foreground mt-3">
-          Check for a missing comma, quote, or closing bracket.
-        </p>
+      <StatePanel
+        title="This does not look like valid JSON yet."
+        description="Check for a missing comma, quote, or closing bracket."
+        tone="destructive"
+      >
         <TechnicalDetails
           showTechnical={showTechnical}
           onToggle={() => setShowTechnical((current) => !current)}
         >
           {syntaxState.error}
         </TechnicalDetails>
-      </Card>
+      </StatePanel>
     );
   }
 
   if (previewError) {
     return (
-      <Card className="p-4 min-w-0 border-[#edd0ca]" aria-live="polite">
-        <h2 className="text-xl font-semibold text-foreground m-0">{previewError.message}</h2>
-        <p className="text-base text-muted-foreground mt-3">
-          No success state is shown until the backend response matches the shared contract.
-        </p>
+      <StatePanel
+        title={previewError.message}
+        description="No success state is shown until the backend response matches the shared contract."
+        tone="destructive"
+      >
         <TechnicalDetails
           showTechnical={showTechnical}
           onToggle={() => setShowTechnical((current) => !current)}
         >
           {previewError.technical}
         </TechnicalDetails>
-      </Card>
+      </StatePanel>
     );
   }
 
   if (isPreviewing) {
     return (
-      <Card className="p-4 min-w-0" aria-live="polite">
-        <h2 className="text-xl font-semibold text-foreground m-0">Validating speech assessment fields...</h2>
-        <p className="text-base text-muted-foreground mt-3">
-          Local syntax passed. The backend is checking required fields and timing data.
-        </p>
-      </Card>
+      <StatePanel
+        title="Checking whether this JSON is ready for analysis..."
+        description="Local syntax passed. The backend is checking required fields and timing data."
+      />
     );
   }
 
   if (!preview) {
     return (
-      <Card className="p-4 min-w-0" aria-live="polite">
-        <h2 className="text-xl font-semibold text-foreground m-0">JSON format looks readable.</h2>
-        <p className="text-base text-muted-foreground mt-3">
-          Validation will confirm the speech assessment fields.
-        </p>
-      </Card>
+      <StatePanel
+        title="JSON format looks readable."
+        description="Validation will confirm the speech assessment fields."
+      />
     );
   }
 
   if (preview.status === "invalid") {
     return (
-      <Card className="p-4 min-w-0 border-[#edd0ca]" aria-live="polite">
+      <Card className="min-w-0 border-destructive-border p-4" aria-live="polite">
         <div className="flex items-start justify-between gap-4">
           <h2 className="text-xl font-semibold text-foreground m-0">
             Some required speech assessment fields are missing or malformed.
@@ -155,7 +149,7 @@ export function ValidationPreviewCard({
 
   if (preview.status === "valid_with_warnings") {
     return (
-      <Card className="p-4 min-w-0 border-[#eadcb8]" aria-live="polite">
+      <Card className="min-w-0 border-warning-border p-4" aria-live="polite">
         <div className="flex items-start justify-between gap-4">
           <h2 className="text-xl font-semibold text-foreground m-0">Analyzable with warnings</h2>
           <Badge className="bg-warning text-white">
@@ -171,7 +165,7 @@ export function ValidationPreviewCard({
   }
 
   return (
-    <Card className="p-4 min-w-0 border-[#d9e8dd]" aria-live="polite">
+    <Card className="min-w-0 border-success-border p-4" aria-live="polite">
       <h2 className="text-xl font-semibold text-foreground m-0">This JSON can be analyzed.</h2>
       <p className="text-base text-muted-foreground mt-3">
         The backend accepted the speech assessment fields for deterministic analysis.

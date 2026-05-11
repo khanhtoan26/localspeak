@@ -2,6 +2,7 @@ import type { ChangeEvent } from "react";
 import { JSON_ANALYSIS_MAX_BYTES } from "@localspeak/contracts";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
+import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 
 const FILE_TOO_LARGE_COPY =
@@ -62,7 +63,7 @@ export function JsonInputCard({
   };
 
   return (
-    <Card className="flex flex-col gap-4 rounded-[24px] bg-card/90 p-5 shadow-sm">
+    <Card className="flex min-w-0 flex-col gap-4 bg-card p-5 shadow-sm">
       <div className="flex items-start justify-between gap-4">
         <div>
           <h2 className="text-xl font-semibold text-foreground m-0">
@@ -77,12 +78,15 @@ export function JsonInputCard({
         </span>
       </div>
 
-      <label className="block font-mono text-[11px] font-semibold uppercase tracking-[0.06em] text-muted-foreground mt-4" htmlFor="speech-json-input">
+      <Label
+        className="mt-4 block font-mono text-[11px] font-semibold uppercase tracking-[0.06em] text-muted-foreground"
+        htmlFor="speech-json-input"
+      >
         Speech assessment JSON input
-      </label>
+      </Label>
       <Textarea
         id="speech-json-input"
-        className="font-mono min-h-[240px] resize-y bg-input w-full max-w-full rounded-[18px]"
+        className="min-h-[240px] w-full min-w-0 max-w-full resize-y rounded-lg bg-input font-mono"
         aria-label="Speech assessment JSON input"
         placeholder="Paste the full speech assessment JSON here."
         value={jsonText}
@@ -111,7 +115,7 @@ export function JsonInputCard({
         </Button>
       </div>
 
-      {fileError ? <p className="text-sm text-danger font-medium">{fileError}</p> : null}
+      {fileError ? <p className="text-sm font-medium text-destructive">{fileError}</p> : null}
 
       <div className="flex flex-wrap items-center gap-2 mt-2 font-mono text-[11px] text-muted-foreground" aria-label="JSON input metadata">
         <span>{jsonText.length} characters</span>
@@ -128,7 +132,13 @@ export function JsonInputCard({
         >
           {isAnalyzing ? "Analyzing..." : "Analyze Pronunciation"}
         </Button>
-        <p className="text-sm text-muted-foreground">{canAnalyze ? "Ready to analyze." : disabledHelper}</p>
+        <p className="text-sm text-muted-foreground" aria-live="polite">
+          {isAnalyzing
+            ? "Computing deterministic pronunciation and fluency metrics..."
+            : canAnalyze
+              ? "Ready to analyze."
+              : disabledHelper}
+        </p>
       </div>
     </Card>
   );

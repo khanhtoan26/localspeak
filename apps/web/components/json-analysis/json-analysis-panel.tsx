@@ -29,9 +29,9 @@ const PREVIEW_UNAVAILABLE_COPY =
 const PREVIEW_CONTRACT_MISMATCH_COPY =
   "Backend preview response did not match the expected contract.";
 const ANALYZE_ERROR_COPY =
-  "We couldn't analyze this JSON yet. Check the format and try again.";
+  "We couldn't analyze this JSON. Check the validation preview, then try Analyze Pronunciation again.";
 const ANALYZE_ERROR_NEXT_STEP =
-  "Check the validation preview, then try Analyze Pronunciation again.";
+  "The deterministic analysis endpoint did not return a usable result.";
 
 type SyntaxState =
   | { status: "empty" }
@@ -392,17 +392,19 @@ export function JsonAnalysisPanel() {
         className="flex flex-col gap-5"
         aria-label="JSON analysis"
       >
-        <header className="rounded-[24px] border border-border bg-card/80 p-5 shadow-sm">
+        <header className="min-w-0 rounded-xl border border-border bg-card p-5 shadow-sm">
           <span className="inline-flex items-center rounded-full bg-primary/10 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.06em] text-primary">
-            JSON Mode
+            JSON Analysis
           </span>
-          <h1 className="font-display text-4xl leading-none tracking-[-0.04em] text-foreground mt-4 mb-3">
-            Find the one practice move that matters.
+          <h1 className="mt-4 mb-3 text-3xl font-semibold tracking-tight text-foreground">
+            {analysisState.status === "done"
+              ? "Review pronunciation evidence"
+              : "Add speech assessment JSON"}
           </h1>
           <p className="max-w-[760px] text-base leading-7 text-muted-foreground m-0">
-            Paste a speech assessment response, load the sample, or upload a
-            JSON file to preview deterministic pronunciation and fluency
-            metrics. The result leads with the highest-impact next drill.
+            {analysisState.status === "done"
+              ? "Your current result stays in focus while input and saved history remain secondary."
+              : "Paste JSON, upload a .json file, or load the sample to validate pronunciation evidence before analysis."}
           </p>
         </header>
 
@@ -525,7 +527,9 @@ export function JsonAnalysisPanel() {
               <Skeleton className="h-4 w-1/2" />
               <Skeleton className="h-4 w-2/3" />
             </div>
-            <p className="text-base text-muted-foreground">Computing deterministic metrics from the JSON...</p>
+            <p className="text-base text-muted-foreground">
+              Computing deterministic pronunciation and fluency metrics...
+            </p>
           </div>
         ) : null}
 
