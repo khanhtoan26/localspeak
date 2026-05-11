@@ -34,6 +34,14 @@ const statusLabels: Record<RecordingStatus, string> = {
   error: "Error",
 }
 
+const statusDescriptions: Record<RecordingStatus, string> = {
+  idle: "Ready when your reference sentence is set.",
+  connecting: "Connecting to live transcription...",
+  recording: "Recording now. Speak clearly and finish the full sentence.",
+  complete: "Recording complete. Review the transcript and pronunciation result.",
+  error: "Recording stopped before LocalSpeak could complete the attempt.",
+}
+
 const statusClasses: Record<RecordingStatus, string> = {
   idle: "border-border bg-muted text-foreground",
   connecting: "border-primary/20 bg-primary/10 text-primary",
@@ -80,7 +88,7 @@ export function RecordingControl({
       </CardHeader>
       <CardContent className="space-y-4">
         <Button
-          className="w-full sm:w-auto"
+          className="min-h-11 w-full sm:w-auto"
           disabled={buttonDisabled}
           onClick={isRecording ? onStop : onStart}
           size="lg"
@@ -92,7 +100,11 @@ export function RecordingControl({
 
         {disabled && disabledMessage ? (
           <p className="m-0 text-sm text-muted-foreground">{disabledMessage}</p>
-        ) : null}
+        ) : (
+          <p className="m-0 text-sm text-muted-foreground" aria-live="polite">
+            {statusDescriptions[status]}
+          </p>
+        )}
 
         <div className="space-y-2" aria-hidden={analyserNode ? undefined : true}>
           <Progress value={progressValue[status]} />

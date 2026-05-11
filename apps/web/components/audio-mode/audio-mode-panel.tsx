@@ -2,10 +2,10 @@
 
 import { useState, useMemo } from "react";
 import { useDeepgramSession } from "./use-deepgram-session";
-import { RecordButton } from "./record-button";
 import { LiveAnalysisPanel } from "./live-analysis-panel";
 import { scorePronunciation } from "../../lib/audio/score-pronunciation";
 import type { PronunciationResult } from "../../lib/audio/score-pronunciation";
+import { RecordingControl } from "@/components/design-system/recording-control";
 import { PracticeReadinessCard } from "@/components/design-system/practice-readiness-card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -156,16 +156,14 @@ export function AudioModePanel() {
         status={readinessStatus}
       />
 
-      {/* Record button with waveform */}
-      <div className="flex flex-col gap-2">
-        <RecordButton
-          status={status}
-          onStart={() => void start()}
-          onStop={stop}
-          disabled={!hasReferenceText}
-          analyserNode={analyserNode}
-        />
-      </div>
+      <RecordingControl
+        status={status}
+        disabled={!hasReferenceText}
+        onStart={() => void start()}
+        onStop={stop}
+        analyserNode={analyserNode}
+        disabledMessage="Enter one sentence first. Recording stays disabled until LocalSpeak knows what you want to practice."
+      />
 
       {/* Error display */}
       {error && (
