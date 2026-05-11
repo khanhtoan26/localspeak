@@ -1,0 +1,563 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>LocalSpeak Sketch 001 - Premium Coach Dashboard</title>
+  <link rel="stylesheet" href="../themes/default.css">
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      padding-top: 58px;
+      color: var(--color-text);
+      background:
+        radial-gradient(circle at 20% 0%, rgba(201,95,61,0.16), transparent 32rem),
+        linear-gradient(135deg, var(--color-bg), var(--color-bg-deep));
+      font-family: var(--font-sans);
+      min-height: 100vh;
+    }
+    button, input { font: inherit; }
+    button { cursor: pointer; }
+    .variant-nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 9998;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      padding: 10px 16px;
+      background: rgba(255,253,248,0.92);
+      border-bottom: 1px solid var(--color-border);
+      backdrop-filter: blur(18px);
+    }
+    .variant-tabs { display: flex; gap: 8px; flex-wrap: wrap; }
+    .variant-tab {
+      border: 1px solid var(--color-border);
+      background: var(--color-surface);
+      color: var(--color-text-muted);
+      border-radius: var(--radius-full);
+      padding: 8px 12px;
+      transition: all 0.15s ease;
+    }
+    .variant-tab:hover, .variant-tab.active {
+      border-color: var(--color-ink);
+      background: var(--color-ink);
+      color: white;
+    }
+    .variant-label {
+      color: var(--color-text-muted);
+      font-family: var(--font-mono);
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+    .variant { display: none; }
+    .variant.active { display: block; }
+    .shell {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 24px;
+      min-height: calc(100vh - 58px);
+    }
+    .eyebrow {
+      margin: 0;
+      color: var(--color-text-soft);
+      font-family: var(--font-mono);
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.09em;
+      text-transform: uppercase;
+    }
+    .display {
+      margin: 0;
+      color: var(--color-ink);
+      font-family: var(--font-display);
+      font-size: clamp(36px, 5vw, 66px);
+      line-height: 0.95;
+      letter-spacing: -0.04em;
+    }
+    .muted { color: var(--color-text-muted); }
+    .soft { color: var(--color-text-soft); }
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      min-height: 32px;
+      border-radius: var(--radius-full);
+      padding: 6px 11px;
+      background: var(--color-primary-soft);
+      color: var(--color-primary-hover);
+      font-size: 13px;
+      font-weight: 700;
+    }
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      min-height: 44px;
+      border: 1px solid transparent;
+      border-radius: var(--radius-full);
+      padding: 0 18px;
+      font-weight: 800;
+      transition: all 0.15s ease;
+    }
+    .btn.primary { background: var(--color-ink); color: white; }
+    .btn.primary:hover { transform: translateY(-1px); box-shadow: var(--shadow-md); }
+    .btn.secondary { background: var(--color-surface); border-color: var(--color-border); color: var(--color-text); }
+    .btn.secondary:hover { border-color: var(--color-ink); }
+    .card {
+      background: rgba(255,253,248,0.86);
+      border: 1px solid rgba(228,219,205,0.9);
+      border-radius: var(--radius-xl);
+      box-shadow: var(--shadow-md);
+    }
+    .metric {
+      background: var(--color-surface-elevated);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-lg);
+      padding: 16px;
+    }
+    .metric strong {
+      display: block;
+      color: var(--color-ink);
+      font-size: 28px;
+      letter-spacing: -0.04em;
+    }
+    .toast {
+      position: fixed;
+      left: 50%;
+      bottom: 24px;
+      z-index: 9997;
+      transform: translate(-50%, 30px);
+      opacity: 0;
+      background: var(--color-ink);
+      color: white;
+      border-radius: var(--radius-full);
+      padding: 12px 16px;
+      box-shadow: var(--shadow-lg);
+      transition: all 0.2s ease;
+    }
+    .toast.show { opacity: 1; transform: translate(-50%, 0); }
+
+    /* Variant A */
+    .command-grid {
+      display: grid;
+      grid-template-columns: 232px minmax(0, 1fr);
+      gap: 20px;
+      min-height: 760px;
+    }
+    .rail {
+      background: #181714;
+      color: white;
+      border-radius: 30px;
+      padding: 18px;
+      box-shadow: var(--shadow-lg);
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+    .brand {
+      font-family: var(--font-display);
+      font-size: 34px;
+      letter-spacing: -0.05em;
+    }
+    .rail button {
+      width: 100%;
+      min-height: 46px;
+      border: 0;
+      border-radius: 16px;
+      padding: 0 12px;
+      text-align: left;
+      color: rgba(255,255,255,0.68);
+      background: transparent;
+      transition: all 0.15s ease;
+    }
+    .rail button:hover, .rail button.active {
+      color: white;
+      background: rgba(255,255,255,0.1);
+    }
+    .hero-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.3fr) 360px;
+      gap: 20px;
+    }
+    .hero {
+      padding: clamp(24px, 4vw, 46px);
+      min-height: 360px;
+      position: relative;
+      overflow: hidden;
+    }
+    .hero:after {
+      content: "";
+      position: absolute;
+      right: -80px;
+      bottom: -100px;
+      width: 290px;
+      height: 290px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(201,95,61,0.25), transparent 64%);
+    }
+    .hero-content { position: relative; z-index: 1; display: grid; gap: 24px; }
+    .hero-actions { display: flex; flex-wrap: wrap; gap: 12px; }
+    .evidence-list { display: grid; gap: 12px; }
+    .evidence {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      border: 1px solid var(--color-border);
+      background: rgba(255,255,255,0.72);
+      border-radius: 18px;
+      padding: 14px;
+    }
+    .right-stack { display: grid; gap: 14px; }
+    .coach-card { padding: 22px; }
+    .coach-card textarea {
+      width: 100%;
+      min-height: 100px;
+      margin-top: 12px;
+      border: 1px solid var(--color-border);
+      border-radius: 18px;
+      padding: 14px;
+      background: var(--color-surface);
+      color: var(--color-text);
+      resize: vertical;
+    }
+    .metrics-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-top: 20px; }
+
+    /* Variant B */
+    .split-shell {
+      display: grid;
+      grid-template-columns: 280px minmax(0,1fr) 340px;
+      gap: 16px;
+      min-height: 760px;
+    }
+    .pane { padding: 18px; }
+    .session-list { display: grid; gap: 10px; margin-top: 18px; }
+    .session {
+      width: 100%;
+      border: 1px solid var(--color-border);
+      background: rgba(255,255,255,0.7);
+      color: var(--color-text);
+      border-radius: 18px;
+      padding: 14px;
+      text-align: left;
+      transition: all 0.15s ease;
+    }
+    .session:hover, .session.active {
+      border-color: var(--color-ink);
+      background: white;
+      transform: translateY(-1px);
+    }
+    .insight-board {
+      display: grid;
+      align-content: start;
+      gap: 16px;
+      padding: 24px;
+    }
+    .priority-panel {
+      min-height: 300px;
+      padding: 34px;
+      background: #191814;
+      color: white;
+      border-radius: 30px;
+      box-shadow: var(--shadow-lg);
+    }
+    .priority-panel .display { color: white; }
+    .queue-card {
+      padding: 18px;
+      border-bottom: 1px solid var(--color-border);
+    }
+    .queue-card:last-child { border-bottom: 0; }
+    .mini-bars { display: flex; align-items: end; gap: 5px; height: 40px; }
+    .mini-bars span {
+      display: block;
+      width: 9px;
+      border-radius: 9px;
+      background: var(--color-primary);
+      opacity: 0.8;
+    }
+
+    /* Variant C */
+    .focus-wrap {
+      max-width: 980px;
+      margin: 0 auto;
+      display: grid;
+      gap: 18px;
+    }
+    .focus-hero {
+      display: grid;
+      grid-template-columns: 1fr 260px;
+      gap: 24px;
+      align-items: center;
+      padding: clamp(28px, 6vw, 64px);
+      min-height: 470px;
+      background: #fffdf8;
+      border: 1px solid var(--color-border);
+      border-radius: 38px;
+      box-shadow: var(--shadow-lg);
+    }
+    .ring {
+      width: 210px;
+      height: 210px;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      background:
+        conic-gradient(var(--color-primary) 0 72%, #eee3d6 72% 100%);
+      position: relative;
+    }
+    .ring:before {
+      content: "";
+      position: absolute;
+      inset: 16px;
+      border-radius: 50%;
+      background: white;
+    }
+    .ring strong { position: relative; font-size: 42px; color: var(--color-ink); }
+    .sprint-steps { display: grid; grid-template-columns: repeat(3,1fr); gap: 14px; }
+    .step {
+      padding: 18px;
+      border: 1px solid var(--color-border);
+      border-radius: 22px;
+      background: rgba(255,255,255,0.72);
+      transition: all 0.15s ease;
+    }
+    .step:hover { transform: translateY(-2px); background: white; }
+    .step.done { border-color: rgba(47,122,81,0.35); background: var(--color-success-soft); }
+
+    #sketch-tools {
+      position: fixed;
+      right: 12px;
+      bottom: 12px;
+      z-index: 9999;
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      padding: 8px 12px;
+      border-radius: 10px;
+      background: rgba(0,0,0,0.72);
+      color: white;
+      font: 12px system-ui;
+      opacity: 0.42;
+      transition: opacity 0.2s ease;
+    }
+    #sketch-tools:hover { opacity: 1; }
+    #sketch-tools button, #sketch-tools select {
+      border: 1px solid rgba(255,255,255,0.24);
+      border-radius: 7px;
+      background: rgba(255,255,255,0.12);
+      color: white;
+      padding: 5px 8px;
+    }
+    #viewport-frame { transition: max-width 0.2s ease; margin: 0 auto; }
+    @media (max-width: 900px) {
+      .command-grid, .hero-grid, .split-shell, .focus-hero { grid-template-columns: 1fr; }
+      .rail { display: none; }
+      .metrics-row, .sprint-steps { grid-template-columns: 1fr; }
+      .shell { padding: 14px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="variant-nav">
+    <div>
+      <div class="variant-label">Sketch 001</div>
+      <strong>Premium Coach Dashboard</strong>
+    </div>
+    <div class="variant-tabs">
+      <button class="variant-tab active" data-variant="a">A: Coach Command Center * Selected</button>
+      <button class="variant-tab" data-variant="b">B: Superhuman Split</button>
+      <button class="variant-tab" data-variant="c">C: Focus Sprint</button>
+    </div>
+  </div>
+
+  <div id="viewport-frame">
+    <section id="variant-a" class="variant active">
+      <div class="shell command-grid">
+        <aside class="rail">
+          <div class="brand">LocalSpeak</div>
+          <div>
+            <p class="eyebrow" style="color:rgba(255,255,255,0.45)">Practice</p>
+            <button class="active">Coach Dashboard</button>
+            <button>JSON Analysis</button>
+            <button>Live Audio</button>
+            <button>Session History</button>
+          </div>
+          <div style="margin-top:auto;display:grid;gap:10px">
+            <p class="eyebrow" style="color:rgba(255,255,255,0.45)">Today</p>
+            <div style="background:rgba(255,255,255,0.08);border-radius:18px;padding:14px">
+              <strong>12 min</strong>
+              <p style="margin:6px 0 0;color:rgba(255,255,255,0.62)">Focused practice completed</p>
+            </div>
+          </div>
+        </aside>
+        <main>
+          <div class="hero-grid">
+            <section class="card hero">
+              <div class="hero-content">
+                <span class="pill">Highest impact next</span>
+                <h1 class="display">Start with the AH / ae sound pattern.</h1>
+                <p class="muted" style="max-width:620px;font-size:18px;line-height:1.6">
+                  You missed this sound in "analysis", "practice", and "clarity". A five-minute contrast drill will unlock the largest score gain.
+                </p>
+                <div class="hero-actions">
+                  <button class="btn primary" data-toast="Starting a focused AH sound drill">Start 5-minute drill</button>
+                  <button class="btn secondary" data-toast="Opening the evidence behind this recommendation">Why this priority?</button>
+                </div>
+              </div>
+            </section>
+            <aside class="right-stack">
+              <section class="card coach-card">
+                <p class="eyebrow">Import assessment</p>
+                <textarea>{"summary":{"wpm":108,"pauseRatio":0.18},"weakPhonemePatterns":["AH"]}</textarea>
+                <button class="btn primary" style="width:100%;margin-top:12px" data-toast="Sample analysis loaded">Analyze sample</button>
+              </section>
+              <section class="card coach-card">
+                <p class="eyebrow">Coach note</p>
+                <p class="muted">You are close. The score is dragged down by one repeated sound pattern, not by overall fluency.</p>
+              </section>
+            </aside>
+          </div>
+          <div class="metrics-row">
+            <div class="metric"><span class="eyebrow">WPM</span><strong>108</strong><span class="muted">target 120-145</span></div>
+            <div class="metric"><span class="eyebrow">Pause ratio</span><strong>18%</strong><span class="muted">too much hesitation</span></div>
+            <div class="metric"><span class="eyebrow">Confidence</span><strong>72</strong><span class="muted">needs sound clarity</span></div>
+          </div>
+          <div class="evidence-list" style="margin-top:18px">
+            <div class="evidence"><span>Weak pattern repeats</span><strong>AH x 6</strong></div>
+            <div class="evidence"><span>Most costly pause</span><strong>between "can" and "improve"</strong></div>
+          </div>
+        </main>
+      </div>
+    </section>
+
+    <section id="variant-b" class="variant">
+      <div class="shell split-shell">
+        <aside class="card pane">
+          <p class="eyebrow">Sessions</p>
+          <h2 style="margin:8px 0 0;font-size:28px;letter-spacing:-0.04em">Practice inbox</h2>
+          <div class="session-list">
+            <button class="session active" data-session="ah"><strong>AH sound pattern</strong><br><span class="muted">6 weak occurrences - ready to drill</span></button>
+            <button class="session" data-session="pause"><strong>Long pause cluster</strong><br><span class="muted">18% pause ratio - rhythm issue</span></button>
+            <button class="session" data-session="words"><strong>Weak word set</strong><br><span class="muted">analysis, clarity, practice</span></button>
+          </div>
+        </aside>
+        <main class="insight-board card">
+          <div class="priority-panel">
+            <p class="eyebrow" style="color:rgba(255,255,255,0.55)">Coach insight</p>
+            <h1 class="display" id="split-title">Fix the AH sound first.</h1>
+            <p id="split-copy" style="font-size:18px;line-height:1.55;color:rgba(255,255,255,0.72)">
+              This is the clearest bottleneck. One contrast drill should improve clarity faster than replaying the whole sentence.
+            </p>
+            <button class="btn primary" style="background:white;color:#181714" data-toast="Queued the selected drill">Queue drill</button>
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px">
+            <div class="metric"><span class="eyebrow">Evidence</span><strong id="split-evidence">6x</strong><span class="muted">weak pattern repeats</span></div>
+            <div class="metric"><span class="eyebrow">Gain estimate</span><strong>+9</strong><span class="muted">clarity points</span></div>
+          </div>
+        </main>
+        <aside class="card" style="overflow:hidden">
+          <div class="queue-card">
+            <p class="eyebrow">Next drill</p>
+            <h3 style="font-size:26px;letter-spacing:-0.04em">Minimal pairs</h3>
+            <p class="muted">can / calm, analysis / analyst, practice / practiced</p>
+          </div>
+          <div class="queue-card">
+            <p class="eyebrow">Live shape</p>
+            <div class="mini-bars"><span style="height:18px"></span><span style="height:32px"></span><span style="height:26px"></span><span style="height:40px"></span><span style="height:22px"></span><span style="height:35px"></span></div>
+          </div>
+          <div class="queue-card">
+            <p class="eyebrow">After this</p>
+            <p class="muted">Move into a 60-second reading sprint with the same sound focus.</p>
+          </div>
+        </aside>
+      </div>
+    </section>
+
+    <section id="variant-c" class="variant">
+      <div class="shell focus-wrap">
+        <section class="focus-hero">
+          <div>
+            <span class="pill">Focus sprint</span>
+            <h1 class="display" style="margin-top:18px">One thing. Five minutes. Better clarity.</h1>
+            <p class="muted" style="font-size:19px;line-height:1.65;max-width:620px">
+              LocalSpeak found one high-leverage sound pattern. Hide the dashboard, practice the exact contrast, then re-score.
+            </p>
+            <div class="hero-actions" style="margin-top:26px">
+              <button class="btn primary" id="focus-start">Begin sprint</button>
+              <button class="btn secondary" data-toast="Showing the raw analysis underneath">Show analysis</button>
+            </div>
+          </div>
+          <div class="ring"><strong id="focus-score">72</strong></div>
+        </section>
+        <div class="sprint-steps">
+          <div class="step done"><p class="eyebrow">Step 1</p><strong>Hear the target</strong><p class="muted">AH vs AE contrast</p></div>
+          <div class="step" id="focus-step-two"><p class="eyebrow">Step 2</p><strong>Repeat 8 words</strong><p class="muted">analysis, practice, clarity...</p></div>
+          <div class="step"><p class="eyebrow">Step 3</p><strong>Re-score sentence</strong><p class="muted">compare clarity gain</p></div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <div id="toast" class="toast" role="status" aria-live="polite">Done</div>
+  <div id="sketch-tools" onmouseenter="this.style.opacity='1'" onmouseleave="this.style.opacity='0.42'">
+    <span>Sketch tools</span>
+    <select onchange="document.querySelector('link[href*=themes]').href='../themes/'+this.value+'.css'">
+      <option value="default">Default</option>
+    </select>
+    <button onclick="setViewport('375px')">Phone</button>
+    <button onclick="setViewport('768px')">Tablet</button>
+    <button onclick="setViewport('1280px')">Desktop</button>
+    <button onclick="setViewport('none')">Full</button>
+  </div>
+
+  <script>
+    function showVariant(id, button) {
+      document.querySelectorAll('.variant').forEach((variant) => variant.classList.remove('active'));
+      document.querySelectorAll('.variant-tab').forEach((tab) => tab.classList.remove('active'));
+      document.getElementById('variant-' + id).classList.add('active');
+      button.classList.add('active');
+    }
+    document.querySelectorAll('.variant-tab').forEach((button) => {
+      button.addEventListener('click', () => showVariant(button.dataset.variant, button));
+    });
+    function showToast(message) {
+      const toast = document.getElementById('toast');
+      toast.textContent = message;
+      toast.classList.add('show');
+      window.setTimeout(() => toast.classList.remove('show'), 1600);
+    }
+    document.querySelectorAll('[data-toast]').forEach((button) => {
+      button.addEventListener('click', () => showToast(button.dataset.toast));
+    });
+    function setViewport(width) {
+      document.getElementById('viewport-frame').style.maxWidth = width === 'none' ? 'none' : width;
+    }
+    const splitData = {
+      ah: ['Fix the AH sound first.', 'This is the clearest bottleneck. One contrast drill should improve clarity faster than replaying the whole sentence.', '6x'],
+      pause: ['Smooth the long pause cluster.', 'Your ideas are clear, but rhythm breaks before the key phrase. Practice one paced delivery loop.', '18%'],
+      words: ['Rebuild three weak words.', 'The pattern is concentrated in a small word set. Drill those words before repeating the full sentence.', '3 words']
+    };
+    document.querySelectorAll('.session').forEach((button) => {
+      button.addEventListener('click', () => {
+        document.querySelectorAll('.session').forEach((session) => session.classList.remove('active'));
+        button.classList.add('active');
+        const data = splitData[button.dataset.session];
+        document.getElementById('split-title').textContent = data[0];
+        document.getElementById('split-copy').textContent = data[1];
+        document.getElementById('split-evidence').textContent = data[2];
+      });
+    });
+    document.getElementById('focus-start').addEventListener('click', () => {
+      document.getElementById('focus-step-two').classList.add('done');
+      document.getElementById('focus-score').textContent = '79';
+      showToast('Sprint started - score projection updated');
+    });
+  </script>
+</body>
+</html>

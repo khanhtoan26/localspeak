@@ -1,0 +1,425 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>LocalSpeak Sketch 002 - Analysis to Practice Flow</title>
+  <link rel="stylesheet" href="../themes/default.css">
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      padding-top: 58px;
+      min-height: 100vh;
+      background: linear-gradient(135deg, var(--color-bg), var(--color-bg-deep));
+      color: var(--color-text);
+      font-family: var(--font-sans);
+    }
+    button, input { font: inherit; }
+    button { cursor: pointer; }
+    .variant-nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 9998;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      padding: 10px 16px;
+      background: rgba(255,253,248,0.92);
+      border-bottom: 1px solid var(--color-border);
+      backdrop-filter: blur(18px);
+    }
+    .variant-tabs { display: flex; gap: 8px; flex-wrap: wrap; }
+    .variant-tab {
+      border: 1px solid var(--color-border);
+      background: var(--color-surface);
+      color: var(--color-text-muted);
+      border-radius: var(--radius-full);
+      padding: 8px 12px;
+      transition: all 0.15s ease;
+    }
+    .variant-tab:hover, .variant-tab.active {
+      background: var(--color-ink);
+      border-color: var(--color-ink);
+      color: white;
+    }
+    .variant-label {
+      color: var(--color-text-muted);
+      font-family: var(--font-mono);
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+    .variant { display: none; }
+    .variant.active { display: block; }
+    .shell { max-width: 1180px; margin: 0 auto; padding: 24px; min-height: calc(100vh - 58px); }
+    .card {
+      background: rgba(255,253,248,0.9);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-xl);
+      box-shadow: var(--shadow-md);
+    }
+    .eyebrow {
+      margin: 0;
+      color: var(--color-text-soft);
+      font-family: var(--font-mono);
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: 0.09em;
+      text-transform: uppercase;
+    }
+    .display {
+      margin: 0;
+      color: var(--color-ink);
+      font-family: var(--font-display);
+      font-size: clamp(34px, 5vw, 60px);
+      line-height: 0.96;
+      letter-spacing: -0.04em;
+    }
+    .muted { color: var(--color-text-muted); }
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 44px;
+      border: 1px solid transparent;
+      border-radius: var(--radius-full);
+      padding: 0 18px;
+      font-weight: 800;
+      transition: all 0.15s ease;
+    }
+    .btn.primary { background: var(--color-ink); color: white; }
+    .btn.primary:hover { transform: translateY(-1px); box-shadow: var(--shadow-md); }
+    .btn.secondary { background: white; border-color: var(--color-border); color: var(--color-text); }
+    .btn.secondary:hover { border-color: var(--color-ink); }
+    .chip {
+      display: inline-flex;
+      align-items: center;
+      min-height: 30px;
+      border-radius: var(--radius-full);
+      padding: 5px 10px;
+      background: var(--color-primary-soft);
+      color: var(--color-primary-hover);
+      font-size: 12px;
+      font-weight: 800;
+    }
+    .toast {
+      position: fixed;
+      left: 50%;
+      bottom: 24px;
+      z-index: 9997;
+      transform: translate(-50%, 30px);
+      opacity: 0;
+      background: var(--color-ink);
+      color: white;
+      border-radius: var(--radius-full);
+      padding: 12px 16px;
+      box-shadow: var(--shadow-lg);
+      transition: all 0.2s ease;
+    }
+    .toast.show { opacity: 1; transform: translate(-50%, 0); }
+
+    /* Variant A */
+    .drill-layout { display: grid; grid-template-columns: minmax(0,1fr) 330px; gap: 18px; }
+    .drill-hero { padding: clamp(28px, 5vw, 58px); overflow: hidden; position: relative; }
+    .drill-hero:after {
+      content: "";
+      position: absolute;
+      right: -60px;
+      top: -90px;
+      width: 280px;
+      height: 280px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(201,95,61,0.22), transparent 65%);
+    }
+    .drill-content { position: relative; z-index: 1; display: grid; gap: 24px; }
+    .word-row { display: flex; flex-wrap: wrap; gap: 8px; }
+    .word {
+      border: 1px solid var(--color-border);
+      border-radius: 16px;
+      background: white;
+      padding: 10px 13px;
+      font-weight: 800;
+      transition: all 0.15s ease;
+    }
+    .word:hover, .word.active { background: var(--color-ink); border-color: var(--color-ink); color: white; }
+    .timer {
+      width: 170px;
+      height: 170px;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      background: conic-gradient(var(--color-primary) var(--timer, 0%), #eee3d6 0);
+      position: relative;
+    }
+    .timer:before { content: ""; position: absolute; inset: 12px; border-radius: 50%; background: white; }
+    .timer strong { position: relative; font-size: 34px; color: var(--color-ink); }
+    .side-stack { display: grid; gap: 14px; }
+    .side-card { padding: 18px; }
+
+    /* Variant B */
+    .timeline-layout { display: grid; grid-template-columns: 340px minmax(0,1fr); gap: 18px; }
+    .plan-summary { padding: 26px; background: #181714; color: white; }
+    .plan-summary .display { color: white; }
+    .timeline { display: grid; gap: 14px; }
+    .step {
+      border: 1px solid var(--color-border);
+      border-radius: 24px;
+      background: rgba(255,255,255,0.78);
+      overflow: hidden;
+      transition: all 0.15s ease;
+    }
+    .step-header {
+      width: 100%;
+      border: 0;
+      background: transparent;
+      padding: 18px;
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      text-align: left;
+      color: var(--color-text);
+    }
+    .step-header:hover { background: rgba(255,255,255,0.8); }
+    .step-body { display: none; padding: 0 18px 18px; color: var(--color-text-muted); }
+    .step.open .step-body { display: block; }
+    .step.done { border-color: rgba(47,122,81,0.35); background: var(--color-success-soft); }
+
+    /* Variant C */
+    .map-layout { display: grid; gap: 18px; }
+    .map-head {
+      display: grid;
+      grid-template-columns: minmax(0,1fr) 260px;
+      gap: 18px;
+      align-items: stretch;
+    }
+    .score-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 14px; }
+    .score-card {
+      padding: 18px;
+      border-radius: 24px;
+      background: white;
+      border: 1px solid var(--color-border);
+      transition: all 0.15s ease;
+    }
+    .score-card:hover { transform: translateY(-2px); box-shadow: var(--shadow-md); }
+    .score-card strong { display: block; font-size: 34px; letter-spacing: -0.04em; color: var(--color-ink); }
+    .action-board { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+    .action {
+      padding: 18px;
+      border-radius: 24px;
+      border: 1px solid var(--color-border);
+      background: rgba(255,255,255,0.78);
+    }
+    .action.selected { border-color: var(--color-primary); background: var(--color-primary-soft); }
+    .progress-line {
+      height: 10px;
+      border-radius: 999px;
+      background: #eee3d6;
+      overflow: hidden;
+    }
+    .progress-line span { display: block; height: 100%; width: 0; background: var(--color-primary); transition: width 0.25s ease; }
+
+    #sketch-tools {
+      position: fixed;
+      right: 12px;
+      bottom: 12px;
+      z-index: 9999;
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      padding: 8px 12px;
+      border-radius: 10px;
+      background: rgba(0,0,0,0.72);
+      color: white;
+      font: 12px system-ui;
+      opacity: 0.42;
+      transition: opacity 0.2s ease;
+    }
+    #sketch-tools:hover { opacity: 1; }
+    #sketch-tools button, #sketch-tools select {
+      border: 1px solid rgba(255,255,255,0.24);
+      border-radius: 7px;
+      background: rgba(255,255,255,0.12);
+      color: white;
+      padding: 5px 8px;
+    }
+    #viewport-frame { transition: max-width 0.2s ease; margin: 0 auto; }
+    @media (max-width: 860px) {
+      .drill-layout, .timeline-layout, .map-head, .action-board { grid-template-columns: 1fr; }
+      .score-grid { grid-template-columns: 1fr; }
+      .shell { padding: 14px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="variant-nav">
+    <div>
+      <div class="variant-label">Sketch 002</div>
+      <strong>Analysis to Practice Flow</strong>
+    </div>
+    <div class="variant-tabs">
+      <button class="variant-tab active" data-variant="a">A: Next Drill Hero * Selected</button>
+      <button class="variant-tab" data-variant="b">B: Coach Plan Timeline</button>
+      <button class="variant-tab" data-variant="c">C: Score-to-Action Map</button>
+    </div>
+  </div>
+
+  <div id="viewport-frame">
+    <section id="variant-a" class="variant active">
+      <div class="shell drill-layout">
+        <main class="card drill-hero">
+          <div class="drill-content">
+            <span class="chip">Generated from your analysis</span>
+            <h1 class="display">Practice the AH sound before anything else.</h1>
+            <p class="muted" style="max-width:650px;font-size:18px;line-height:1.6">
+              LocalSpeak found one repeated weak pattern across the highest-impact words. Start with a focused loop, then re-record the original sentence.
+            </p>
+            <div class="word-row">
+              <button class="word active">analysis</button>
+              <button class="word">practice</button>
+              <button class="word">clarity</button>
+              <button class="word">can</button>
+              <button class="word">manage</button>
+            </div>
+            <div style="display:flex;gap:12px;flex-wrap:wrap">
+              <button class="btn primary" id="start-drill">Start guided drill</button>
+              <button class="btn secondary" data-toast="Playing coach pronunciation example">Hear target sound</button>
+            </div>
+          </div>
+        </main>
+        <aside class="side-stack">
+          <section class="card side-card" style="display:grid;place-items:center;gap:16px">
+            <div class="timer" id="timer"><strong id="timer-label">5:00</strong></div>
+            <p class="muted" id="timer-copy">Ready for a short sprint</p>
+          </section>
+          <section class="card side-card">
+            <p class="eyebrow">Why this drill?</p>
+            <p class="muted">AH appears in 6 weak occurrences and affects three important words in your answer.</p>
+          </section>
+        </aside>
+      </div>
+    </section>
+
+    <section id="variant-b" class="variant">
+      <div class="shell timeline-layout">
+        <aside class="card plan-summary">
+          <p class="eyebrow" style="color:rgba(255,255,255,0.55)">Coach plan</p>
+          <h1 class="display">A 3-step practice plan, not a report.</h1>
+          <p style="color:rgba(255,255,255,0.7);line-height:1.6">Each step ties directly to evidence from the analysis and ends with a measurable re-score.</p>
+          <button class="btn primary" style="background:white;color:#181714" data-toast="Plan started">Start plan</button>
+        </aside>
+        <main class="timeline">
+          <section class="step open">
+            <button class="step-header"><strong>1. Isolate the weak sound</strong><span class="chip">AH x 6</span></button>
+            <div class="step-body">Practice minimal pairs for two minutes: can/calm, analysis/analyst, practice/practiced.</div>
+          </section>
+          <section class="step">
+            <button class="step-header"><strong>2. Repair rhythm around the pause</strong><span class="chip">18% pause</span></button>
+            <div class="step-body">Repeat the sentence in three chunks and aim for a shorter gap before the key clause.</div>
+          </section>
+          <section class="step">
+            <button class="step-header"><strong>3. Re-record and compare</strong><span class="chip">target +9</span></button>
+            <div class="step-body">Record the original answer again and compare pronunciation score, WPM, and pause ratio.</div>
+          </section>
+          <section class="step done">
+            <button class="step-header"><strong>Evidence preserved</strong><span>View details</span></button>
+            <div class="step-body">Words, phonemes, and pauses stay available, but they are subordinate to the plan.</div>
+          </section>
+        </main>
+      </div>
+    </section>
+
+    <section id="variant-c" class="variant">
+      <div class="shell map-layout">
+        <header class="map-head">
+          <section class="card" style="padding:34px">
+            <span class="chip">Score to action</span>
+            <h1 class="display" style="margin-top:16px">Every metric should answer: what do I do next?</h1>
+          </section>
+          <section class="card" style="padding:22px">
+            <p class="eyebrow">Session readiness</p>
+            <div class="progress-line" style="margin-top:18px"><span id="map-progress"></span></div>
+            <p class="muted" id="map-copy">0 of 3 actions queued</p>
+          </section>
+        </header>
+        <section class="score-grid">
+          <button class="score-card" data-action="sound"><p class="eyebrow">Clarity</p><strong>72</strong><span class="muted">Queue sound drill</span></button>
+          <button class="score-card" data-action="rhythm"><p class="eyebrow">Rhythm</p><strong>18%</strong><span class="muted">Queue pace drill</span></button>
+          <button class="score-card" data-action="words"><p class="eyebrow">Weak words</p><strong>3</strong><span class="muted">Queue word loop</span></button>
+        </section>
+        <section class="action-board">
+          <div class="action" id="sound"><p class="eyebrow">Action 1</p><h3>AH contrast drill</h3><p class="muted">Fix the repeated sound pattern first.</p></div>
+          <div class="action" id="rhythm"><p class="eyebrow">Action 2</p><h3>Paced sentence repeat</h3><p class="muted">Reduce the long pause before the key clause.</p></div>
+          <div class="action" id="words"><p class="eyebrow">Action 3</p><h3>Weak word loop</h3><p class="muted">Repeat the words that lost the most points.</p></div>
+          <div class="action"><p class="eyebrow">Finish</p><h3>Re-score original answer</h3><p class="muted">Compare with the baseline analysis.</p></div>
+        </section>
+      </div>
+    </section>
+  </div>
+
+  <div id="toast" class="toast" role="status" aria-live="polite">Done</div>
+  <div id="sketch-tools" onmouseenter="this.style.opacity='1'" onmouseleave="this.style.opacity='0.42'">
+    <span>Sketch tools</span>
+    <select onchange="document.querySelector('link[href*=themes]').href='../themes/'+this.value+'.css'">
+      <option value="default">Default</option>
+    </select>
+    <button onclick="setViewport('375px')">Phone</button>
+    <button onclick="setViewport('768px')">Tablet</button>
+    <button onclick="setViewport('1280px')">Desktop</button>
+    <button onclick="setViewport('none')">Full</button>
+  </div>
+
+  <script>
+    function showVariant(id, button) {
+      document.querySelectorAll('.variant').forEach((variant) => variant.classList.remove('active'));
+      document.querySelectorAll('.variant-tab').forEach((tab) => tab.classList.remove('active'));
+      document.getElementById('variant-' + id).classList.add('active');
+      button.classList.add('active');
+    }
+    document.querySelectorAll('.variant-tab').forEach((button) => {
+      button.addEventListener('click', () => showVariant(button.dataset.variant, button));
+    });
+    function showToast(message) {
+      const toast = document.getElementById('toast');
+      toast.textContent = message;
+      toast.classList.add('show');
+      window.setTimeout(() => toast.classList.remove('show'), 1600);
+    }
+    document.querySelectorAll('[data-toast]').forEach((button) => {
+      button.addEventListener('click', () => showToast(button.dataset.toast));
+    });
+    function setViewport(width) {
+      document.getElementById('viewport-frame').style.maxWidth = width === 'none' ? 'none' : width;
+    }
+    document.querySelectorAll('.word').forEach((button) => {
+      button.addEventListener('click', () => {
+        document.querySelectorAll('.word').forEach((word) => word.classList.remove('active'));
+        button.classList.add('active');
+      });
+    });
+    document.getElementById('start-drill').addEventListener('click', () => {
+      document.getElementById('timer').style.setProperty('--timer', '34%');
+      document.getElementById('timer-label').textContent = '3:18';
+      document.getElementById('timer-copy').textContent = 'Drill in progress';
+      showToast('Guided drill started');
+    });
+    document.querySelectorAll('.step-header').forEach((button) => {
+      button.addEventListener('click', () => button.closest('.step').classList.toggle('open'));
+    });
+    const queued = new Set();
+    document.querySelectorAll('[data-action]').forEach((card) => {
+      card.addEventListener('click', () => {
+        const id = card.dataset.action;
+        queued.add(id);
+        document.getElementById(id).classList.add('selected');
+        document.getElementById('map-progress').style.width = `${(queued.size / 3) * 100}%`;
+        document.getElementById('map-copy').textContent = `${queued.size} of 3 actions queued`;
+      });
+    });
+  </script>
+</body>
+</html>
