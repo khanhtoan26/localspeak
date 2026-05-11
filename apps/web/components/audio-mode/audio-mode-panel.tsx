@@ -6,8 +6,16 @@ import { RecordButton } from "./record-button";
 import { LiveAnalysisPanel } from "./live-analysis-panel";
 import { scorePronunciation } from "../../lib/audio/score-pronunciation";
 import type { PronunciationResult } from "../../lib/audio/score-pronunciation";
+import { PracticeReadinessCard } from "@/components/design-system/practice-readiness-card";
 import { Input } from "@/components/ui/input";
-import { Card } from "@/components/ui/card";
+import { Label } from "@/components/ui/label";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { cn } from "@/lib/utils";
 
 const scoreColor: Record<"good" | "okay" | "weak", string> = {
@@ -95,33 +103,57 @@ export function AudioModePanel() {
       ? `${transcript.final} ${transcript.interim}`
       : transcript.final
     : transcript.interim || "";
+  const hasReferenceText = Boolean(referenceText.trim());
+  const readinessStatus = !hasReferenceText
+    ? "empty"
+    : status === "recording"
+      ? "recording"
+      : status === "complete"
+        ? "complete"
+        : "ready";
 
   return (
-    <div className="flex flex-col gap-5 rounded-[28px] border border-border bg-card/90 p-5 shadow-sm sm:p-6">
-      <header>
-        <span className="inline-flex items-center rounded-full bg-primary/10 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.06em] text-primary">
-          Live Audio
-        </span>
-        <h1 className="mt-4 font-display text-4xl leading-none tracking-[-0.04em] text-foreground">
-          Practice the sentence out loud.
-        </h1>
-        <p className="mt-3 max-w-[720px] text-base leading-7 text-muted-foreground">
-          Record a focused attempt, watch the transcript stream in, and compare
-          the pronunciation score against your target sentence.
-        </p>
-      </header>
-      {/* Reference text input */}
-      <label htmlFor="reference-text" className="block font-mono text-[11px] font-semibold uppercase tracking-[0.06em] text-muted-foreground">
-        Reference sentence
-      </label>
-      <Input
-        id="reference-text"
-        type="text"
-        value={referenceText}
-        onChange={(e) => setReferenceText(e.target.value)}
-        placeholder="Enter the sentence you want to practice..."
-        className="bg-input"
-        disabled={status === "recording" || status === "connecting"}
+    <section className="flex min-w-0 flex-col gap-4" aria-label="Live Audio Practice">
+      <Card className="min-w-0">
+        <CardHeader>
+          <span className="inline-flex w-fit items-center rounded-full bg-primary/10 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.06em] text-primary">
+            Live Audio Practice
+          </span>
+          <CardTitle className="text-3xl font-semibold tracking-tight">
+            Practice the sentence out loud.
+          </CardTitle>
+          <CardDescription className="max-w-[720px] text-base leading-7">
+            Record a focused attempt, watch the transcript stream in, and compare
+            the pronunciation score against your target sentence.
+          </CardDescription>
+        </CardHeader>
+        <CardContent className="space-y-3">
+          <Label
+            htmlFor="reference-text"
+            className="block font-mono text-[11px] font-semibold uppercase tracking-[0.06em] text-muted-foreground"
+          >
+            Reference sentence
+          </Label>
+          <Input
+            id="reference-text"
+            type="text"
+            value={referenceText}
+            onChange={(e) => setReferenceText(e.target.value)}
+            placeholder="Enter one sentence you want to practice."
+            className="min-w-0 bg-input"
+            disabled={status === "recording" || status === "connecting"}
+          />
+        </CardContent>
+      </Card>
+
+      <PracticeReadinessCard
+        title={hasReferenceText ? "Get ready to speak" : "Reference sentence needed"}
+        description={
+          hasReferenceText
+            ? "Read the sentence once, then record one focused attempt."
+            : "Enter one sentence first. Recording stays disabled until LocalSpeak knows what you want to practice."
+        }
+        status={readinessStatus}
       />
 
       {/* Record button with waveform */}
@@ -130,7 +162,7 @@ export function AudioModePanel() {
           status={status}
           onStart={() => void start()}
           onStop={stop}
-          disabled={!referenceText.trim()}
+          disabled={!hasReferenceText}
           analyserNode={analyserNode}
         />
       </div>
@@ -150,6 +182,6 @@ export function AudioModePanel() {
 
       {/* Pronunciation score card (after recording) */}
       {pronunciationResult && <WordScoreCard result={pronunciationResult} />}
-    </div>
+    </section>
   );
 }
