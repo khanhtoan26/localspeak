@@ -16,9 +16,10 @@ import { ResultTabs } from "./result-tabs";
 import { SavedSessionsPanel } from "./saved-sessions-panel";
 import { SummaryMetricCards } from "./summary-metric-cards";
 import { ValidationPreviewCard } from "./validation-preview-card";
+import { ActionBanner } from "@/components/design-system/action-banner";
+import { StatePanel } from "@/components/design-system/state-panel";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { ChevronDown } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -417,14 +418,11 @@ export function JsonAnalysisPanel() {
             ) : null}
             <PracticePriorityCard analysis={analysisState.result} />
             {analysisState.result.warnings.length > 0 ? (
-              <Card className="border-[#eadcb8] p-4 min-w-0">
-                <h2 className="text-xl font-semibold text-foreground m-0">
-                  Analyzable with warnings
-                </h2>
-                <p className="text-base text-muted-foreground mt-3">
-                  Metrics will still be computed, but review these unusual
-                  values.
-                </p>
+              <StatePanel
+                title="Analyzable with warnings"
+                description="Metrics will still be computed, but review these unusual values."
+                tone="warning"
+              >
                 <ul className="flex flex-col gap-2 mt-3 list-none p-0">
                   {analysisState.result.warnings.map((warning) => (
                     <li
@@ -437,7 +435,7 @@ export function JsonAnalysisPanel() {
                     </li>
                   ))}
                 </ul>
-              </Card>
+              </StatePanel>
             ) : null}
             <SummaryMetricCards summary={analysisState.result.summary} />
             <div id="analysis-details" className="flex flex-col gap-4 min-w-0">
@@ -467,7 +465,7 @@ export function JsonAnalysisPanel() {
             <CollapsibleContent className="flex flex-col gap-3 pt-2">
               {resultsStale ? (
                 <p className="text-sm text-warning font-medium">
-                  Input changed. Analyze again to update results.
+                  Input changed. Analyze again to update these results.
                 </p>
               ) : null}
               <JsonInputCard
@@ -534,17 +532,11 @@ export function JsonAnalysisPanel() {
         ) : null}
 
         {analysisState.status === "error" ? (
-          <Card
-            className="border-[#edd0ca] p-4 min-w-0"
-            aria-live="polite"
-          >
-            <h2 className="text-xl font-semibold text-foreground m-0">
-              {analysisState.message}
-            </h2>
-            <p className="text-base text-muted-foreground mt-3">
-              {analysisState.nextStep}
-            </p>
-          </Card>
+          <StatePanel
+            title={analysisState.message}
+            description={analysisState.nextStep}
+            tone="destructive"
+          />
         ) : null}
       </section>
     </section>
@@ -559,40 +551,19 @@ function PracticePriorityCard({
   const priority = derivePracticePriority(analysis);
 
   return (
-      <Card
-        className="relative overflow-hidden border-foreground bg-foreground p-6 text-card shadow-[0_24px_70px_rgba(35,30,23,0.18)] sm:p-7"
-        aria-labelledby="json-priority-title"
-      >
-        <div className="pointer-events-none absolute -right-20 -top-24 h-72 w-72 rounded-full bg-primary/25 blur-3xl" />
-        <div className="relative">
-          <p className="inline-flex items-center rounded-full bg-card/10 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.06em] text-[#f4eee5]">
-            Highest impact next
-          </p>
-          <h2
-            id="json-priority-title"
-            className="mt-5 text-sm font-semibold uppercase tracking-[0.08em] text-[#ded6ca]"
-          >
-            What should I practice next?
-          </h2>
-          <p className="font-display text-4xl leading-[0.98] tracking-[-0.04em] text-card mt-3 mb-3">
-            {priority.priority}
-          </p>
-          <p className="max-w-[760px] text-base leading-7 text-[#ded6ca] m-0">
-            {priority.reason}
-          </p>
-          <div className="mt-5 flex flex-wrap gap-3">
+      <ActionBanner
+        eyebrow="What should I practice next?"
+        title={priority.priority}
+        description={priority.reason}
+        action={
             <a
               href="#analysis-details"
-              className="inline-flex min-h-[44px] items-center justify-center rounded-full bg-card px-5 text-sm font-semibold text-foreground transition-colors hover:bg-card/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+              className="inline-flex min-h-[44px] items-center justify-center rounded-md bg-primary px-4 text-sm font-semibold text-primary-foreground transition-colors hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
             >
-              Review evidence
+              Review the evidence
             </a>
-            <span className="inline-flex min-h-[44px] items-center rounded-full border border-card/15 px-5 text-sm font-semibold text-[#f4eee5]">
-              5-minute focused drill
-            </span>
-          </div>
-        </div>
-      </Card>
+        }
+      />
   );
 }
 

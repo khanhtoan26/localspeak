@@ -1,5 +1,5 @@
-import { Card } from "@/components/ui/card";
 import type { JsonAnalysisSummary } from "@localspeak/contracts";
+import { MetricCard } from "@/components/design-system/metric-card";
 
 const metricHelpers = [
   {
@@ -24,6 +24,12 @@ const metricHelpers = [
     helper: "Words per minute from word timings.",
     value: (summary: JsonAnalysisSummary) => String(summary.wpm),
   },
+  {
+    label: "Pause Ratio",
+    helper: "Share of speaking time spent in pauses.",
+    value: (summary: JsonAnalysisSummary) =>
+      `${Math.round(summary.pauseRatio * 100)}%`,
+  },
 ];
 
 type SummaryMetricCardsProps = {
@@ -32,18 +38,17 @@ type SummaryMetricCardsProps = {
 
 export function SummaryMetricCards({ summary }: SummaryMetricCardsProps) {
   return (
-    <section className="grid grid-cols-2 gap-3 xl:grid-cols-4" aria-label="Summary metrics">
+    <section
+      className="grid min-w-0 grid-cols-1 gap-3 sm:grid-cols-2 xl:grid-cols-5"
+      aria-label="Summary metrics"
+    >
       {metricHelpers.map((metric) => (
-        <Card key={metric.label} className="min-w-0 rounded-[22px] bg-card/90 p-4 shadow-sm">
-          <h3
-            className="font-mono text-[11px] font-semibold uppercase tracking-[0.06em] text-muted-foreground m-0"
-            data-testid="summary-metric-label"
-          >
-            {metric.label}
-          </h3>
-          <p className="font-display text-4xl leading-none tracking-[-0.04em] text-foreground mt-3 mb-2">{metric.value(summary)}</p>
-          <p className="text-sm text-muted-foreground m-0">{metric.helper}</p>
-        </Card>
+        <MetricCard
+          key={metric.label}
+          label={metric.label}
+          value={metric.value(summary)}
+          description={metric.helper}
+        />
       ))}
     </section>
   );

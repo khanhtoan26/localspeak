@@ -13,7 +13,13 @@ import {
 import type { AiCoachState } from "./ai-coach-tab";
 import { tryGetOrCreateOwnerKey } from "../../lib/saved-sessions/owner-key";
 import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 
 type SavedSessionsPanelProps = {
   analysis: JsonAnalysisResponse;
@@ -119,44 +125,52 @@ export function SavedSessionsPanel({
 
   if (!ownerKey) {
     return (
-      <aside className="flex flex-col gap-4" aria-label="Saved sessions">
-        <h2 className="text-xl font-semibold text-foreground m-0">Saved attempts unavailable</h2>
-        <p className="text-base text-muted-foreground">
-          This browser cannot create secure local saved-session keys.
-        </p>
+      <aside className="flex min-w-0 flex-col gap-4" aria-label="Saved sessions">
+        <Card>
+          <CardHeader>
+            <CardTitle>Saved sessions</CardTitle>
+            <CardDescription>
+              This browser cannot create secure local saved-session keys.
+            </CardDescription>
+          </CardHeader>
+        </Card>
       </aside>
     );
   }
 
   return (
-    <aside className="flex flex-col gap-4" aria-label="Saved sessions">
-      <div className="flex items-start justify-between gap-4">
-        <div>
-          <h2 className="text-xl font-semibold text-foreground m-0">Saved attempts</h2>
-          <p className="text-base text-muted-foreground mt-1">
-            Save this result or reopen a recent attempt from this browser.
-          </p>
-        </div>
-        <Button
-          type="button"
-          variant="outline"
-          onClick={() => void handleSave()}
-          disabled={isSaving}
-          className="min-h-[44px] shrink-0"
-        >
-          {isSaving ? "Saving…" : "Save Result"}
-        </Button>
-      </div>
+    <aside className="flex min-w-0 flex-col gap-4" aria-label="Saved sessions">
+      <Card>
+        <CardHeader className="gap-3">
+          <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+            <div className="min-w-0 space-y-1">
+              <CardTitle>Saved sessions</CardTitle>
+              <CardDescription>
+                Reopen a previous analysis without replacing the current input until you choose one.
+              </CardDescription>
+            </div>
+            <Button
+              type="button"
+              variant="outline"
+              onClick={() => void handleSave()}
+              disabled={isSaving}
+              className="min-h-[44px] shrink-0"
+            >
+              {isSaving ? "Saving…" : "Save Result"}
+            </Button>
+          </div>
+        </CardHeader>
+        <CardContent className="space-y-4">
 
       {saveStatus ? <p className="text-sm text-muted-foreground">{saveStatus}</p> : null}
-      {reopenError ? <p className="text-sm text-danger font-medium">{reopenError}</p> : null}
+      {reopenError ? <p className="text-sm font-medium text-destructive">{reopenError}</p> : null}
 
       {loadState.status === "loading" ? (
         <p className="text-base text-muted-foreground">Loading saved attempts...</p>
       ) : null}
 
       {loadState.status === "error" ? (
-        <p className="text-sm text-danger font-medium">{loadState.message}</p>
+        <p className="text-sm font-medium text-destructive">{loadState.message}</p>
       ) : null}
 
       {loadState.status === "ready" && loadState.sessions.length === 0 ? (
@@ -202,6 +216,8 @@ export function SavedSessionsPanel({
           </ol>
         </details>
       ) : null}
+        </CardContent>
+      </Card>
     </aside>
   );
 }
