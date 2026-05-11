@@ -70,7 +70,7 @@ Plans:
   6. Phone-width layout has no horizontal overflow and no hidden primary actions.
   7. Keyboard navigation, focus states, semantic landmarks, touch targets, labels, and contrast are covered.
   8. Unit and Playwright coverage is updated for the new shadcn shell and preserved JSON/audio behavior.
-**Plans:** 1/5 plans executed
+**Plans:** 2/5 plans executed
 
 Plans:
 - [ ] TBD (run /gsd-plan-phase 07.1 to break down)

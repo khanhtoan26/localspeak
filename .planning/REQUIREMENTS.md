@@ -47,8 +47,8 @@ Requirements for the next milestone. These are derived from `.scope/scope.md` an
 
 ### Comprehensive UI/UX Redesign
 
-- [ ] **UIX-01**: User experiences a cohesive app shell with clear navigation, hierarchy, and visual identity across JSON Analysis, Live Audio Practice, and upcoming exam-practice surfaces.
-- [ ] **UIX-02**: User can understand the primary next action on every major screen without competing controls or crowded panels.
+- [x] **UIX-01**: User experiences a cohesive app shell with clear navigation, hierarchy, and visual identity across JSON Analysis, Live Audio Practice, and upcoming exam-practice surfaces.
+- [x] **UIX-02**: User can understand the primary next action on every major screen without competing controls or crowded panels.
 - [x] **UIX-03**: UI uses a documented design system for spacing, typography, color, cards, buttons, forms, tabs, sidebars, timers, recording controls, feedback panels, and empty/loading/error states.
 - [ ] **UIX-04**: JSON Analysis is redesigned around learner outcomes: priority action first, readable metrics, compact analysis sections, and secondary technical/input controls.
 - [ ] **UIX-05**: Live Audio Practice is redesigned around a simple speaking flow: prompt/reference text, recording state, timer/waveform, transcript, and feedback/readiness states.
@@ -154,8 +154,8 @@ Tracked from `.scope/scope.md`, but intentionally deferred beyond this milestone
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| UIX-01 | Phase 7 | Pending |
-| UIX-02 | Phase 7 | Pending |
+| UIX-01 | Phase 7 | Complete |
+| UIX-02 | Phase 7 | Complete |
 | UIX-03 | Phase 7 | Complete |
 | UIX-04 | Phase 7 | Pending |
 | UIX-05 | Phase 7 | Pending |
