@@ -49,11 +49,11 @@ Requirements for the next milestone. These are derived from `.scope/scope.md` an
 
 - [ ] **UIX-01**: User experiences a cohesive app shell with clear navigation, hierarchy, and visual identity across JSON Analysis, Live Audio Practice, and upcoming exam-practice surfaces.
 - [ ] **UIX-02**: User can understand the primary next action on every major screen without competing controls or crowded panels.
-- [ ] **UIX-03**: UI uses a documented design system for spacing, typography, color, cards, buttons, forms, tabs, sidebars, timers, recording controls, feedback panels, and empty/loading/error states.
+- [x] **UIX-03**: UI uses a documented design system for spacing, typography, color, cards, buttons, forms, tabs, sidebars, timers, recording controls, feedback panels, and empty/loading/error states.
 - [ ] **UIX-04**: JSON Analysis is redesigned around learner outcomes: priority action first, readable metrics, compact analysis sections, and secondary technical/input controls.
 - [ ] **UIX-05**: Live Audio Practice is redesigned around a simple speaking flow: prompt/reference text, recording state, timer/waveform, transcript, and feedback/readiness states.
-- [ ] **UIX-06**: The app is responsive at phone width without horizontal overflow, oversized cards, or hidden primary actions.
-- [ ] **UIX-07**: The redesigned UI meets accessibility basics for keyboard navigation, focus states, semantic landmarks, touch targets, contrast, and screen-reader labels.
+- [x] **UIX-06**: The app is responsive at phone width without horizontal overflow, oversized cards, or hidden primary actions.
+- [x] **UIX-07**: The redesigned UI meets accessibility basics for keyboard navigation, focus states, semantic landmarks, touch targets, contrast, and screen-reader labels.
 - [ ] **UIX-08**: Playwright or equivalent UI coverage verifies core responsive flows and guards against regressions in navigation, JSON analysis, live audio, and empty/error states.
 
 ### Question Bank
@@ -156,11 +156,11 @@ Tracked from `.scope/scope.md`, but intentionally deferred beyond this milestone
 |-------------|-------|--------|
 | UIX-01 | Phase 7 | Pending |
 | UIX-02 | Phase 7 | Pending |
-| UIX-03 | Phase 7 | Pending |
+| UIX-03 | Phase 7 | Complete |
 | UIX-04 | Phase 7 | Pending |
 | UIX-05 | Phase 7 | Pending |
-| UIX-06 | Phase 7 | Pending |
-| UIX-07 | Phase 7 | Pending |
+| UIX-06 | Phase 7 | Complete |
+| UIX-07 | Phase 7 | Complete |
 | UIX-08 | Phase 7 | Pending |
 | QBANK-01 | Phase 8 | Pending |
 | QBANK-02 | Phase 8 | Pending |
