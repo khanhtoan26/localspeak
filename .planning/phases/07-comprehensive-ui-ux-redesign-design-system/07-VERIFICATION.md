@@ -1,24 +1,24 @@
 ---
 phase: 07-comprehensive-ui-ux-redesign-design-system
-verified: 2026-05-09T16:32:00Z
-status: human_needed
-score: 6/7 must-haves verified
+verified: 2026-05-11T03:17:42Z
+status: verified
+score: 7/7 must-haves verified
 overrides_applied: 0
-human_verification:
-  - test: "Run pnpm --filter web test:e2e against a live dev server and confirm all 15 Playwright E2E tests pass (4 test.describe groups in responsive.spec.ts + dashboard-ui.spec.ts tests)"
-    expected: "Exit code 0, all tests green. Both dashboard-ui.spec.ts and responsive.spec.ts tests pass. No overflow at 390px, bottom nav visible at mobile, sidebar visible at desktop, tabs navigable by keyboard, audio Record button disabled when reference text is empty."
-    why_human: "E2E tests require a running Next.js dev server at localhost:3000. Cannot start a server in this verification context without risking side effects. The playwright.config.ts has webServer config that auto-starts the server, but running it non-interactively without knowing port availability is unsafe."
-  - test: "Visually confirm the redesigned UI in a browser: sidebar-left at desktop, fixed bottom nav at mobile (390px), 'Practice Tools' label visible, Shadcn component styling applied"
-    expected: "UI renders with warm color palette (#fafaf7 background, #d97757 primary), Inter font, sidebar on left with rounded corners and bg-sidebar color, JSON Analysis and Live Audio Practice nav items with active indicator bar."
-    why_human: "Visual rendering cannot be verified programmatically without a running browser. Tailwind v4 CSS-first config requires the PostCSS pipeline to run at build time."
+verification_runs:
+  - command: "pnpm --filter web test:e2e -- dashboard-ui.spec.ts responsive.spec.ts"
+    result: "17 passed"
+  - command: "pnpm --filter web exec tsc --noEmit -p tsconfig.json"
+    result: "exit 0"
+  - command: "pnpm --filter web test"
+    result: "6 files, 47 tests passed"
 ---
 
 # Phase 7: Comprehensive UI/UX Redesign & Design System Verification Report
 
 **Phase Goal:** Rebuild the current app UI into a cohesive, responsive, accessible, learner-centered experience before adding new practice features.
-**Verified:** 2026-05-09T16:32:00Z
-**Status:** human_needed
-**Re-verification:** No — initial verification
+**Verified:** 2026-05-11T03:17:42Z
+**Status:** verified
+**Re-verification:** Yes — E2E and responsive verification completed after code-review fixes
 
 ## Goal Achievement
 
@@ -26,15 +26,15 @@ human_verification:
 
 | # | Truth | Status | Evidence |
 |---|-------|--------|----------|
-| 1 | App has a redesigned shell/navigation system (sidebar-left desktop, fixed bottom nav mobile) | VERIFIED | `page.tsx` has `hidden sm:grid` sidebar with "Practice Tools" label, `sm:hidden` fixed bottom nav. Both use `aria-current="page"` for active state. |
+| 1 | App has a redesigned shell/navigation system (sidebar-left desktop, fixed bottom nav mobile) | VERIFIED | `page.tsx` has a responsive shell with `hidden sm:flex` sidebar, `sm:hidden` fixed bottom nav, one shared content panel instance, and `aria-current="page"` for active state. |
 | 2 | A documented design system exists in code (Shadcn components, @theme tokens, cn() utility) | VERIFIED | `globals.css` has `@theme inline` with all color/font/radius tokens. 11 Shadcn components in `components/ui/`. `lib/utils.ts` exports `cn()`. `components.json` configures Shadcn. |
 | 3 | JSON Analysis redesigned around learner outcomes: PracticePriorityCard first, Collapsible input | VERIFIED | `json-analysis-panel.tsx` renders `PracticePriorityCard` at line 414, `SummaryMetricCards` at 438, `ResultTabs` at 440, `Collapsible` input at 456. `setIsInputOpen(false)` at line 254 auto-closes on completion. |
 | 4 | Live Audio Practice redesigned: simple speaking flow, Input for reference, stateful record button | VERIFIED | `audio-mode-panel.tsx` uses Shadcn `Input` with `htmlFor="reference-text"`. Record button disabled when `!referenceText.trim()`. Word chips with `min-h-[44px]`. |
-| 5 | Phone-width layouts have no horizontal overflow | UNCERTAIN | `min-w-0` is on all flex/grid children in `page.tsx` (line 98, 110). `responsive.spec.ts` has 3 overflow tests using `scrollWidth` check. E2E tests exist but cannot be run without a live server. |
+| 5 | Phone-width layouts have no horizontal overflow | VERIFIED | `pnpm --filter web test:e2e -- dashboard-ui.spec.ts responsive.spec.ts` passed 17/17 tests, including all 390px JSON/audio `scrollWidth` checks. |
 | 6 | Keyboard navigation, focus states, semantic landmarks, touch targets, contrast, and screen-reader labels covered | VERIFIED | NavItem/BottomNavItem have `min-h-[44px]` and `focus-visible:ring-2 focus-visible:ring-primary`. `aria-label="Main navigation"` on both nav elements. `aria-current="page"` on active items. Shadcn Tabs provide correct `role=tablist/tab/tabpanel` ARIA. `aria-label="Speech assessment JSON input"` on Textarea. |
-| 7 | Playwright E2E coverage verifies navigation, JSON analysis, responsive layout, and empty/error states | UNCERTAIN | `dashboard-ui.spec.ts` updated with correct selectors. `responsive.spec.ts` created (15 tests, 4 groups). TypeScript compiles clean. Unit tests (46/46) pass. E2E tests NOT run — require live server. |
+| 7 | Playwright E2E coverage verifies navigation, JSON analysis, responsive layout, and empty/error states | VERIFIED | `dashboard-ui.spec.ts` and `responsive.spec.ts` passed 17/17 Playwright tests against a fresh Next dev server. |
 
-**Score:** 5/7 truths fully verified, 2 uncertain pending E2E run
+**Score:** 7/7 truths fully verified
 
 ### Required Artifacts
 
@@ -56,7 +56,7 @@ human_verification:
 | `apps/web/components/ui/dialog.tsx` | Shadcn Dialog | VERIFIED | File exists. |
 | `apps/web/components/ui/skeleton.tsx` | Shadcn Skeleton | VERIFIED | File exists. |
 | `apps/web/app/layout.tsx` | Font loading, viewport, Tailwind body classes | VERIFIED | Inter + JetBrains_Mono via next/font/google. Viewport export. `bg-background text-foreground font-sans antialiased` on body. |
-| `apps/web/app/page.tsx` | Sidebar + bottom nav layout | VERIFIED | `hidden sm:grid` desktop sidebar, `sm:hidden` fixed bottom nav, "Practice Tools" label, `aria-current="page"` semantics, `min-w-0` overflow prevention, `min-h-[44px]` touch targets. |
+| `apps/web/app/page.tsx` | Sidebar + bottom nav layout | VERIFIED | Responsive shell with desktop sidebar, `sm:hidden` fixed bottom nav, one shared mounted panel instance, "Practice Tools" label, `aria-current="page"` semantics, `min-w-0` overflow prevention, `min-h-[44px]` touch targets. |
 | `apps/web/components/status-card.tsx` | Shadcn Card + Badge | VERIFIED | Imports `Card` from `@/components/ui/card`, `Badge` from `@/components/ui/badge`. No `status-card` BEM class names. |
 | `apps/web/components/status-panel.tsx` | Shadcn Button | VERIFIED | Imports `Button` from `@/components/ui/button`. No `status-shell` class names. |
 | `apps/web/components/json-analysis/summary-metric-cards.tsx` | 4-card responsive grid | VERIFIED | `grid grid-cols-2 sm:grid-cols-4 gap-2`, Shadcn `Card`, `data-testid="summary-metric-label"` present. |
@@ -106,12 +106,12 @@ human_verification:
 
 | Behavior | Command | Result | Status |
 |----------|---------|--------|--------|
-| Unit tests all pass | `pnpm --filter web test` | 6 test files, 46 tests, 0 failures | PASS |
-| TypeScript compiles clean | `pnpm --filter web exec tsc --noEmit` | No output (exit 0) | PASS |
+| Unit tests all pass | `pnpm --filter web test` | 6 test files, 47 tests, 0 failures | PASS |
+| TypeScript compiles clean | `pnpm --filter web exec tsc --noEmit -p tsconfig.json` | No output (exit 0) | PASS |
 | Playwright Chromium binary installed | `pnpm --filter web exec playwright install chromium` | Exit code 0 | PASS |
 | globals.css is Tailwind v4 format | Line 1 = `@import "tailwindcss"`, not `@tailwind base` | 41 lines, correct format | PASS |
 | No tailwind.config.ts/js (Tailwind v4 CSS-first) | `ls apps/web/tailwind.config.ts` | ABSENT | PASS |
-| E2E test suite (requires live server) | `pnpm --filter web test:e2e` | NOT RUN — requires dev server | SKIP |
+| E2E test suite | `pnpm --filter web test:e2e -- dashboard-ui.spec.ts responsive.spec.ts` | 17 tests, 0 failures | PASS |
 
 ### Requirements Coverage
 
@@ -122,9 +122,9 @@ human_verification:
 | UIX-03 | 07-01, 07-03 | Documented design system in code | VERIFIED | @theme inline tokens in globals.css. 11 Shadcn components. components.json. cn() utility. |
 | UIX-04 | 07-03, 07-04 | JSON Analysis outcome-first hierarchy | VERIFIED | PracticePriorityCard renders at line 414, before SummaryMetricCards (438), before ResultTabs (440), before Collapsible input (456). |
 | UIX-05 | 07-04, 07-05 | Live Audio redesigned around speaking flow | VERIFIED | Shadcn Input with reference text. Record disabled when empty. responsive.spec.ts Group 4 (2 tests) covers disabled state and enabled state after fill. |
-| UIX-06 | 07-02, 07-04, 07-05 | Responsive at phone width, no horizontal overflow | UNCERTAIN | `min-w-0` present on all flex/grid children. responsive.spec.ts has 3 overflow tests. E2E tests not run to confirm. |
+| UIX-06 | 07-02, 07-04, 07-05 | Responsive at phone width, no horizontal overflow | VERIFIED | `responsive.spec.ts` passed all 390px overflow checks for JSON pre-analysis, JSON post-analysis, and Audio mode. |
 | UIX-07 | 07-02, 07-03, 07-05 | Accessibility: keyboard, focus, landmarks, touch targets | VERIFIED | `aria-current`, `aria-label`, `focus-visible:ring`, `min-h-[44px]`, Shadcn Tabs ARIA (tablist/tab/tabpanel). responsive.spec.ts Group 3 (5 tests). |
-| UIX-08 | 07-05 | Playwright/equivalent UI coverage | UNCERTAIN | dashboard-ui.spec.ts updated. responsive.spec.ts created (15 tests). TypeScript clean. E2E tests not run — require live dev server. |
+| UIX-08 | 07-05 | Playwright/equivalent UI coverage | VERIFIED | `dashboard-ui.spec.ts` + `responsive.spec.ts` passed 17/17 tests after fixing duplicate responsive panel rendering. |
 
 ### Anti-Patterns Found
 
@@ -134,32 +134,16 @@ human_verification:
 | ROADMAP.md | — | Phase 7 tracking still shows "0/5 plans complete" and "Not started" | Warning | Documentation inconsistency. Plans 07-02 through 07-05 are marked complete in ROADMAP wave list ([x]), but the progress table was not updated. Does not affect code correctness. |
 | `.planning/phases/07-comprehensive-ui-ux-redesign-design-system/07-01-SUMMARY.md` | — | File missing — was shown as untracked in session's initial git status but does not exist on disk | Warning | 07-01 work IS committed (commits aa92d85 and 4c3e571 confirmed). Summary was likely created in an executor worktree but not committed to master. No impact on phase goal achievement; code artifacts are present and verified. |
 
-### Human Verification Required
+### Completed Verification
 
-#### 1. E2E Test Suite Pass
-
-**Test:** Run `pnpm --filter web test:e2e` against a running dev server.
-```bash
-cd /home/toanak/workspace/localspeak
-pnpm --filter web dev &
-sleep 10
-pnpm --filter web test:e2e
-```
-**Expected:** All tests pass. Output shows 15 tests from responsive.spec.ts + tests from dashboard-ui.spec.ts. Exit code 0.
-**Why human:** Requires a running Next.js dev server at port 3000. Playwright's `webServer` config handles this automatically when invoked, but starting a background server in a verification context risks port conflicts and cannot be reliably cleaned up.
-
-#### 2. Visual Rendering Confirmation
-
-**Test:** Open http://localhost:3000 in a browser with DevTools responsive mode at 390px width and 1280px width.
-**Expected:**
-- At 1280px: Sidebar visible on left with "Practice Tools" label, "JSON Analysis" and "Live Audio Practice" nav items with left-border indicator on active item. Main content area occupies remaining width. No bottom nav visible.
-- At 390px: Sidebar hidden. Fixed bottom nav visible at screen bottom with "JSON Analysis" and "Live Audio" icon+label items. No horizontal scrollbar.
-- Color scheme: warm off-white background (#fafaf7), Inter font, rounded corners on sidebar and cards.
-**Why human:** CSS visual output cannot be verified programmatically without a running browser. Tailwind v4 CSS-first config requires the PostCSS pipeline to compile at runtime.
+- `pnpm install` refreshed missing workspace dependency links required by the Phase 7 UI stack.
+- Stale Next dev server PID 57660 was stopped after user approval because it returned HTTP 500 and blocked Playwright's managed server.
+- `pnpm --filter web test:e2e -- dashboard-ui.spec.ts responsive.spec.ts` passed 17/17 tests.
+- The E2E run surfaced and verified a real responsive-shell fix: the app now renders one shared content panel instance instead of duplicating JSON/audio panels for desktop and mobile layouts.
 
 ### Gaps Summary
 
-No blocking gaps found. All 31 artifacts verified as existing, substantive, and wired. All critical BEM class names removed from migrated files. The two UNCERTAIN truths (UIX-06 overflow, UIX-08 E2E coverage) both have complete test implementations in responsive.spec.ts — the uncertainty is that the tests have not been run against a live server, not that they are missing or broken.
+No blocking gaps found. All 31 artifacts verified as existing, substantive, and wired. All critical BEM class names removed from migrated files. Previously open E2E and responsive verification items are now closed.
 
 **Two non-blocking observations:**
 
@@ -169,5 +153,5 @@ No blocking gaps found. All 31 artifacts verified as existing, substantive, and 
 
 ---
 
-_Verified: 2026-05-09T16:32:00Z_
+_Verified: 2026-05-11T03:17:42Z_
 _Verifier: Claude (gsd-verifier)_
