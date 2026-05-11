@@ -44,10 +44,12 @@ function BottomNavItem({ icon: Icon, label, active, onClick }: NavItemProps) {
       aria-current={active ? "page" : undefined}
       onClick={onClick}
       className={cn(
-        "flex flex-1 flex-col items-center justify-center gap-1 min-h-[44px]",
+        "relative flex flex-1 flex-col items-center justify-center gap-1 min-h-[44px]",
         "text-[11px] font-semibold transition-colors duration-[120ms]",
         "focus-visible:ring-2 focus-visible:ring-primary focus-visible:outline-none",
-        active ? "text-primary" : "text-muted-foreground"
+        active
+          ? "text-foreground before:absolute before:top-1 before:h-1 before:w-6 before:rounded-full before:bg-primary"
+          : "text-muted-foreground"
       )}
     >
       <Icon className="h-5 w-5" />
@@ -75,7 +77,7 @@ export default function Home() {
           <Separator />
           <p
             className="font-mono text-[11px] font-semibold uppercase tracking-[0.06em]
-                        text-subtle px-1 pt-2"
+                        text-muted-foreground px-1 pt-2"
           >
             Practice Tools
           </p>
