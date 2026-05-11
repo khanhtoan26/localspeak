@@ -70,7 +70,7 @@ Plans:
   6. Phone-width layout has no horizontal overflow and no hidden primary actions.
   7. Keyboard navigation, focus states, semantic landmarks, touch targets, labels, and contrast are covered.
   8. Unit and Playwright coverage is updated for the new shadcn shell and preserved JSON/audio behavior.
-**Plans:** 2/5 plans executed
+**Plans:** 3/5 plans executed
 
 Plans:
 - [ ] TBD (run /gsd-plan-phase 07.1 to break down)
@@ -170,14 +170,14 @@ Phases execute in numeric order: 7 -> 8 -> 9 -> 10 -> 11 -> 12
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| UIX-01 | Phase 7 | Pending |
-| UIX-02 | Phase 7 | Pending |
-| UIX-03 | Phase 7 | Pending |
-| UIX-04 | Phase 7 | Pending |
+| UIX-01 | Phase 7 | Complete |
+| UIX-02 | Phase 7 | Complete |
+| UIX-03 | Phase 7 | Complete |
+| UIX-04 | Phase 7 | Complete |
 | UIX-05 | Phase 7 | Pending |
-| UIX-06 | Phase 7 | Pending |
-| UIX-07 | Phase 7 | Pending |
-| UIX-08 | Phase 7 | Pending |
+| UIX-06 | Phase 7 | Complete |
+| UIX-07 | Phase 7 | Complete |
+| UIX-08 | Phase 7 | Complete |
 | QBANK-01 | Phase 8 | Pending |
 | QBANK-02 | Phase 8 | Pending |
 | QBANK-03 | Phase 8 | Pending |
