@@ -222,7 +222,7 @@ test.describe("No horizontal overflow at mobile width (UIX-06)", () => {
     const textarea = page.getByLabel("Speech assessment JSON input");
     await textarea.fill('{"test": true}');
     await page.getByRole("button", { name: "Analyze Pronunciation" }).click();
-    await page.waitForTimeout(500); // allow mock response to process
+    await expect(page.getByRole("heading", { name: "What should I practice next?" })).toBeVisible();
     const overflow = await page.evaluate(() =>
       document.documentElement.scrollWidth > document.documentElement.clientWidth
     );
@@ -270,7 +270,7 @@ test.describe("Accessibility baseline (UIX-07)", () => {
     // Submit JSON to get to post-analysis state
     await page.getByLabel("Speech assessment JSON input").fill('{"test": true}');
     await page.getByRole("button", { name: "Analyze Pronunciation" }).click();
-    await page.waitForTimeout(500);
+    await expect(page.getByRole("heading", { name: "What should I practice next?" })).toBeVisible();
     // Tabs should render with correct ARIA roles
     await expect(page.getByRole("tablist")).toBeVisible();
     await expect(page.getByRole("tab", { name: "Pause Analysis" })).toBeVisible();
@@ -282,7 +282,7 @@ test.describe("Accessibility baseline (UIX-07)", () => {
     await page.goto("/");
     await page.getByLabel("Speech assessment JSON input").fill('{"test": true}');
     await page.getByRole("button", { name: "Analyze Pronunciation" }).click();
-    await page.waitForTimeout(500);
+    await expect(page.getByRole("heading", { name: "What should I practice next?" })).toBeVisible();
     // Focus the first tab and press ArrowRight
     const firstTab = page.getByRole("tab", { name: "Pause Analysis" });
     await firstTab.focus();
