@@ -1,4 +1,4 @@
-import { test, expect } from "@playwright/test";
+import { expect, test, type Page } from "@playwright/test";
 import { mockDashboardApi } from "./fixtures/analysis";
 
 type Rgb = [number, number, number];
@@ -35,253 +35,151 @@ function expectRgb(color: string, expected: Rgb) {
   expect(parseRgb(color)).toEqual(expected);
 }
 
-// =============================================================================
-// GROUP 1: Navigation visibility (UIX-01)
-// =============================================================================
+async function expectNoHorizontalOverflow(page: Page) {
+  const width = await page.evaluate(() => ({
+    clientWidth: document.documentElement.clientWidth,
+    scrollWidth: document.documentElement.scrollWidth,
+  }));
+  expect(width.scrollWidth).toBeLessThanOrEqual(width.clientWidth);
+}
 
-test.describe("Navigation layout at breakpoints", () => {
-  test("sidebar visible at desktop (1280px); bottom nav hidden", async ({ page }) => {
-    await page.setViewportSize({ width: 1280, height: 800 });
-    await page.goto("/");
-    // Desktop sidebar: "Practice Tools" label visible only at sm+ breakpoint
-    await expect(page.getByText("Practice Tools")).toBeVisible();
-    // Bottom nav: sm:hidden — not visible at desktop viewport
-    const bottomNav = page.locator("nav[aria-label='Main navigation']").last();
-    await expect(bottomNav).not.toBeVisible();
-  });
+async function completeJsonAnalysis(page: Page) {
+  await page
+    .getByLabel("Speech assessment JSON input")
+    .fill(JSON.stringify({ result: [] }));
+  await expect(page.getByRole("button", { name: "Analyze Pronunciation" })).toBeEnabled();
+  await page.getByRole("button", { name: "Analyze Pronunciation" }).click();
+  await expect(page.getByText("What should I practice next?")).toBeVisible();
+}
 
-  test("bottom nav visible at mobile (390px); sidebar hidden", async ({ page }) => {
-    await page.setViewportSize({ width: 390, height: 844 });
-    await page.goto("/");
-    // Desktop sidebar container: hidden at mobile ("Practice Tools" not visible)
-    await expect(page.getByText("Practice Tools")).not.toBeVisible();
-    // Bottom nav: visible at mobile (the fixed bottom nav)
-    const bottomNav = page.locator("nav[aria-label='Main navigation']").last();
-    await expect(bottomNav).toBeVisible();
-  });
+async function openMobileSidebar(page: Page) {
+  const sidebarTrigger = page.locator('[data-sidebar="trigger"]');
+  await expect(sidebarTrigger).toBeVisible();
+  await sidebarTrigger.focus();
+  await expect(sidebarTrigger).toBeFocused();
+  await sidebarTrigger.click();
+}
 
-  test("nav has aria-label='Main navigation'", async ({ page }) => {
-    await page.goto("/");
-    const navElements = page.locator("nav[aria-label='Main navigation']");
-    await expect(navElements.first()).toBeAttached();
-  });
+test("desktop Sidebar shell exposes shadcn navigation without the old bottom nav", async ({
+  page,
+}) => {
+  await page.setViewportSize({ width: 1280, height: 800 });
+  await page.goto("/");
 
-  test("active nav item has aria-current='page'", async ({ page }) => {
-    await page.goto("/");
-    // Default mode is json — JSON Analysis nav item should be active
-    const activeItem = page.getByRole("button", { name: "JSON Analysis" }).first();
-    await expect(activeItem).toHaveAttribute("aria-current", "page");
-  });
-
-  test("bottom nav switches mode at mobile (390px)", async ({ page }) => {
-    await page.setViewportSize({ width: 390, height: 844 });
-    await page.goto("/");
-    // Click the Live Audio bottom nav item (mobile label is "Live Audio")
-    const audioNavItem = page.getByRole("button", { name: /Live Audio/i }).last();
-    await audioNavItem.click();
-    // Audio mode should be active — aria-current="page" set on clicked item
-    await expect(audioNavItem).toHaveAttribute("aria-current", "page");
-  });
+  await expect(page.getByRole("button", { name: "JSON Analysis" })).toBeVisible();
+  await expect(page.getByRole("button", { name: "Live Audio Practice" })).toBeVisible();
+  await expect(page.getByRole("button", { name: /IELTS Practice/i })).toBeDisabled();
+  await expect(page.getByRole("button", { name: /TOEIC Practice/i })).toBeDisabled();
+  await expect(page.getByRole("button", { name: "Live Audio", exact: true })).toHaveCount(0);
+  await expect(page.locator("nav.fixed, nav[class*='bottom-0'], nav[class*='fixed']")).toHaveCount(0);
 });
 
-// =============================================================================
-// GROUP 2: No horizontal overflow (UIX-06)
-// =============================================================================
+test("mobile sidebar trigger opens future-aware navigation at 390px without overflow", async ({
+  page,
+}) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto("/");
 
-test.describe("No horizontal overflow at mobile width (UIX-06)", () => {
-  test.beforeEach(async ({ page }) => {
-    await mockDashboardApi(page);
-    await page.setViewportSize({ width: 390, height: 844 });
-  });
+  await expectNoHorizontalOverflow(page);
+  await openMobileSidebar(page);
 
-  test("no horizontal overflow at 390px — JSON mode (pre-analysis)", async ({ page }) => {
-    await page.goto("/");
-    const overflow = await page.evaluate(() =>
-      document.documentElement.scrollWidth > document.documentElement.clientWidth
-    );
-    expect(overflow).toBe(false);
-  });
-
-  test("no horizontal overflow at 390px — JSON mode (post-analysis)", async ({ page }) => {
-    await page.goto("/");
-    // Submit JSON to trigger analysis
-    const textarea = page.getByLabel("Speech assessment JSON input");
-    await textarea.fill('{"test": true}');
-    await page.getByRole("button", { name: "Analyze Pronunciation" }).click();
-    await expect(page.getByRole("heading", { name: "What should I practice next?" })).toBeVisible();
-    const overflow = await page.evaluate(() =>
-      document.documentElement.scrollWidth > document.documentElement.clientWidth
-    );
-    expect(overflow).toBe(false);
-  });
-
-  test("no horizontal overflow at 390px — Audio mode", async ({ page }) => {
-    await page.goto("/");
-    // Switch to Audio mode via bottom nav (mobile label is "Live Audio")
-    await page.getByRole("button", { name: /Live Audio/i }).last().click();
-    const overflow = await page.evaluate(() =>
-      document.documentElement.scrollWidth > document.documentElement.clientWidth
-    );
-    expect(overflow).toBe(false);
-  });
+  await expect(page.getByRole("button", { name: "JSON Analysis" })).toBeVisible();
+  await expect(page.getByRole("button", { name: "Live Audio Practice" })).toBeVisible();
+  await expect(page.getByRole("button", { name: /IELTS Practice/i })).toBeDisabled();
+  await expect(page.getByRole("button", { name: /TOEIC Practice/i })).toBeDisabled();
+  await expect(page.getByText("Coming soon").first()).toBeVisible();
+  await expect(page.getByRole("button", { name: "Live Audio", exact: true })).toHaveCount(0);
+  await expect(page.locator("nav.fixed, nav[class*='bottom-0'], nav[class*='fixed']")).toHaveCount(0);
 });
 
-// =============================================================================
-// GROUP 3: Accessibility (UIX-07)
-// =============================================================================
+test("JSON analysis stays within 390px and keeps role-based tabs keyboardable", async ({
+  page,
+}) => {
+  await mockDashboardApi(page);
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto("/");
 
-test.describe("Accessibility baseline (UIX-07)", () => {
-  test("bottom nav items have min 44px touch target height at mobile", async ({ page }) => {
-    await page.setViewportSize({ width: 390, height: 844 });
-    await page.goto("/");
-    // The last nav[aria-label] is the fixed mobile bottom nav
-    const bottomNavButtons = page.locator("nav[aria-label='Main navigation']").last()
-      .getByRole("button");
-    const count = await bottomNavButtons.count();
-    for (let i = 0; i < count; i++) {
-      const box = await bottomNavButtons.nth(i).boundingBox();
-      expect(box?.height).toBeGreaterThanOrEqual(44);
-    }
-  });
+  await expectNoHorizontalOverflow(page);
+  await completeJsonAnalysis(page);
+  await expectNoHorizontalOverflow(page);
 
-  test("JSON Textarea has aria-label", async ({ page }) => {
-    await page.goto("/");
-    const textarea = page.getByLabel("Speech assessment JSON input");
-    await expect(textarea).toBeAttached();
-  });
+  await expect(page.getByRole("tablist")).toBeVisible();
+  const pauseTab = page.getByRole("tab", { name: "Pause Analysis" });
+  await expect(pauseTab).toBeVisible();
+  await expect(page.getByRole("tab", { name: "Words" })).toBeVisible();
+  await expect(page.getByRole("tab", { name: "Phonemes" })).toBeVisible();
 
-  test("result tabs have role=tablist with tab and tabpanel roles after analysis", async ({ page }) => {
-    await mockDashboardApi(page);
-    await page.goto("/");
-    // Submit JSON to get to post-analysis state
-    await page.getByLabel("Speech assessment JSON input").fill('{"test": true}');
-    await page.getByRole("button", { name: "Analyze Pronunciation" }).click();
-    await expect(page.getByRole("heading", { name: "What should I practice next?" })).toBeVisible();
-    // Tabs should render with correct ARIA roles
-    await expect(page.getByRole("tablist")).toBeVisible();
-    await expect(page.getByRole("tab", { name: "Pause Analysis" })).toBeVisible();
-    await expect(page.getByRole("tabpanel")).toBeAttached();
-  });
-
-  test("result tabs navigable by keyboard arrow keys", async ({ page }) => {
-    await mockDashboardApi(page);
-    await page.goto("/");
-    await page.getByLabel("Speech assessment JSON input").fill('{"test": true}');
-    await page.getByRole("button", { name: "Analyze Pronunciation" }).click();
-    await expect(page.getByRole("heading", { name: "What should I practice next?" })).toBeVisible();
-    // Focus the first tab and press ArrowRight
-    const firstTab = page.getByRole("tab", { name: "Pause Analysis" });
-    await firstTab.focus();
-    await page.keyboard.press("ArrowRight");
-    // Words tab should now be selected after arrow navigation
-    await expect(page.getByRole("tab", { name: "Words" })).toHaveAttribute("aria-selected", "true");
-  });
-
-  test("nav items reachable via Tab key", async ({ page }) => {
-    await page.goto("/");
-    await page.keyboard.press("Tab");
-    // First Tab should focus the first interactive element — typically the first nav button
-    const focused = await page.evaluate(() => document.activeElement?.textContent?.trim());
-    expect(typeof focused).toBe("string"); // something is focused
-  });
-
-  test("design tokens render with readable contrast", async ({ page }) => {
-    await page.goto("/");
-
-    const bodyColors = await page.evaluate(() => {
-      const bodyStyle = getComputedStyle(document.body);
-      return {
-        backgroundColor: bodyStyle.backgroundColor,
-        color: bodyStyle.color,
-      };
-    });
-    expectRgb(bodyColors.backgroundColor, [250, 250, 247]);
-    expectRgb(bodyColors.color, [22, 21, 19]);
-    expect(contrastRatio(bodyColors.color, bodyColors.backgroundColor)).toBeGreaterThanOrEqual(4.5);
-
-    const sidebarColors = await page.getByText("Practice Tools").evaluate((element) => {
-      const labelStyle = getComputedStyle(element);
-      const sidebar = element.closest("aside");
-      if (!sidebar) throw new Error("Practice Tools label is not inside the sidebar");
-      return {
-        backgroundColor: getComputedStyle(sidebar).backgroundColor,
-        color: labelStyle.color,
-      };
-    });
-    expectRgb(sidebarColors.backgroundColor, [22, 21, 19]);
-    expect(contrastRatio(sidebarColors.color, sidebarColors.backgroundColor)).toBeGreaterThanOrEqual(4.5);
-
-    const desktopActiveNavColors = await page
-      .getByRole("button", { name: "JSON Analysis" })
-      .first()
-      .evaluate((element) => {
-        const style = getComputedStyle(element);
-        const activeMarker = getComputedStyle(element, "::before");
-        return {
-          backgroundColor: style.backgroundColor,
-          color: style.color,
-          markerColor: activeMarker.backgroundColor,
-        };
-      });
-    expectRgb(desktopActiveNavColors.backgroundColor, [255, 255, 255]);
-    expectRgb(desktopActiveNavColors.markerColor, [217, 119, 87]);
-    expect(contrastRatio(desktopActiveNavColors.color, desktopActiveNavColors.backgroundColor))
-      .toBeGreaterThanOrEqual(4.5);
-
-    await page.setViewportSize({ width: 390, height: 844 });
-    await page.goto("/");
-    const mobileActiveNavColors = await page
-      .getByRole("button", { name: "JSON Analysis" })
-      .last()
-      .evaluate((element) => {
-        const style = getComputedStyle(element);
-        const marker = getComputedStyle(element, "::before");
-        const nav = element.closest("nav");
-        if (!nav) throw new Error("Mobile nav item is not inside a nav");
-        return {
-          backgroundColor: getComputedStyle(nav).backgroundColor,
-          color: style.color,
-          markerColor: marker.backgroundColor,
-        };
-      });
-    expectRgb(mobileActiveNavColors.backgroundColor, [255, 255, 255]);
-    expectRgb(mobileActiveNavColors.markerColor, [217, 119, 87]);
-    expect(contrastRatio(mobileActiveNavColors.color, mobileActiveNavColors.backgroundColor))
-      .toBeGreaterThanOrEqual(4.5);
-  });
+  await pauseTab.focus();
+  await page.keyboard.press("ArrowRight");
+  await expect(page.getByRole("tab", { name: "Words" })).toHaveAttribute(
+    "aria-selected",
+    "true",
+  );
 });
 
-// =============================================================================
-// GROUP 4: Audio panel behavioral states (UIX-05)
-// =============================================================================
+test("Live Audio Practice stays within 390px and keeps the primary recording action usable", async ({
+  page,
+}) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto("/");
+  await openMobileSidebar(page);
+  await page.getByRole("button", { name: "Live Audio Practice" }).click();
+  await page.keyboard.press("Escape");
 
-test.describe("Audio panel behavioral states (UIX-05)", () => {
-  test.beforeEach(async ({ page }) => {
-    await page.goto("/");
-    // Navigate to Audio mode via the first matching nav button (works at any viewport)
-    await page.getByRole("button", { name: /Live Audio/i }).first().click();
-  });
+  await expect(page.getByLabel("Reference sentence")).toBeVisible();
+  await expect(
+    page.getByText(
+      "Enter one sentence first. Recording stays disabled until LocalSpeak knows what you want to practice.",
+    ).first(),
+  ).toBeVisible();
+  await expect(page.getByRole("button", { name: "Start Recording" })).toBeDisabled();
+  await expectNoHorizontalOverflow(page);
 
-  test("Audio: record button disabled when reference text is empty", async ({ page }) => {
-    // Reference input should be empty on initial render
-    const referenceInput = page.getByLabel("Reference sentence");
-    await expect(referenceInput).toBeAttached();
-    // Clear input to ensure it is empty
-    await referenceInput.fill("");
-    // Record button (text: "Record") must be disabled when reference text is empty
-    const recordButton = page.getByRole("button", { name: "Record" });
-    await expect(recordButton).toBeDisabled();
-  });
+  await page.getByLabel("Reference sentence").fill("The trees stood near the street.");
+  const startButton = page.getByRole("button", { name: "Start Recording" });
+  await expect(startButton).toBeEnabled();
+  const box = await startButton.boundingBox();
+  expect(box?.height).toBeGreaterThanOrEqual(44);
+});
 
-  test("Audio: status badge updates on session state change", async ({ page }) => {
-    const referenceInput = page.getByLabel("Reference sentence");
-    // Initial state: record button disabled (reference text empty)
-    const recordButton = page.getByRole("button", { name: "Record" });
-    await expect(recordButton).toBeDisabled();
-    // Fill reference text to change session state
-    await referenceInput.fill("Say something");
-    // After filling reference text, the record button should be enabled
-    // This verifies that the component's status state responds to input changes
-    await expect(recordButton).toBeEnabled();
+test("labels, focus, contrast, and anti-reuse guards match the shadcn rebuild", async ({
+  page,
+}) => {
+  await page.goto("/");
+
+  await expect(page.getByLabel("Speech assessment JSON input")).toBeVisible();
+  await expect(page.getByLabel("Upload .json file")).toBeAttached();
+  await expect(page.getByRole("button", { name: "Analyze Pronunciation" })).toBeVisible();
+  await page.getByRole("button", { name: "Live Audio Practice" }).focus();
+  await expect(page.getByRole("button", { name: "Live Audio Practice" })).toBeFocused();
+  await page.getByRole("button", { name: "JSON Analysis" }).focus();
+  await expect(page.getByRole("button", { name: "JSON Analysis" })).toBeFocused();
+  const sidebarTrigger = page.locator('[data-sidebar="trigger"]');
+  await sidebarTrigger.focus();
+  await expect(sidebarTrigger).toBeFocused();
+
+  const bodyColors = await page.evaluate(() => {
+    const bodyStyle = getComputedStyle(document.body);
+    return {
+      backgroundColor: bodyStyle.backgroundColor,
+      color: bodyStyle.color,
+    };
   });
+  expectRgb(bodyColors.backgroundColor, [250, 250, 250]);
+  expectRgb(bodyColors.color, [23, 23, 23]);
+  expect(contrastRatio(bodyColors.color, bodyColors.backgroundColor)).toBeGreaterThanOrEqual(4.5);
+
+  const primaryButtonColor = await page
+    .getByRole("button", { name: "Analyze Pronunciation" })
+    .evaluate((element) => getComputedStyle(element).backgroundColor);
+  expectRgb(primaryButtonColor, [37, 99, 235]);
+
+  await page.getByRole("button", { name: "Live Audio Practice" }).click();
+  await expect(page.getByLabel("Reference sentence")).toBeVisible();
+  await expect(page.getByRole("button", { name: "Start Recording" })).toBeVisible();
+
+  await expect(page.getByText("Premium coach", { exact: true })).toHaveCount(0);
+  await expect(page.getByText("Premium pronunciation coach")).toHaveCount(0);
+  await expect(page.getByText("Know exactly what to practice next.")).toHaveCount(0);
+  await expect(page.getByRole("button", { name: "Live Audio", exact: true })).toHaveCount(0);
 });
