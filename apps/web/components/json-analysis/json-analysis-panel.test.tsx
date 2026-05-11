@@ -628,9 +628,12 @@ describe("JsonAnalysisPanel", () => {
     ]);
     expect(screen.getByText("What should I practice next?")).toBeInTheDocument();
     expect(screen.getByText("Start with the TH / θ sound pattern.")).toBeInTheDocument();
+    expect(screen.getByText("Review the evidence")).toBeInTheDocument();
     expect(
       screen.getByText("3 repeated weak occurrences appeared in three."),
     ).toBeInTheDocument();
+    expect(screen.getByText("Saved sessions")).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Change JSON input" })).toBeInTheDocument();
     expect(screen.getByText("Computed from word and phone scores.")).toBeInTheDocument();
     expect(
       screen.getByText("Estimated from deterministic score thresholds."),
