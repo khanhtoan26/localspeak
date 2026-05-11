@@ -117,7 +117,29 @@ async function mockDashboardApi(page: Page) {
       await route.fulfill({ json: { sessions: [] } });
       return;
     }
-    await route.fulfill({ json: { session: null }, status: 201 });
+    const timestamp = new Date().toISOString();
+    await route.fulfill({
+      json: {
+        contract: "saved-session-create.v1",
+        session: {
+          id: "00000000-0000-4000-8000-000000000001",
+          ownerKey: "mock-owner-key-1234567890",
+          userId: null,
+          inputMode: "json",
+          title: "Mock session",
+          referenceText: analysisResponse.extracted.referenceText,
+          pronunciationBand: analysisResponse.summary.pronunciationBand,
+          fluencyBand: analysisResponse.summary.fluencyBand,
+          wpm: analysisResponse.summary.wpm,
+          createdAt: timestamp,
+          updatedAt: timestamp,
+          inputMetadata: { source: "e2e" },
+          metrics: analysisResponse,
+          feedback: null,
+        },
+      },
+      status: 201,
+    });
   });
 }
 
