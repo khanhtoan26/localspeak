@@ -16,6 +16,7 @@ v1.0 established the web/backend foundation, deterministic JSON pronunciation an
 - [x] **Phase 5: Saved Analysis Persistence Service (Drizzle + Postgres)** - App can persist and retrieve analysis sessions through a backend service using Drizzle + Postgres.
 - [x] **Phase 6: Learner Dashboard & Analysis Views** - Learner can understand results through dashboard metrics, side navigation, tabs, timelines, word chips, phoneme rankings, saved history, and IELTS analysis UI.
 - [ ] **Phase 7: Comprehensive UI/UX Redesign & Design System** - Rebuild the current app UI into a cohesive, responsive, accessible, learner-centered experience before adding new practice features.
+- [ ] **Phase 07.1: Ground-Up Shadcn UI Rebuild (INSERTED)** - Supersede the rejected Phase 7 frame with a ground-up shadcn/ui app shell, design system, and redesigned JSON/audio surfaces.
 - [ ] **Phase 8: Exam Question Bank & Contracts** - App has shared schemas and seeded IELTS/TOEIC speaking prompts from the scope document.
 - [ ] **Phase 9: Timed IELTS Practice Session Flow** - Learner can select an IELTS prompt, record a timed response, and preserve prompt/transcript/metrics context.
 - [ ] **Phase 10: IELTS Rubric Evaluation API** - Backend can produce and validate strict IELTS examiner JSON across the four official criteria.
@@ -55,10 +56,29 @@ Plans:
 - [x] 07-05-PLAN.md — Tests (update dashboard-ui.spec.ts, create responsive.spec.ts)
 **UI hint**: yes
 
+### Phase 07.1: Ground-Up Shadcn UI Rebuild (INSERTED)
+
+**Goal:** Supersede the rejected Phase 7 frame with a ground-up shadcn/ui app shell, design system, and redesigned JSON/audio surfaces.
+**Requirements**: UIX-01, UIX-02, UIX-03, UIX-04, UIX-05, UIX-06, UIX-07, UIX-08
+**Depends on:** Phase 7
+**Success Criteria** (what must be TRUE):
+  1. App shell uses shadcn Sidebar/SidebarProvider/SidebarInset rather than the old custom desktop rail and mobile bottom nav frame.
+  2. Navigation is config-driven and ready for JSON Analysis, Live Audio Practice, and future IELTS/TOEIC practice surfaces.
+  3. JSON Analysis is rebuilt outcome-first with shadcn cards/tabs/collapsibles while preserving validation, analysis, warnings, saved sessions, AI feedback, and stale-state behavior.
+  4. Live Audio Practice is rebuilt as a simple speaking flow with shadcn cards/buttons/badges/progress while preserving reference text, recording state, transcript, and scoring behavior.
+  5. The design system uses documented tokens and product-level composed components rather than one-off hard-coded frame styles.
+  6. Phone-width layout has no horizontal overflow and no hidden primary actions.
+  7. Keyboard navigation, focus states, semantic landmarks, touch targets, labels, and contrast are covered.
+  8. Unit and Playwright coverage is updated for the new shadcn shell and preserved JSON/audio behavior.
+**Plans:** 0 plans
+
+Plans:
+- [ ] TBD (run /gsd-plan-phase 07.1 to break down)
+
 ### Phase 8: Exam Question Bank & Contracts
 
 **Goal**: App has shared schemas and seeded IELTS/TOEIC speaking prompts from `.scope/scope.md`.
-**Depends on**: Phase 7
+**Depends on**: Phase 07.1
 **Requirements**: QBANK-01, QBANK-02, QBANK-03, QBANK-04, QBANK-05, ARCH-05
 **Success Criteria** (what must be TRUE):
   1. Shared contracts model exam type, speaking part/task type, prompt text, cue-card bullets, topic/theme, prep time, response time, and scoring metadata.

@@ -2,16 +2,16 @@
 gsd_state_version: 1.0
 milestone: v1.1
 milestone_name: milestone
-status: verifying
-stopped_at: Phase 7 verified; security review pending
-last_updated: "2026-05-11T03:17:42Z"
-last_activity: 2026-05-11 -- Phase 07 E2E verification completed
+status: planning
+stopped_at: Phase 07.1 inserted for ground-up shadcn UI rebuild
+last_updated: "2026-05-11T04:01:57.136Z"
+last_activity: 2026-05-11 -- Phase 07.1 inserted for shadcn rebuild
 progress:
-  total_phases: 9
+  total_phases: 10
   completed_phases: 0
   total_plans: 5
-  completed_plans: 5
-  percent: 100
+  completed_plans: 4
+  percent: 80
 ---
 
 # Project State
@@ -21,14 +21,14 @@ progress:
 See: .planning/PROJECT.md (updated 2026-05-08)
 
 **Core value:** Vietnamese learners can practice realistic IELTS/TOEIC speaking tasks, receive strict evidence-based feedback, and know exactly what to improve next.
-**Current focus:** Phase 07 — comprehensive-ui-ux-redesign-design-system
+**Current focus:** Phase 07.1 — ground-up-shadcn-ui-rebuild
  
 ## Current Position
 
-Phase: 07 (comprehensive-ui-ux-redesign-design-system) — VERIFYING
-Plan: 5 of 5
-Status: Phase 07 verified; security review pending before phase transition
-Last activity: 2026-05-11 -- Phase 07 E2E verification completed
+Phase: 07.1 (ground-up-shadcn-ui-rebuild) — PLANNING
+Plan: 0 of TBD
+Status: Urgent shadcn UI rebuild inserted; research and planning needed before Phase 8
+Last activity: 2026-05-11 -- Phase 07.1 inserted for shadcn rebuild
 
 ## Performance Metrics
 
@@ -73,6 +73,7 @@ Last activity: 2026-05-11 -- Phase 07 E2E verification completed
 - Phase 5 edited: deferred auth to backlog; Phase 5 now saved-analysis persistence service
 - Milestone v1.1 planned from `.scope/scope.md`: question bank, timed IELTS practice, strict rubric evaluation, saved reports, and TOEIC scaffold.
 - Phase 7 inserted as comprehensive UI/UX redesign before exam-practice phases; prior v1.1 phases renumbered to 8-12.
+- Phase 07.1 inserted after Phase 7: Ground-Up Shadcn UI Rebuild (URGENT)
 
 ### Decisions
 
@@ -112,6 +113,6 @@ Items acknowledged and carried forward from previous milestone close:
 
 ## Session Continuity
 
-Last session: 2026-05-11T03:17:42Z
-Stopped at: Phase 7 verified; security review pending
-Resume file: .planning/phases/07-comprehensive-ui-ux-redesign-design-system/07-VERIFICATION.md
+Last session: 2026-05-11T04:01:57.124Z
+Stopped at: Phase 07.1 inserted for ground-up shadcn UI rebuild
+Resume file: .planning/phases/07.1-ground-up-shadcn-ui-rebuild
