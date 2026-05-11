@@ -76,7 +76,10 @@ export function SavedSessionsPanel({
     try {
       const response = await fetch("/api/saved-sessions", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          "X-Localspeak-Owner-Key": ownerKey,
+        },
         body: JSON.stringify(body),
       });
       if (!response.ok) throw new Error(`Save failed with status ${response.status}`);
