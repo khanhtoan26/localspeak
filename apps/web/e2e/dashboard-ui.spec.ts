@@ -37,7 +37,7 @@ test("polished dashboard leads with results and keeps secondary controls quiet",
   await page.getByRole("tab", { name: "IELTS Analysis" }).click();
   await expect(page.getByRole("button", { name: "Get AI Feedback" })).toBeVisible();
 
-  await page.getByRole("button", { name: "Live Audio Practice" }).click();
+  await page.getByRole("button", { name: /Live Audio/i }).last().click();
   await expect(page.getByLabel("Reference sentence")).toBeVisible();
 });
 
@@ -57,7 +57,7 @@ test("mobile JSON layout stays within the same phone shell as live audio", async
   }));
   expect(jsonWidth.scrollWidth).toBeLessThanOrEqual(jsonWidth.clientWidth);
 
-  await page.getByRole("button", { name: "Live Audio Practice" }).click();
+  await page.getByRole("button", { name: /Live Audio/i }).last().click();
   await expect(page.getByLabel("Reference sentence")).toBeVisible();
   const audioWidth = await page.evaluate(() => ({
     clientWidth: document.documentElement.clientWidth,

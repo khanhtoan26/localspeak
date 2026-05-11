@@ -39,6 +39,12 @@ describe("Home page mode switch", () => {
     expect(screen.queryByText(/Gemini Live/i)).not.toBeInTheDocument();
   });
 
+  it("renders a single content panel instance across responsive layouts", () => {
+    render(<Home />);
+
+    expect(screen.getAllByLabelText("Speech assessment JSON input")).toHaveLength(1);
+  });
+
   it("switches aria-current when clicking audio nav item", () => {
     render(<Home />);
 

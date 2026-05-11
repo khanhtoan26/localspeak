@@ -61,13 +61,12 @@ export default function Home() {
 
   return (
     <div className="min-h-screen bg-background">
-      {/* Desktop layout: sidebar-left grid. hidden on mobile. */}
       <div
-        className="hidden sm:grid grid-cols-[minmax(180px,220px)_minmax(0,1fr)]
-                    items-start gap-4 max-w-[1200px] mx-auto p-6"
+        className="min-h-screen sm:grid sm:grid-cols-[minmax(180px,220px)_minmax(0,1fr)]
+                    sm:items-start sm:gap-4 sm:max-w-[1200px] sm:mx-auto sm:p-6"
       >
         <aside
-          className="flex flex-col sticky top-6 self-start
+          className="hidden sm:flex flex-col sticky top-6 self-start
                       bg-sidebar rounded-[18px] p-3 gap-2"
         >
           <p className="font-display text-3xl text-foreground px-1 pb-1">
@@ -95,7 +94,7 @@ export default function Home() {
             />
           </nav>
         </aside>
-        <main className="min-w-0 py-6">
+        <main className="min-w-0 p-4 pb-20 sm:p-0 sm:py-6">
           <div hidden={mode !== "json"}>
             <JsonAnalysisPanel />
           </div>
@@ -105,36 +104,25 @@ export default function Home() {
         </main>
       </div>
 
-      {/* Mobile layout: single column + fixed bottom nav. hidden on desktop. */}
-      <div className="sm:hidden flex flex-col min-h-screen pb-16">
-        <main className="flex-1 min-w-0 p-4">
-          <div hidden={mode !== "json"}>
-            <JsonAnalysisPanel />
-          </div>
-          <div hidden={mode !== "audio"}>
-            <AudioModePanel />
-          </div>
-        </main>
-        <nav
-          aria-label="Main navigation"
-          className="fixed bottom-0 left-0 right-0 z-50
-                     flex h-16 border-t border-border bg-card
-                     pb-[env(safe-area-inset-bottom)]"
-        >
-          <BottomNavItem
-            icon={FileJson}
-            label="JSON Analysis"
-            active={mode === "json"}
-            onClick={() => setMode("json")}
-          />
-          <BottomNavItem
-            icon={Mic}
-            label="Live Audio"
-            active={mode === "audio"}
-            onClick={() => setMode("audio")}
-          />
-        </nav>
-      </div>
+      <nav
+        aria-label="Main navigation"
+        className="sm:hidden fixed bottom-0 left-0 right-0 z-50
+                   flex h-16 border-t border-border bg-card
+                   pb-[env(safe-area-inset-bottom)]"
+      >
+        <BottomNavItem
+          icon={FileJson}
+          label="JSON Analysis"
+          active={mode === "json"}
+          onClick={() => setMode("json")}
+        />
+        <BottomNavItem
+          icon={Mic}
+          label="Live Audio"
+          active={mode === "audio"}
+          onClick={() => setMode("audio")}
+        />
+      </nav>
     </div>
   );
 }
