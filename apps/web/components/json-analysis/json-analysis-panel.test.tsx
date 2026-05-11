@@ -321,7 +321,7 @@ describe("JsonAnalysisPanel", () => {
     renderPanel();
 
     expect(
-      screen.getByRole("heading", { name: "Analyze speech assessment JSON" }),
+      screen.getByRole("heading", { name: "Find the one practice move that matters." }),
     ).toBeInTheDocument();
     expect(screen.getByText("JSON Mode")).toBeInTheDocument();
     expect(

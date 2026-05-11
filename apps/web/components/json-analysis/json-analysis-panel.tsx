@@ -387,20 +387,22 @@ export function JsonAnalysisPanel() {
   );
 
   return (
-    <section className="flex flex-col gap-4" aria-label="JSON analysis dashboard">
+    <section className="flex flex-col gap-5" aria-label="JSON analysis dashboard">
       <section
-        className="flex flex-col gap-4"
+        className="flex flex-col gap-5"
         aria-label="JSON analysis"
       >
-        <header className="pt-2 pb-1">
-          <span className="inline-flex items-center rounded-full bg-sidebar text-primary text-[11px] font-semibold uppercase tracking-[0.06em] px-2 py-1">JSON Mode</span>
-          <h1 className="font-display text-3xl text-foreground mt-4 mb-2">
-            Analyze speech assessment JSON
+        <header className="rounded-[24px] border border-border bg-card/80 p-5 shadow-sm">
+          <span className="inline-flex items-center rounded-full bg-primary/10 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.06em] text-primary">
+            JSON Mode
+          </span>
+          <h1 className="font-display text-4xl leading-none tracking-[-0.04em] text-foreground mt-4 mb-3">
+            Find the one practice move that matters.
           </h1>
-          <p className="text-base text-muted-foreground m-0">
+          <p className="max-w-[760px] text-base leading-7 text-muted-foreground m-0">
             Paste a speech assessment response, load the sample, or upload a
             JSON file to preview deterministic pronunciation and fluency
-            metrics.
+            metrics. The result leads with the highest-impact next drill.
           </p>
         </header>
 
@@ -436,7 +438,7 @@ export function JsonAnalysisPanel() {
               </Card>
             ) : null}
             <SummaryMetricCards summary={analysisState.result.summary} />
-            <div className="flex flex-col gap-4 min-w-0">
+            <div id="analysis-details" className="flex flex-col gap-4 min-w-0">
               <ResultTabs
                 analysis={analysisState.result}
                 aiCoachState={aiCoachState}
@@ -553,14 +555,40 @@ function PracticePriorityCard({
   const priority = derivePracticePriority(analysis);
 
   return (
-    <Card className="p-5 min-w-0 bg-sidebar border-border" aria-labelledby="json-priority-title">
-      <p className="inline-flex items-center rounded-full bg-background text-primary text-[11px] font-semibold uppercase tracking-[0.06em] px-2 py-1 mb-2">IELTS Coach</p>
-      <h2 id="json-priority-title" className="text-xl font-semibold text-foreground m-0">
-        What should I practice next?
-      </h2>
-      <p className="font-display text-2xl text-foreground mt-3 mb-1">{priority.priority}</p>
-      <p className="text-base text-muted-foreground m-0">{priority.reason}</p>
-    </Card>
+      <Card
+        className="relative overflow-hidden border-foreground bg-foreground p-6 text-card shadow-[0_24px_70px_rgba(35,30,23,0.18)] sm:p-7"
+        aria-labelledby="json-priority-title"
+      >
+        <div className="pointer-events-none absolute -right-20 -top-24 h-72 w-72 rounded-full bg-primary/25 blur-3xl" />
+        <div className="relative">
+          <p className="inline-flex items-center rounded-full bg-card/10 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.06em] text-[#f4eee5]">
+            Highest impact next
+          </p>
+          <h2
+            id="json-priority-title"
+            className="mt-5 text-sm font-semibold uppercase tracking-[0.08em] text-[#ded6ca]"
+          >
+            What should I practice next?
+          </h2>
+          <p className="font-display text-4xl leading-[0.98] tracking-[-0.04em] text-card mt-3 mb-3">
+            {priority.priority}
+          </p>
+          <p className="max-w-[760px] text-base leading-7 text-[#ded6ca] m-0">
+            {priority.reason}
+          </p>
+          <div className="mt-5 flex flex-wrap gap-3">
+            <a
+              href="#analysis-details"
+              className="inline-flex min-h-[44px] items-center justify-center rounded-full bg-card px-5 text-sm font-semibold text-foreground transition-colors hover:bg-card/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+            >
+              Review evidence
+            </a>
+            <span className="inline-flex min-h-[44px] items-center rounded-full border border-card/15 px-5 text-sm font-semibold text-[#f4eee5]">
+              5-minute focused drill
+            </span>
+          </div>
+        </div>
+      </Card>
   );
 }
 

@@ -16,13 +16,19 @@ test("polished dashboard leads with results and keeps secondary controls quiet",
   await mockDashboardApi(page);
 
   await page.goto("/");
+  await expect(
+    page.getByRole("heading", { name: "Know exactly what to practice next." }),
+  ).toBeVisible();
+  await expect(page.getByText("Premium coach", { exact: true })).toBeVisible();
   await expect(page.getByRole("button", { name: "JSON Analysis" }).first()).toHaveAttribute(
     "aria-current",
     "page",
   );
 
   await completeJsonAnalysis(page);
+  await expect(page.getByText("Highest impact next")).toBeVisible();
   await expect(page.getByText("Start with the TH / theta sound pattern.")).toBeVisible();
+  await expect(page.getByRole("link", { name: "Review evidence" })).toBeVisible();
   await expect(page.getByTestId("summary-metric-label")).toHaveText([
     "Pronunciation",
     "Pronunciation Band",

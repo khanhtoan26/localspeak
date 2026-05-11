@@ -208,7 +208,7 @@ test.describe("Accessibility baseline (UIX-07)", () => {
         color: labelStyle.color,
       };
     });
-    expectRgb(sidebarColors.backgroundColor, [241, 237, 228]);
+    expectRgb(sidebarColors.backgroundColor, [22, 21, 19]);
     expect(contrastRatio(sidebarColors.color, sidebarColors.backgroundColor)).toBeGreaterThanOrEqual(4.5);
 
     const desktopActiveNavColors = await page

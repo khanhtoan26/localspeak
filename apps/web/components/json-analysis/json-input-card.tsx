@@ -1,6 +1,7 @@
 import type { ChangeEvent } from "react";
 import { JSON_ANALYSIS_MAX_BYTES } from "@localspeak/contracts";
 import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
 import { Textarea } from "@/components/ui/textarea";
 
 const FILE_TOO_LARGE_COPY =
@@ -61,18 +62,27 @@ export function JsonInputCard({
   };
 
   return (
-    <section className="flex flex-col gap-4">
+    <Card className="flex flex-col gap-4 rounded-[24px] bg-card/90 p-5 shadow-sm">
       <div className="flex items-start justify-between gap-4">
-        <h2 className="text-xl font-semibold text-foreground m-0">Speech assessment JSON</h2>
-        <span className="inline-flex items-center rounded-full bg-sidebar text-muted-foreground text-[11px] font-semibold uppercase tracking-[0.06em] px-2 py-1 shrink-0">Primary input</span>
+        <div>
+          <h2 className="text-xl font-semibold text-foreground m-0">
+            Speech assessment JSON
+          </h2>
+          <p className="mt-1 text-sm text-muted-foreground">
+            Validate first, then generate the coach recommendation.
+          </p>
+        </div>
+        <span className="inline-flex shrink-0 items-center rounded-full bg-primary/10 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.06em] text-primary">
+          Primary input
+        </span>
       </div>
 
-      <label className="block font-mono text-[11px] font-semibold uppercase tracking-[0.06em] text-subtle mt-4" htmlFor="speech-json-input">
+      <label className="block font-mono text-[11px] font-semibold uppercase tracking-[0.06em] text-muted-foreground mt-4" htmlFor="speech-json-input">
         Speech assessment JSON input
       </label>
       <Textarea
         id="speech-json-input"
-        className="font-mono min-h-[280px] resize-y bg-input w-full max-w-full"
+        className="font-mono min-h-[240px] resize-y bg-input w-full max-w-full rounded-[18px]"
         aria-label="Speech assessment JSON input"
         placeholder="Paste the full speech assessment JSON here."
         value={jsonText}
@@ -103,7 +113,7 @@ export function JsonInputCard({
 
       {fileError ? <p className="text-sm text-danger font-medium">{fileError}</p> : null}
 
-      <div className="flex flex-wrap items-center gap-2 mt-2 font-mono text-[11px] text-subtle" aria-label="JSON input metadata">
+      <div className="flex flex-wrap items-center gap-2 mt-2 font-mono text-[11px] text-muted-foreground" aria-label="JSON input metadata">
         <span>{jsonText.length} characters</span>
         {fileName ? <span>{fileName}</span> : null}
         <span>validation: {lastValidationStatus}</span>
@@ -120,6 +130,6 @@ export function JsonInputCard({
         </Button>
         <p className="text-sm text-muted-foreground">{canAnalyze ? "Ready to analyze." : disabledHelper}</p>
       </div>
-    </section>
+    </Card>
   );
 }

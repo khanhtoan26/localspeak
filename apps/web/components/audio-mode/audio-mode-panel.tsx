@@ -97,9 +97,21 @@ export function AudioModePanel() {
     : transcript.interim || "";
 
   return (
-    <div className="flex flex-col gap-4 rounded-[18px] border border-border bg-card p-4">
+    <div className="flex flex-col gap-5 rounded-[28px] border border-border bg-card/90 p-5 shadow-sm sm:p-6">
+      <header>
+        <span className="inline-flex items-center rounded-full bg-primary/10 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.06em] text-primary">
+          Live Audio
+        </span>
+        <h1 className="mt-4 font-display text-4xl leading-none tracking-[-0.04em] text-foreground">
+          Practice the sentence out loud.
+        </h1>
+        <p className="mt-3 max-w-[720px] text-base leading-7 text-muted-foreground">
+          Record a focused attempt, watch the transcript stream in, and compare
+          the pronunciation score against your target sentence.
+        </p>
+      </header>
       {/* Reference text input */}
-      <label htmlFor="reference-text" className="block font-mono text-[11px] font-semibold uppercase tracking-[0.06em] text-subtle">
+      <label htmlFor="reference-text" className="block font-mono text-[11px] font-semibold uppercase tracking-[0.06em] text-muted-foreground">
         Reference sentence
       </label>
       <Input
