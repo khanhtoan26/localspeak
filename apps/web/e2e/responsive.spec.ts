@@ -1,6 +1,40 @@
 import { test, expect } from "@playwright/test";
 import { mockDashboardApi } from "./fixtures/analysis";
 
+type Rgb = [number, number, number];
+
+function parseRgb(color: string): Rgb {
+  const match = color.match(/^rgba?\((\d+),\s*(\d+),\s*(\d+)/);
+  if (!match) {
+    throw new Error(`Expected rgb/rgba color, received: ${color}`);
+  }
+  return [Number(match[1]), Number(match[2]), Number(match[3])];
+}
+
+function relativeLuminance([red, green, blue]: Rgb) {
+  const [r, g, b] = [red, green, blue].map((channel) => {
+    const value = channel / 255;
+    return value <= 0.03928
+      ? value / 12.92
+      : Math.pow((value + 0.055) / 1.055, 2.4);
+  });
+
+  return 0.2126 * r + 0.7152 * g + 0.0722 * b;
+}
+
+function contrastRatio(foreground: string, background: string) {
+  const fg = relativeLuminance(parseRgb(foreground));
+  const bg = relativeLuminance(parseRgb(background));
+  const lighter = Math.max(fg, bg);
+  const darker = Math.min(fg, bg);
+
+  return (lighter + 0.05) / (darker + 0.05);
+}
+
+function expectRgb(color: string, expected: Rgb) {
+  expect(parseRgb(color)).toEqual(expected);
+}
+
 // =============================================================================
 // GROUP 1: Navigation visibility (UIX-01)
 // =============================================================================
@@ -149,6 +183,71 @@ test.describe("Accessibility baseline (UIX-07)", () => {
     // First Tab should focus the first interactive element — typically the first nav button
     const focused = await page.evaluate(() => document.activeElement?.textContent?.trim());
     expect(typeof focused).toBe("string"); // something is focused
+  });
+
+  test("design tokens render with readable contrast", async ({ page }) => {
+    await page.goto("/");
+
+    const bodyColors = await page.evaluate(() => {
+      const bodyStyle = getComputedStyle(document.body);
+      return {
+        backgroundColor: bodyStyle.backgroundColor,
+        color: bodyStyle.color,
+      };
+    });
+    expectRgb(bodyColors.backgroundColor, [250, 250, 247]);
+    expectRgb(bodyColors.color, [22, 21, 19]);
+    expect(contrastRatio(bodyColors.color, bodyColors.backgroundColor)).toBeGreaterThanOrEqual(4.5);
+
+    const sidebarColors = await page.getByText("Practice Tools").evaluate((element) => {
+      const labelStyle = getComputedStyle(element);
+      const sidebar = element.closest("aside");
+      if (!sidebar) throw new Error("Practice Tools label is not inside the sidebar");
+      return {
+        backgroundColor: getComputedStyle(sidebar).backgroundColor,
+        color: labelStyle.color,
+      };
+    });
+    expectRgb(sidebarColors.backgroundColor, [241, 237, 228]);
+    expect(contrastRatio(sidebarColors.color, sidebarColors.backgroundColor)).toBeGreaterThanOrEqual(4.5);
+
+    const desktopActiveNavColors = await page
+      .getByRole("button", { name: "JSON Analysis" })
+      .first()
+      .evaluate((element) => {
+        const style = getComputedStyle(element);
+        const activeMarker = getComputedStyle(element, "::before");
+        return {
+          backgroundColor: style.backgroundColor,
+          color: style.color,
+          markerColor: activeMarker.backgroundColor,
+        };
+      });
+    expectRgb(desktopActiveNavColors.backgroundColor, [255, 255, 255]);
+    expectRgb(desktopActiveNavColors.markerColor, [217, 119, 87]);
+    expect(contrastRatio(desktopActiveNavColors.color, desktopActiveNavColors.backgroundColor))
+      .toBeGreaterThanOrEqual(4.5);
+
+    await page.setViewportSize({ width: 390, height: 844 });
+    await page.goto("/");
+    const mobileActiveNavColors = await page
+      .getByRole("button", { name: "JSON Analysis" })
+      .last()
+      .evaluate((element) => {
+        const style = getComputedStyle(element);
+        const marker = getComputedStyle(element, "::before");
+        const nav = element.closest("nav");
+        if (!nav) throw new Error("Mobile nav item is not inside a nav");
+        return {
+          backgroundColor: getComputedStyle(nav).backgroundColor,
+          color: style.color,
+          markerColor: marker.backgroundColor,
+        };
+      });
+    expectRgb(mobileActiveNavColors.backgroundColor, [255, 255, 255]);
+    expectRgb(mobileActiveNavColors.markerColor, [217, 119, 87]);
+    expect(contrastRatio(mobileActiveNavColors.color, mobileActiveNavColors.backgroundColor))
+      .toBeGreaterThanOrEqual(4.5);
   });
 });
 
