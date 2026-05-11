@@ -89,13 +89,31 @@ function getScoreLevel(score: number): "good" | "okay" | "weak" {
 
 export function AudioModePanel() {
   const [referenceText, setReferenceText] = useState("");
+  const [attemptReferenceText, setAttemptReferenceText] = useState<string | null>(null);
   const { status, transcript, error, analyserNode, start, stop } =
     useDeepgramSession(referenceText);
 
+  const normalizedReferenceText = referenceText.trim();
+  const isCurrentAttemptReference =
+    attemptReferenceText !== null && normalizedReferenceText === attemptReferenceText;
+
   const pronunciationResult = useMemo<PronunciationResult | null>(() => {
-    if (status !== "complete" || transcript.words.length === 0) return null;
-    return scorePronunciation(transcript.words, referenceText);
-  }, [status, transcript.words, referenceText]);
+    if (
+      status !== "complete" ||
+      transcript.words.length === 0 ||
+      !attemptReferenceText ||
+      !isCurrentAttemptReference
+    ) {
+      return null;
+    }
+
+    return scorePronunciation(transcript.words, attemptReferenceText);
+  }, [status, transcript.words, attemptReferenceText, isCurrentAttemptReference]);
+
+  const handleStart = () => {
+    setAttemptReferenceText(normalizedReferenceText);
+    void start();
+  };
 
   // Build display text: final + interim
   const displayText = transcript.final
@@ -103,7 +121,7 @@ export function AudioModePanel() {
       ? `${transcript.final} ${transcript.interim}`
       : transcript.final
     : transcript.interim || "";
-  const hasReferenceText = Boolean(referenceText.trim());
+  const hasReferenceText = Boolean(normalizedReferenceText);
   const readinessStatus = !hasReferenceText
     ? "empty"
     : status === "recording"
@@ -159,7 +177,7 @@ export function AudioModePanel() {
       <RecordingControl
         status={status}
         disabled={!hasReferenceText}
-        onStart={() => void start()}
+        onStart={handleStart}
         onStop={stop}
         analyserNode={analyserNode}
         disabledMessage="Enter one sentence first. Recording stays disabled until LocalSpeak knows what you want to practice."

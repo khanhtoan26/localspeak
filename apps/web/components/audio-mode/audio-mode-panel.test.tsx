@@ -83,6 +83,7 @@ describe("AudioModePanel", () => {
     fireEvent.change(screen.getByLabelText("Reference sentence"), {
       target: { value: "The trees stood near the street." },
     });
+    fireEvent.click(screen.getByRole("button", { name: "Start Recording" }));
 
     setSession({
       status: "complete",
@@ -103,5 +104,39 @@ describe("AudioModePanel", () => {
 
     expect(screen.getByText("Pronunciation result")).toBeInTheDocument();
     expect(screen.getByLabelText("Word pronunciation scores")).toBeInTheDocument();
+  });
+
+  it("hides a completed Pronunciation result when the reference changes", () => {
+    const { rerender } = render(<AudioModePanel />);
+
+    fireEvent.change(screen.getByLabelText("Reference sentence"), {
+      target: { value: "The trees stood near the street." },
+    });
+    fireEvent.click(screen.getByRole("button", { name: "Start Recording" }));
+
+    setSession({
+      status: "complete",
+      transcript: {
+        interim: "",
+        final: "The trees stood near the street.",
+        words: [
+          { word: "The", confidence: 0.98, start: 0, end: 0.1 },
+          { word: "trees", confidence: 0.92, start: 0.2, end: 0.6 },
+          { word: "stood", confidence: 0.9, start: 0.7, end: 1.0 },
+          { word: "near", confidence: 0.95, start: 1.1, end: 1.3 },
+          { word: "the", confidence: 0.97, start: 1.4, end: 1.5 },
+          { word: "street", confidence: 0.93, start: 1.6, end: 2.0 },
+        ],
+      },
+    });
+    rerender(<AudioModePanel />);
+
+    expect(screen.getByText("Pronunciation result")).toBeInTheDocument();
+
+    fireEvent.change(screen.getByLabelText("Reference sentence"), {
+      target: { value: "A different sentence for a new attempt." },
+    });
+
+    expect(screen.queryByText("Pronunciation result")).not.toBeInTheDocument();
   });
 });
