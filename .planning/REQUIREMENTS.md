@@ -51,7 +51,7 @@ Requirements for the next milestone. These are derived from `.scope/scope.md` an
 - [x] **UIX-02**: User can understand the primary next action on every major screen without competing controls or crowded panels.
 - [x] **UIX-03**: UI uses a documented design system for spacing, typography, color, cards, buttons, forms, tabs, sidebars, timers, recording controls, feedback panels, and empty/loading/error states.
 - [x] **UIX-04**: JSON Analysis is redesigned around learner outcomes: priority action first, readable metrics, compact analysis sections, and secondary technical/input controls.
-- [ ] **UIX-05**: Live Audio Practice is redesigned around a simple speaking flow: prompt/reference text, recording state, timer/waveform, transcript, and feedback/readiness states.
+- [x] **UIX-05**: Live Audio Practice is redesigned around a simple speaking flow: prompt/reference text, recording state, timer/waveform, transcript, and feedback/readiness states.
 - [x] **UIX-06**: The app is responsive at phone width without horizontal overflow, oversized cards, or hidden primary actions.
 - [x] **UIX-07**: The redesigned UI meets accessibility basics for keyboard navigation, focus states, semantic landmarks, touch targets, contrast, and screen-reader labels.
 - [x] **UIX-08**: Playwright or equivalent UI coverage verifies core responsive flows and guards against regressions in navigation, JSON analysis, live audio, and empty/error states.
@@ -158,7 +158,7 @@ Tracked from `.scope/scope.md`, but intentionally deferred beyond this milestone
 | UIX-02 | Phase 7 | Complete |
 | UIX-03 | Phase 7 | Complete |
 | UIX-04 | Phase 7 | Complete |
-| UIX-05 | Phase 7 | Pending |
+| UIX-05 | Phase 7 | Complete |
 | UIX-06 | Phase 7 | Complete |
 | UIX-07 | Phase 7 | Complete |
 | UIX-08 | Phase 7 | Complete |
