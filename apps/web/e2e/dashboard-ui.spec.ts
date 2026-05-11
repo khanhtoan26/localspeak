@@ -27,9 +27,21 @@ test("shadcn app shell exposes enabled practice surfaces and disabled future sur
   await expect(page.getByText("IELTS speaking practice", { exact: true })).toBeVisible();
   await expect(page.getByRole("button", { name: "JSON Analysis" })).toBeVisible();
   await expect(page.getByRole("button", { name: "Live Audio Practice" })).toBeVisible();
-  await expect(page.getByRole("button", { name: /IELTS Practice/i })).toBeDisabled();
-  await expect(page.getByRole("button", { name: /TOEIC Practice/i })).toBeDisabled();
+  await expect(page.getByRole("button", { name: /IELTS Practice/i })).toHaveAttribute(
+    "aria-disabled",
+    "true",
+  );
+  await expect(page.getByRole("button", { name: /TOEIC Practice/i })).toHaveAttribute(
+    "aria-disabled",
+    "true",
+  );
   await expect(page.getByText("Coming soon").first()).toBeVisible();
+
+  await page.getByRole("button", { name: /IELTS Practice/i }).click({ force: true });
+  await expect(page.getByRole("button", { name: "JSON Analysis" })).toHaveAttribute(
+    "aria-current",
+    "page",
+  );
 
   await expect(page.getByText("Premium coach", { exact: true })).toHaveCount(0);
   await expect(page.getByText("Premium pronunciation coach")).toHaveCount(0);

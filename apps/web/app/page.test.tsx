@@ -46,8 +46,10 @@ describe("Home page mode switch", () => {
     const ieltsButton = screen.getByRole("button", { name: /IELTS Practice/i });
     const toeicButton = screen.getByRole("button", { name: /TOEIC Practice/i });
 
-    expect(ieltsButton).toBeDisabled();
-    expect(toeicButton).toBeDisabled();
+    expect(ieltsButton).toHaveAttribute("aria-disabled", "true");
+    expect(toeicButton).toHaveAttribute("aria-disabled", "true");
+    expect(ieltsButton).toBeEnabled();
+    expect(toeicButton).toBeEnabled();
     expect(screen.getAllByText("Coming soon").length).toBeGreaterThanOrEqual(2);
 
     fireEvent.click(ieltsButton);

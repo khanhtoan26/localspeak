@@ -83,7 +83,7 @@ export function AppSidebar({
                 <SidebarMenuItem key={item.id}>
                   <SidebarMenuButton
                     aria-disabled="true"
-                    disabled
+                    onClick={(event) => event.preventDefault()}
                     tooltip={item.label}
                     type="button"
                   >

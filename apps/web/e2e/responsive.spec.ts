@@ -68,10 +68,22 @@ test("desktop Sidebar shell exposes shadcn navigation without the old bottom nav
 
   await expect(page.getByRole("button", { name: "JSON Analysis" })).toBeVisible();
   await expect(page.getByRole("button", { name: "Live Audio Practice" })).toBeVisible();
-  await expect(page.getByRole("button", { name: /IELTS Practice/i })).toBeDisabled();
-  await expect(page.getByRole("button", { name: /TOEIC Practice/i })).toBeDisabled();
+  await expect(page.getByRole("button", { name: /IELTS Practice/i })).toHaveAttribute(
+    "aria-disabled",
+    "true",
+  );
+  await expect(page.getByRole("button", { name: /TOEIC Practice/i })).toHaveAttribute(
+    "aria-disabled",
+    "true",
+  );
   await expect(page.getByRole("button", { name: "Live Audio", exact: true })).toHaveCount(0);
   await expect(page.locator("nav.fixed, nav[class*='bottom-0'], nav[class*='fixed']")).toHaveCount(0);
+
+  await page.locator('[data-sidebar="trigger"]').click();
+  await page.getByRole("button", { name: /IELTS Practice/i }).hover();
+  await expect(
+    page.locator('[data-slot="tooltip-content"]').filter({ hasText: "IELTS Practice" }),
+  ).toBeVisible();
 });
 
 test("mobile sidebar trigger opens future-aware navigation at 390px without overflow", async ({
@@ -85,8 +97,14 @@ test("mobile sidebar trigger opens future-aware navigation at 390px without over
 
   await expect(page.getByRole("button", { name: "JSON Analysis" })).toBeVisible();
   await expect(page.getByRole("button", { name: "Live Audio Practice" })).toBeVisible();
-  await expect(page.getByRole("button", { name: /IELTS Practice/i })).toBeDisabled();
-  await expect(page.getByRole("button", { name: /TOEIC Practice/i })).toBeDisabled();
+  await expect(page.getByRole("button", { name: /IELTS Practice/i })).toHaveAttribute(
+    "aria-disabled",
+    "true",
+  );
+  await expect(page.getByRole("button", { name: /TOEIC Practice/i })).toHaveAttribute(
+    "aria-disabled",
+    "true",
+  );
   await expect(page.getByText("Coming soon").first()).toBeVisible();
   await expect(page.getByRole("button", { name: "Live Audio", exact: true })).toHaveCount(0);
   await expect(page.locator("nav.fixed, nav[class*='bottom-0'], nav[class*='fixed']")).toHaveCount(0);
