@@ -116,7 +116,7 @@ export function ValidationPreviewCard({
         </div>
         <IssueList issues={preview.issues} showTechnical={showTechnical} />
         {preview.issueCount > preview.issues.length ? (
-          <p className="font-mono text-[11px] text-subtle mt-2">
+            <p className="font-mono text-[11px] text-muted-foreground mt-2">
             Showing {preview.issues.length} of {preview.issueCount} issues.
           </p>
         ) : null}
@@ -189,7 +189,7 @@ function IssueList({
           <span>path: {issue.path}</span>
           {issue.hint ? <p>{issue.hint}</p> : null}
           {showTechnical && issue.technical ? (
-            <code className="block font-mono text-[11px] text-subtle bg-sidebar rounded p-2 mt-1 break-all">{issue.technical}</code>
+            <code className="block font-mono text-[11px] text-muted-foreground bg-sidebar rounded p-2 mt-1 break-all">{issue.technical}</code>
           ) : null}
         </li>
       ))}
@@ -227,7 +227,7 @@ function TechnicalDetails({
         {showTechnical ? "Hide technical details" : "Show technical details"}
       </Button>
       {showTechnical && children ? (
-        <code className="block font-mono text-[11px] text-subtle bg-sidebar rounded p-2 mt-1 break-all">{children}</code>
+        <code className="block font-mono text-[11px] text-muted-foreground bg-sidebar rounded p-2 mt-1 break-all">{children}</code>
       ) : null}
     </div>
   );

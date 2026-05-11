@@ -193,8 +193,8 @@ export function SavedSessionsPanel({
                   <Card className="p-4 min-w-0 flex items-start justify-between gap-4">
                     <div className="flex flex-col gap-1 min-w-0">
                       <strong className="text-sm font-semibold text-foreground">{session.title ?? "Saved speaking attempt"}</strong>
-                      <span className="font-mono text-[11px] text-subtle">{`JSON Analysis · ${formattedDate}`}</span>
-                      <span className="font-mono text-[11px] text-subtle">
+                      <span className="font-mono text-[11px] text-muted-foreground">{`JSON Analysis · ${formattedDate}`}</span>
+                      <span className="font-mono text-[11px] text-muted-foreground">
                         Band {session.pronunciationBand ?? "-"} / Fluency{" "}
                         {session.fluencyBand ?? "-"} / {session.wpm ?? "-"} WPM
                       </span>

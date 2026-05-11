@@ -7,21 +7,21 @@ const severityLabels: Record<PauseSeverity, string> = {
 };
 
 const segmentFill: Record<PauseSeverity, string> = {
-  natural: "#3f6b4f",
-  noticeable: "#b88a3e",
-  critical: "#9f2d20",
+  natural: "var(--color-success)",
+  noticeable: "var(--color-warning)",
+  critical: "var(--color-destructive)",
 };
 
 const legendDotColor: Record<PauseSeverity, string> = {
-  natural: "bg-[#3f6b4f]",
-  noticeable: "bg-[#b88a3e]",
-  critical: "bg-[#9f2d20]",
+  natural: "bg-success",
+  noticeable: "bg-warning",
+  critical: "bg-destructive",
 };
 
 const pauseRowColor: Record<PauseSeverity, string> = {
-  natural: "border-[#d9e8dd] bg-[#f0f7f2]",
-  noticeable: "border-[#eadcb8] bg-[#fdf7ec]",
-  critical: "border-[#edd0ca] bg-[#fdf1ee]",
+  natural: "border-success-border bg-success/10",
+  noticeable: "border-warning-border bg-warning/10",
+  critical: "border-destructive-border bg-destructive/10",
 };
 
 type PausesTabProps = {
@@ -50,7 +50,7 @@ export function PausesTab({ pauses, pauseRatio }: PausesTabProps) {
   return (
     <section className="flex flex-col gap-4">
       <h2 className="text-xl font-semibold text-foreground m-0">Pause Analysis</h2>
-      <div className="grid grid-cols-2 sm:grid-cols-4 gap-2" aria-label="Pause summary">
+      <div className="grid min-w-0 grid-cols-1 gap-2 sm:grid-cols-2 lg:grid-cols-4" aria-label="Pause summary">
         <div className="flex flex-col gap-1 rounded-xl bg-sidebar p-3 text-sm">
           <span>Total pause time</span>
           <strong>{totalPauseTime.toFixed(2)}s</strong>

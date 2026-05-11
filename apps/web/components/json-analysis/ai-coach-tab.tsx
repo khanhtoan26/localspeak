@@ -54,7 +54,7 @@ export function AiCoachTab({
 
   if (state.status === "error") {
     return (
-      <Card className="border-[#edd0ca] p-4 flex flex-col gap-3">
+      <Card className="flex flex-col gap-3 border-destructive-border p-4">
         <h2 className="text-xl font-semibold text-foreground m-0">AI feedback unavailable</h2>
         <p className="text-base text-muted-foreground">
           {state.message}
@@ -74,14 +74,14 @@ export function AiCoachTab({
 
       <div className="grid grid-cols-2 gap-2">
         <Card className="p-3 flex flex-col gap-1">
-          <span className="font-mono text-[11px] font-semibold uppercase tracking-[0.06em] text-subtle">Pronunciation Band</span>
-          <span className="font-display text-3xl text-foreground">
+          <span className="font-mono text-[11px] font-semibold uppercase tracking-[0.06em] text-muted-foreground">Pronunciation Band</span>
+          <span className="text-3xl font-semibold text-foreground">
             {feedback.pronunciationBand}
           </span>
         </Card>
         <Card className="p-3 flex flex-col gap-1">
-          <span className="font-mono text-[11px] font-semibold uppercase tracking-[0.06em] text-subtle">Fluency Band</span>
-          <span className="font-display text-3xl text-foreground">{feedback.fluencyBand}</span>
+          <span className="font-mono text-[11px] font-semibold uppercase tracking-[0.06em] text-muted-foreground">Fluency Band</span>
+          <span className="text-3xl font-semibold text-foreground">{feedback.fluencyBand}</span>
         </Card>
       </div>
 

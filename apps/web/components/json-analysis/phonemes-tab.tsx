@@ -47,7 +47,7 @@ export function PhonemesTab({ patterns }: PhonemesTabProps) {
               aria-label={`${pattern.arpabet} weakness impact`}
             >
               <span
-                className="block h-full rounded-full bg-danger transition-all"
+                className="block h-full rounded-full bg-destructive transition-all"
                 style={{ width: `${Math.round((1 - pattern.averageScore) * 100)}%` }}
               />
             </div>

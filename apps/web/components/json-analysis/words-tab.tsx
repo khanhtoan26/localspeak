@@ -7,7 +7,7 @@ const bandLabels: Record<WordBand, string> = {
 };
 
 const legendDotColor: Record<WordBand, string> = {
-  weak: "bg-danger",
+  weak: "bg-destructive",
   okay: "bg-warning",
   good: "bg-success",
 };
@@ -15,9 +15,9 @@ const legendDotColor: Record<WordBand, string> = {
 const chipBase = "inline-flex flex-col items-center rounded-xl px-3 py-1.5 text-sm font-medium min-h-[44px] justify-center";
 
 const chipColor: Record<WordBand, string> = {
-  weak: "bg-[#fdf1ee] text-danger border border-[#edd0ca]",
-  okay: "bg-[#fdf7ec] text-warning border border-[#eadcb8]",
-  good: "bg-[#f0f7f2] text-success border border-[#d9e8dd]",
+  weak: "border border-destructive-border bg-destructive/10 text-destructive",
+  okay: "border border-warning-border bg-warning/10 text-warning-foreground",
+  good: "border border-success-border bg-success/10 text-success-foreground",
 };
 
 type WordsTabProps = {
@@ -73,7 +73,7 @@ export function WordsTab({ words }: WordsTabProps) {
           <ol className="flex flex-col gap-2 list-none p-0 m-0">
             {weakWords.map((word) => (
               <li
-                className="flex flex-col gap-1 rounded-xl p-3 text-sm border border-[#edd0ca] bg-[#fdf1ee]"
+                className="flex flex-col gap-1 rounded-xl border border-destructive-border bg-destructive/10 p-3 text-sm"
                 key={`${word.index}-${word.word}-weak`}
               >
                 <strong>{word.word}</strong>
