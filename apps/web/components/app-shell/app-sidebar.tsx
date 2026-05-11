@@ -15,6 +15,7 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
   SidebarRail,
+  useSidebar,
 } from "@/components/ui/sidebar"
 
 type AppSidebarProps = {
@@ -26,6 +27,15 @@ export function AppSidebar({
   activeSurface,
   onSurfaceChange,
 }: AppSidebarProps) {
+  const { isMobile, setOpenMobile } = useSidebar()
+
+  const handleSurfaceChange = (surface: SurfaceId) => {
+    onSurfaceChange(surface)
+    if (isMobile) {
+      setOpenMobile(false)
+    }
+  }
+
   return (
     <Sidebar collapsible="icon" variant="inset">
       <SidebarHeader>
@@ -51,7 +61,7 @@ export function AppSidebar({
                     <SidebarMenuButton
                       aria-current={isActive ? "page" : undefined}
                       isActive={isActive}
-                      onClick={() => onSurfaceChange(item.id)}
+                      onClick={() => handleSurfaceChange(item.id)}
                       tooltip={item.label}
                       type="button"
                     >

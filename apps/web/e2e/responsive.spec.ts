@@ -124,8 +124,8 @@ test("Live Audio Practice stays within 390px and keeps the primary recording act
   await page.goto("/");
   await openMobileSidebar(page);
   await page.getByRole("button", { name: "Live Audio Practice" }).click();
-  await page.keyboard.press("Escape");
 
+  await expect(page.locator('[data-sidebar="sidebar"][data-mobile="true"]')).toBeHidden();
   await expect(page.getByLabel("Reference sentence")).toBeVisible();
   await expect(
     page.getByText(
