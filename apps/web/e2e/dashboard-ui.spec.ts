@@ -114,7 +114,9 @@ async function mockDashboardApi(page: Page) {
   });
   await page.route("**/api/saved-sessions", async (route) => {
     if (route.request().method() === "GET") {
-      await route.fulfill({ json: { sessions: [] } });
+      await route.fulfill({
+        json: { contract: "saved-session-list.v1", sessions: [] },
+      });
       return;
     }
     const timestamp = new Date().toISOString();
