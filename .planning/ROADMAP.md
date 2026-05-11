@@ -16,7 +16,7 @@ v1.0 established the web/backend foundation, deterministic JSON pronunciation an
 - [x] **Phase 5: Saved Analysis Persistence Service (Drizzle + Postgres)** - App can persist and retrieve analysis sessions through a backend service using Drizzle + Postgres.
 - [x] **Phase 6: Learner Dashboard & Analysis Views** - Learner can understand results through dashboard metrics, side navigation, tabs, timelines, word chips, phoneme rankings, saved history, and IELTS analysis UI.
 - [ ] **Phase 7: Comprehensive UI/UX Redesign & Design System** - Rebuild the current app UI into a cohesive, responsive, accessible, learner-centered experience before adding new practice features.
-- [ ] **Phase 07.1: Ground-Up Shadcn UI Rebuild (INSERTED)** - Supersede the rejected Phase 7 frame with a ground-up shadcn/ui app shell, design system, and redesigned JSON/audio surfaces.
+- [x] **Phase 07.1: Ground-Up Shadcn UI Rebuild (INSERTED)** - Supersede the rejected Phase 7 frame with a ground-up shadcn/ui app shell, design system, and redesigned JSON/audio surfaces. (completed 2026-05-11)
 - [ ] **Phase 8: Exam Question Bank & Contracts** - App has shared schemas and seeded IELTS/TOEIC speaking prompts from the scope document.
 - [ ] **Phase 9: Timed IELTS Practice Session Flow** - Learner can select an IELTS prompt, record a timed response, and preserve prompt/transcript/metrics context.
 - [ ] **Phase 10: IELTS Rubric Evaluation API** - Backend can produce and validate strict IELTS examiner JSON across the four official criteria.
@@ -70,7 +70,7 @@ Plans:
   6. Phone-width layout has no horizontal overflow and no hidden primary actions.
   7. Keyboard navigation, focus states, semantic landmarks, touch targets, labels, and contrast are covered.
   8. Unit and Playwright coverage is updated for the new shadcn shell and preserved JSON/audio behavior.
-**Plans:** 4/5 plans executed
+**Plans:** 5/5 plans complete
 
 Plans:
 - [ ] TBD (run /gsd-plan-phase 07.1 to break down)
