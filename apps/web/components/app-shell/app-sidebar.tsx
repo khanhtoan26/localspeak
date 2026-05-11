@@ -43,19 +43,24 @@ export function AppSidebar({
           <SidebarGroupLabel>Practice</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
-              {practiceNav.map((item) => (
-                <SidebarMenuItem key={item.id}>
-                  <SidebarMenuButton
-                    isActive={activeSurface === item.id}
-                    onClick={() => onSurfaceChange(item.id)}
-                    tooltip={item.label}
-                    type="button"
-                  >
-                    <item.icon />
-                    <span>{item.label}</span>
-                  </SidebarMenuButton>
-                </SidebarMenuItem>
-              ))}
+              {practiceNav.map((item) => {
+                const isActive = activeSurface === item.id
+
+                return (
+                  <SidebarMenuItem key={item.id}>
+                    <SidebarMenuButton
+                      aria-current={isActive ? "page" : undefined}
+                      isActive={isActive}
+                      onClick={() => onSurfaceChange(item.id)}
+                      tooltip={item.label}
+                      type="button"
+                    >
+                      <item.icon />
+                      <span>{item.label}</span>
+                    </SidebarMenuButton>
+                  </SidebarMenuItem>
+                )
+              })}
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>
