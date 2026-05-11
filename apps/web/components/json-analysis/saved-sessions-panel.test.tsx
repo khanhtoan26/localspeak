@@ -187,7 +187,7 @@ describe("SavedSessionsPanel", () => {
       />,
     );
 
-    expect(screen.getByText("Saved attempts unavailable")).toBeInTheDocument();
+    expect(screen.getByText("Saved sessions")).toBeInTheDocument();
     expect(
       screen.getByText("This browser cannot create secure local saved-session keys."),
     ).toBeInTheDocument();
@@ -209,7 +209,10 @@ describe("SavedSessionsPanel", () => {
       />,
     );
 
-    expect(screen.getByText("Saved attempts unavailable")).toBeInTheDocument();
+    expect(screen.getByText("Saved sessions")).toBeInTheDocument();
+    expect(
+      screen.getByText("This browser cannot create secure local saved-session keys."),
+    ).toBeInTheDocument();
     expect(fetchMock).not.toHaveBeenCalled();
   });
 });

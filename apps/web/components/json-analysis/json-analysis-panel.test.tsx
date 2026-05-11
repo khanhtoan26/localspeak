@@ -317,17 +317,17 @@ describe("JsonAnalysisPanel", () => {
     vi.unstubAllGlobals();
   });
 
-  it("renders the empty JSON mode input state", () => {
+  it("renders the empty JSON analysis input state", () => {
     renderPanel();
 
     expect(
-      screen.getByRole("heading", { name: "Find the one practice move that matters." }),
+      screen.getByRole("heading", { name: "Add speech assessment JSON" }),
     ).toBeInTheDocument();
-    expect(screen.getByText("JSON Mode")).toBeInTheDocument();
+    expect(screen.getByText("JSON Analysis")).toBeInTheDocument();
     expect(
       screen.getByLabelText("Speech assessment JSON input"),
     ).toBeInTheDocument();
-    expect(screen.getByText("Start with an analysis")).toBeInTheDocument();
+    expect(screen.getByText("Validation preview")).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "Analyze Pronunciation" })).toBeDisabled();
     expect(
       screen.getByText("Paste JSON or load the sample to continue."),
@@ -521,7 +521,7 @@ describe("JsonAnalysisPanel", () => {
       "Clear the pasted JSON and current results? This cannot be undone.",
     );
     expect(screen.getByLabelText("Speech assessment JSON input")).toHaveValue("");
-    expect(screen.getByText("Start with an analysis")).toBeInTheDocument();
+    expect(screen.getByText("Paste JSON or load the sample to continue.")).toBeInTheDocument();
   });
 
   it("keeps malformed backend preview responses out of success UI", async () => {
@@ -606,16 +606,16 @@ describe("JsonAnalysisPanel", () => {
 
     expect(
       screen.getByText(
-        "We couldn't analyze this JSON yet. Check the format and try again.",
+        "We couldn't analyze this JSON. Check the validation preview, then try Analyze Pronunciation again.",
       ),
     ).toBeInTheDocument();
     expect(
-      screen.getByText("Check the validation preview, then try Analyze Pronunciation again."),
+      screen.getByText("The deterministic analysis endpoint did not return a usable result."),
     ).toBeInTheDocument();
     expect(screen.queryByText("Pronunciation percentage")).not.toBeInTheDocument();
   });
 
-  it("renders dashboard priority and exact four primary metrics", async () => {
+  it("renders dashboard priority and primary metrics", async () => {
     renderPanel();
     await previewAndAnalyze(createJsonAnalysisResponseFixture());
 
@@ -624,6 +624,7 @@ describe("JsonAnalysisPanel", () => {
       "Pronunciation Band",
       "Fluency Band",
       "WPM",
+      "Pause Ratio",
     ]);
     expect(screen.getByText("What should I practice next?")).toBeInTheDocument();
     expect(screen.getByText("Start with the TH / θ sound pattern.")).toBeInTheDocument();
@@ -639,7 +640,7 @@ describe("JsonAnalysisPanel", () => {
     ).toBeInTheDocument();
     expect(screen.getByText("Words per minute from word timings.")).toBeInTheDocument();
     const metricGrid = screen.getByLabelText("Summary metrics");
-    expect(within(metricGrid).queryByText("Pause ratio")).not.toBeInTheDocument();
+    expect(within(metricGrid).getByText("Pause Ratio")).toBeInTheDocument();
     expect(screen.getByText("82%")).toBeInTheDocument();
     expect(screen.getByText("7.0")).toBeInTheDocument();
     expect(screen.getByText("6.5")).toBeInTheDocument();
@@ -723,7 +724,7 @@ describe("JsonAnalysisPanel", () => {
     ]);
     expect(
       screen.getByLabelText("three, weak, 48 percent, from 0.20s to 0.75s"),
-    ).toHaveClass("text-danger");
+    ).toHaveClass("text-destructive");
     expect(screen.getByLabelText("Word score legend")).toHaveTextContent(
       "WeakOkayGood",
     );
@@ -771,7 +772,7 @@ describe("JsonAnalysisPanel", () => {
 
     expect(screen.getByLabelText("Pause summary")).toBeInTheDocument();
     expect(screen.getByText("Pause ratio")).toBeInTheDocument();
-    expect(screen.getByText("24%")).toBeInTheDocument();
+    expect(within(screen.getByLabelText("Pause summary")).getByText("24%")).toBeInTheDocument();
     expect(screen.getByRole("img", { name: "Pause timeline" })).toBeInTheDocument();
     expect(screen.getByLabelText("Pause severity legend")).toBeInTheDocument();
     expect(screen.getByText("Practice this pause first")).toBeInTheDocument();
@@ -824,7 +825,7 @@ describe("JsonAnalysisPanel", () => {
     });
 
     expect(
-      screen.getByText("Input changed. Analyze again to update results."),
+      screen.getByText("Input changed. Analyze again to update these results."),
     ).toBeInTheDocument();
   });
 });
